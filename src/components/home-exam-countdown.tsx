@@ -13,6 +13,11 @@ function getDaysUntil(dateValue: string) {
   return Math.round((target.getTime() - start.getTime()) / 86400000);
 }
 
+function getTodayInputValue() {
+  const today = new Date();
+  return [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+}
+
 function formatExamDate(dateValue: string) {
   if (!dateValue) return "";
   return new Intl.DateTimeFormat("en-IE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(dateValue + "T12:00:00"));
@@ -55,7 +60,7 @@ export function HomeExamCountdown() {
             </div>
             <label className="home-exam-date-control">
               <span>Test date</span>
-              <input type="date" value={examDate} min={new Date().toISOString().slice(0, 10)} onChange={(event) => saveDate(event.target.value)} aria-label="Choose your theory test date" />
+              <input type="date" value={examDate} min={getTodayInputValue()} onChange={(event) => saveDate(event.target.value)} aria-label="Choose your theory test date" />
             </label>
           </div>
         ) : (
