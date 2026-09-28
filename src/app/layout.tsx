@@ -21,7 +21,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body><SiteHeader />{children}</body>
+      <body>
+        <a className="skip-link" href="#main-content">Skip to main content</a>
+        <SiteHeader />
+        <div id="main-content" tabIndex={-1}>{children}</div>
+      </body>
     </html>
   );
 }
