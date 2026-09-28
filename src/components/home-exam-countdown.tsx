@@ -1,52 +1,125 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const STORAGE_KEY = "theorytester-exam-date";
+const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
+
+function toDateValue(date: Date) {
+  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+}
+
+function fromDateValue(value: string) {
+  if (!value) return null;
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
 
 function getDaysUntil(dateValue: string) {
-  if (!dateValue) return null;
-  const [year, month, day] = dateValue.split("-").map(Number);
-  const target = new Date(year, month - 1, day);
+  const target = fromDateValue(dateValue);
+  if (!target) return null;
   const today = new Date();
   const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   return Math.round((target.getTime() - start.getTime()) / 86400000);
 }
 
-function getTodayInputValue() {
-  const today = new Date();
-  return [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+function formatExamDate(dateValue: string) {
+  const date = fromDateValue(dateValue);
+  if (!date) return "";
+  return new Intl.DateTimeFormat("en-IE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
 }
 
-function formatExamDate(dateValue: string) {
-  if (!dateValue) return "";
-  return new Intl.DateTimeFormat("en-IE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date(dateValue + "T12:00:00"));
+function getCalendarDays(monthDate: Date) {
+  const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+  const startOffset = (first.getDay() + 6) % 7;
+  const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+  const previousMonthDays = new Date(monthDate.getFullYear(), monthDate.getMonth(), 0).getDate();
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const dayOffset = index - startOffset + 1;
+    const date = dayOffset <= 0
+      ? new Date(monthDate.getFullYear(), monthDate.getMonth() - 1, previousMonthDays + dayOffset)
+      : dayOffset > daysInMonth
+        ? new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, dayOffset - daysInMonth)
+        : new Date(monthDate.getFullYear(), monthDate.getMonth(), dayOffset);
+
+    return {
+      date,
+      inMonth: date.getMonth() === monthDate.getMonth(),
+    };
+  });
 }
 
 export function HomeExamCountdown() {
   const [examDate, setExamDate] = useState("");
   const [editing, setEditing] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [viewMonth, setViewMonth] = useState(() => new Date());
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
-      setExamDate(localStorage.getItem(STORAGE_KEY) ?? "");
+      const saved = localStorage.getItem(STORAGE_KEY) ?? "";
+      setExamDate(saved);
+      const savedDate = fromDateValue(saved);
+      if (savedDate) setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));
     } catch {
       setExamDate("");
     }
   }, []);
 
+  useEffect(() => {
+    if (!calendarOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setCalendarOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setCalendarOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [calendarOpen]);
+
   const days = useMemo(() => getDaysUntil(examDate), [examDate]);
+  const todayValue = toDateValue(new Date());
+  const calendarDays = useMemo(() => getCalendarDays(viewMonth), [viewMonth]);
 
   function saveDate(value: string) {
     setExamDate(value);
+    setCalendarOpen(false);
     setEditing(false);
     try {
-      if (value) localStorage.setItem(STORAGE_KEY, value);
-      else localStorage.removeItem(STORAGE_KEY);
+      localStorage.setItem(STORAGE_KEY, value);
     } catch {
       // The countdown still works for this session if storage is unavailable.
     }
   }
+
+  function openDatePicker() {
+    const selected = fromDateValue(examDate);
+    setViewMonth(selected ? new Date(selected.getFullYear(), selected.getMonth(), 1) : new Date());
+    setCalendarOpen(true);
+  }
+
+  const monthLabel = new Intl.DateTimeFormat("en-IE", {
+    month: "long",
+    year: "numeric",
+  }).format(viewMonth);
 
   return (
     <section className="home-exam-section" aria-label="Exam countdown">
@@ -58,10 +131,79 @@ export function HomeExamCountdown() {
               <h2>Keep the date in sight.</h2>
               <p>Set your theory test date and we’ll show you how long you have left.</p>
             </div>
-            <label className="home-exam-date-control">
-              <span>Test date</span>
-              <input type="date" value={examDate} min={getTodayInputValue()} onChange={(event) => saveDate(event.target.value)} aria-label="Choose your theory test date" />
-            </label>
+
+            <div className="home-exam-picker" ref={calendarRef}>
+              <span className="home-exam-picker-label">Test date</span>
+              <button
+                className={calendarOpen ? "home-exam-date-trigger home-exam-date-trigger-open" : "home-exam-date-trigger"}
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={calendarOpen}
+                onClick={openDatePicker}
+              >
+                <span>{examDate ? formatExamDate(examDate) : "Choose a date"}</span>
+                <span className="home-exam-calendar-icon" aria-hidden="true">▦</span>
+              </button>
+
+              {calendarOpen && (
+                <div className="home-exam-calendar" role="dialog" aria-label="Choose your theory test date">
+                  <div className="home-exam-calendar-header">
+                    <div>
+                      <span className="eyebrow">Test date</span>
+                      <strong>{monthLabel}</strong>
+                    </div>
+                    <div className="home-exam-calendar-nav">
+                      <button
+                        type="button"
+                        aria-label="Previous month"
+                        onClick={() => setViewMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))}
+                      >←</button>
+                      <button
+                        type="button"
+                        aria-label="Next month"
+                        onClick={() => setViewMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+                      >→</button>
+                    </div>
+                  </div>
+
+                  <div className="home-exam-calendar-week" aria-hidden="true">
+                    {WEEKDAYS.map((day, index) => <span key={day + index}>{day}</span>)}
+                  </div>
+
+                  <div className="home-exam-calendar-grid">
+                    {calendarDays.map(({ date, inMonth }) => {
+                      const value = toDateValue(date);
+                      const selected = value === examDate;
+                      const today = value === todayValue;
+                      const disabled = value < todayValue;
+
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          className={[
+                            "home-exam-calendar-day",
+                            !inMonth ? "home-exam-calendar-day-muted" : "",
+                            selected ? "home-exam-calendar-day-selected" : "",
+                            today ? "home-exam-calendar-day-today" : "",
+                          ].join(" ")}
+                          disabled={disabled}
+                          aria-label={date.toLocaleDateString("en-IE", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                          aria-pressed={selected}
+                          onClick={() => saveDate(value)}
+                        >
+                          {date.getDate()}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="home-exam-calendar-footer">
+                    <button type="button" onClick={() => { setViewMonth(new Date()); saveDate(todayValue); }}>Today</button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="home-exam-content">
@@ -75,7 +217,9 @@ export function HomeExamCountdown() {
                 <strong>{Math.max(0, days ?? 0)}</strong>
                 <span>{days === 1 ? "day" : "days"}</span>
               </div>
-              <button className="button button-secondary home-exam-change" type="button" onClick={() => setEditing(true)}>Change date</button>
+              <button className="button button-secondary home-exam-change" type="button" onClick={() => { setEditing(true); openDatePicker(); }}>
+                Change date
+              </button>
             </div>
           </div>
         )}
