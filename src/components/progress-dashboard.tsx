@@ -105,7 +105,7 @@ export function ProgressDashboard() {
     .filter((attempt, index, all) => all.findIndex((item) => item.question_id === attempt.question_id) === index)
     .slice(0, 5)
     .map((attempt) => questions.find((question) => question.id === attempt.question_id))
-    .filter(Boolean);
+    .filter((question): question is (typeof questions)[number] => Boolean(question));
 
   const achievements = [
     { icon: "✓", title: "First question", earned: answeredAttempts.length >= 1 },
