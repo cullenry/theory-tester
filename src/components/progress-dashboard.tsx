@@ -92,10 +92,14 @@ function Readiness({ accuracy, mockAverage, coverage, userId }: { accuracy: numb
 
   useEffect(() => {
     try {
-      const today = new Date().toISOString().slice(0, 10);
+      const now = new Date();
+      const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("-");
+      const cutoffDate = new Date(now);
+      cutoffDate.setDate(cutoffDate.getDate() - 31);
+      const cutoff = [cutoffDate.getFullYear(), String(cutoffDate.getMonth() + 1).padStart(2, "0"), String(cutoffDate.getDate()).padStart(2, "0")].join("-");
       const storageKey = "theorytester-readiness-history-" + userId;
       const stored = JSON.parse(localStorage.getItem(storageKey) ?? "[]") as Array<{ date: string; score: number }>;
-      const withoutToday = stored.filter((entry) => entry.date !== today).filter((entry) => entry.date >= new Date(Date.now() - 31 * 86400000).toISOString().slice(0, 10));
+      const withoutToday = stored.filter((entry) => entry.date !== today).filter((entry) => entry.date >= cutoff);
       const next = [...withoutToday, { date: today, score }].slice(-31);
       localStorage.setItem(storageKey, JSON.stringify(next));
       setHistory(next);
