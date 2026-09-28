@@ -10,6 +10,8 @@
     "scrape": "node scripts/scrape-theory-tester.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
     "next": "16.3.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -25,5 +27,8 @@
     "eslint-config-next": "16.3.5",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.0.0"
+  },
+  "allowScripts": {
+    "unrs-resolver@1.12.2": true
   }
 }
