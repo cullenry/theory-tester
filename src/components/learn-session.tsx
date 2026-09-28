@@ -31,6 +31,7 @@ export function LearnSession() {
   const [retryPosition, setRetryPosition] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
+  const [coreCorrectCount, setCoreCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [retryCorrectCount, setRetryCorrectCount] = useState(0);
 
@@ -71,6 +72,8 @@ export function LearnSession() {
       setCorrectCount((count) => count + 1);
       if (phase === "retry") {
         setRetryCorrectCount((count) => count + 1);
+      } else {
+        setCoreCorrectCount((count) => count + 1);
       }
     } else {
       setWrongCount((count) => count + 1);
@@ -118,6 +121,7 @@ export function LearnSession() {
     setRetryPosition(0);
     setSelected(null);
     setCorrectCount(0);
+    setCoreCorrectCount(0);
     setWrongCount(0);
     setRetryCorrectCount(0);
 
@@ -148,8 +152,8 @@ export function LearnSession() {
               You answered {plan.length} core questions, got {correctCount} right and revisited {retryIds.length} question{retryIds.length === 1 ? "" : "s"} you missed.
             </p>
             <div className="results-summary results-summary-four">
-              <div><strong>{correctCount}</strong><span>Core correct</span></div>
-              <div><strong>{plan.length - wrongCount}</strong><span>Core unanswered/right balance</span></div>
+              <div><strong>{coreCorrectCount}</strong><span>Core correct</span></div>
+              <div><strong>{wrongCount}</strong><span>Core missed</span></div>
               <div><strong>{retryIds.length}</strong><span>Retry round</span></div>
               <div><strong>{retryCorrectCount}</strong><span>Retry correct</span></div>
             </div>
