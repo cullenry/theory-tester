@@ -124,3 +124,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .mock-format-featured .button { min-height: 48px; margin-top: auto; }
   .mock-quick-heading { margin-top: 8px; }
 }
+
+.custom-select { position: relative; }
+.custom-select select { appearance: none; -webkit-appearance: none; padding-right: 40px; cursor: pointer; }
+.custom-select select:hover:not(:disabled) { border-color: #83b195; background: #fbfefb; }
+.custom-select select:focus-visible { border-color: #75bd91; }
+.custom-select-chevron { position: absolute; top: 50%; right: 13px; pointer-events: none; color: var(--green); font-size: 18px; line-height: 1; transform: translateY(-55%); }
+.custom-select select:disabled + .custom-select-chevron { color: #9aa59d; }
