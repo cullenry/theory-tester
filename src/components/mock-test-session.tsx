@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ProgressBar, QuestionCard } from "@/components/question-ui";
 import { getRandomQuestions, type Question } from "@/lib/questions";
+import { recordMockTest, recordQuestionAttempt } from "@/lib/progress";
 
 const TEST_FORMATS = [
   { id: "full", title: "Full Mock Exam", questionCount: 40, durationMinutes: 40, description: "Full timed exam experience" },
@@ -55,6 +56,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 40 
   const [timeRemaining, setTimeRemaining] = useState(initialDurationSeconds);
   const deadlineRef = useRef<number | null>(null);
   const submissionRef = useRef(false);
+  const recordedResultRef = useRef(false);
   const durationSecondsRef = useRef(initialDurationSeconds);
   const current = test[position];
   const correctCount = test.reduce((total, question, index) => total + (responses[index] !== null && responses[index] === question.correctAnswer ? 1 : 0), 0);
@@ -86,6 +88,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 40 
   const startTest = (format: MockTestFormat, nextTest = getRandomQuestions(format.questionCount)) => {
     const durationSeconds = debugTimerEnabled ? initialDurationSeconds : format.durationMinutes * 60;
     submissionRef.current = false;
+    recordedResultRef.current = false;
     deadlineRef.current = null;
     durationSecondsRef.current = durationSeconds;
     setActiveFormat(format);
@@ -115,6 +118,31 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 40 
   const retakeTest = () => {
     startTest(activeFormat);
   };
+
+  useEffect(() => {
+    if (!submitted || recordedResultRef.current) return;
+    recordedResultRef.current = true;
+
+    void recordMockTest({
+      formatId: activeFormat.id,
+      questionCount: test.length,
+      correctCount,
+      answeredCount,
+      percentage,
+      timeExpired,
+    });
+
+    void Promise.all(
+      test.map((question, index) =>
+        recordQuestionAttempt(
+          question,
+          responses[index],
+          responses[index] !== null && responses[index] === question.correctAnswer,
+          "mock",
+        ),
+      ),
+    );
+  }, [submitted, activeFormat, test, responses, correctCount, answeredCount, percentage, timeExpired]);
 
   if (!hasStarted) {
     return (
