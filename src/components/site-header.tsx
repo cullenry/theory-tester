@@ -103,6 +103,7 @@ export function SiteHeader() {
               className={item.href === "/progress" ? "nav-link nav-progress-link" : "nav-link"}
               href={item.href}
               key={item.href}
+              aria-current={pathname === item.href ? "page" : undefined}
             >
               {item.label}
             </Link>
