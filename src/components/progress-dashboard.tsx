@@ -87,7 +87,39 @@ function getReadinessComment(score: number) {
 function Readiness({ accuracy, mockAverage, coverage }: { accuracy: number; mockAverage: number; coverage: number }) {
   const score = Math.round(accuracy * 0.45 + mockAverage * 0.35 + coverage * 0.2);
   const comment = getReadinessComment(score);
-  return <section className="progress-feature-card readiness-card"><div><p className="eyebrow">Practice benchmark</p><h2>Test readiness</h2><p>Based on your question accuracy, mock-test performance and topic coverage. It is a practice metric, not a prediction of your test result.</p><p className="readiness-comment">{comment}</p></div><div className="readiness-score"><strong>{score}</strong><span>/100</span></div><div className="readiness-bar"><span style={{ width: score + "%" }} /></div><div className="readiness-facts"><span>{accuracy}% question accuracy</span><span>{mockAverage}% mock average</span><span>{coverage}% topic coverage</span></div></section>;
+  const [history, setHistory] = useState<Array<{ date: string; score: number }>>([]);
+
+  useEffect(() => {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const stored = JSON.parse(localStorage.getItem("theorytester-readiness-history") ?? "[]") as Array<{ date: string; score: number }>;
+      const withoutToday = stored.filter((entry) => entry.date !== today).filter((entry) => entry.date >= new Date(Date.now() - 31 * 86400000).toISOString().slice(0, 10));
+      const next = [...withoutToday, { date: today, score }].slice(-31);
+      localStorage.setItem("theorytester-readiness-history", JSON.stringify(next));
+      setHistory(next);
+    } catch {
+      setHistory([]);
+    }
+  }, [score]);
+
+  const previous = history.length > 1 ? history[history.length - 2] : null;
+  const delta = previous ? score - previous.score : null;
+
+  return <section className="progress-feature-card readiness-card">
+    <div>
+      <p className="eyebrow">Practice benchmark</p>
+      <h2>Test readiness</h2>
+      <p>Based on your question accuracy, mock-test performance and topic coverage. It is a practice metric, not a prediction of your test result.</p>
+      <p className="readiness-comment">{comment}</p>
+      <div className="readiness-actions">
+        <Link className="text-action" href="/test-ready">Open Test Ready check ↗</Link>
+        {delta !== null && <span className={delta >= 0 ? "readiness-delta readiness-delta-up" : "readiness-delta readiness-delta-down"}>{delta > 0 ? "+" : ""}{delta} since your last saved check</span>}
+      </div>
+    </div>
+    <div className="readiness-score"><strong>{score}</strong><span>/100</span></div>
+    <div className="readiness-bar"><span style={{ width: score + "%" }} /></div>
+    <div className="readiness-facts"><span>{accuracy}% question accuracy</span><span>{mockAverage}% mock average</span><span>{coverage}% topic coverage</span></div>
+  </section>;
 }
 
 function StarredQuestions({ questionIds, bookmarksAvailable }: { questionIds: number[]; bookmarksAvailable: boolean }) {
@@ -115,18 +147,24 @@ function StarredQuestions({ questionIds, bookmarksAvailable }: { questionIds: nu
           <span>Tap the ☆ Star button on any question to save it here.</span>
         </div>
       ) : (
-        <div className="starred-question-list">
-          {starredQuestions.map((question, index) => (
-            <Link className="starred-question-row" href={"/questions/" + question.id} key={question.id}>
-              <span className="starred-question-star" aria-hidden="true">★</span>
-              <div>
-                <strong>{question.question}</strong>
-                <small>Question {index + 1} · {question.taxonomy.category ?? "General"}</small>
-              </div>
-              <span className="row-arrow" aria-hidden="true">↗</span>
-            </Link>
-          ))}
-        </div>
+        <>
+          <div className="starred-question-list">
+            {starredQuestions.map((question, index) => (
+              <Link className="starred-question-row" href={"/questions/" + question.id} key={question.id}>
+                <span className="starred-question-star" aria-hidden="true">★</span>
+                <div>
+                  <strong>{question.question}</strong>
+                  <small>Question {index + 1} · {question.taxonomy.category ?? "General"}</small>
+                </div>
+                <span className="row-arrow" aria-hidden="true">↗</span>
+              </Link>
+            ))}
+          </div>
+          <div className="starred-actions">
+            <Link className="button button-primary" href="/practice?starred=1">Practise starred questions <span aria-hidden="true">→</span></Link>
+            <Link className="button button-secondary" href="/questions">Browse library</Link>
+          </div>
+        </>
       )}
     </section>
   );
@@ -164,11 +202,15 @@ export function ProgressDashboard() {
 
   const achievements = [
     { icon: "✓", title: "First question", earned: answeredAttempts.length >= 1 },
+    { icon: "5", title: "Quick five", earned: answeredAttempts.length >= 5 },
     { icon: "100", title: "100 questions", earned: answeredAttempts.length >= 100 },
+    { icon: "500", title: "500 questions", earned: answeredAttempts.length >= 500 },
     { icon: "80%", title: "80% accuracy", earned: answeredAttempts.length >= 20 && accuracy >= 80 },
     { icon: "🔥", title: "7 day streak", earned: streak.best >= 7 },
     { icon: "40", title: "First full mock", earned: data.mockTests.some((test) => test.question_count === 40) },
     { icon: "★", title: "Perfect mock", earned: data.mockTests.some((test) => test.percentage === 100) },
+    { icon: "★", title: "10 starred", earned: data.starredQuestionIds.length >= 10 },
+    { icon: "🎯", title: "Ready to focus", earned: categoryStats.length >= 5 },
   ];
 
   return <main className="app-main"><div className="page-shell progress-shell">
