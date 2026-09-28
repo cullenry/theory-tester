@@ -10,6 +10,7 @@ const navigation = [
   { href: "/practice", label: "Practice" },
   { href: "/mock-test", label: "Mock test" },
   { href: "/questions", label: "Questions" },
+  { href: "/progress", label: "My Progress" },
 ];
 
 function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
@@ -76,7 +77,11 @@ export function SiteHeader() {
 
         <nav className="main-nav" aria-label="Main navigation">
           {navigation.map((item) => (
-            <Link className="nav-link" href={item.href} key={item.href}>
+            <Link
+              className={item.href === "/progress" ? "nav-link nav-progress-link" : "nav-link"}
+              href={item.href}
+              key={item.href}
+            >
               {item.label}
             </Link>
           ))}
