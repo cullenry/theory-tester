@@ -41,7 +41,7 @@ export function DailyMission() {
 
   if (!progress) return null;
 
-  if (!progress.user) {
+  if (!progress.user || !progress.available) {
     return (
       <section className="daily-mission-section" aria-label="Daily mission">
         <div className="daily-mission-card daily-mission-locked">
