@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard, ScoreDisplay } from "@/components/question-ui";
 import { getRandomQuestionsFromPool, questions, type Question } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
-import { recordQuestionAttempt } from "@/lib/progress";
+import { getStarredQuestionIds, recordQuestionAttempt } from "@/lib/progress";
 
-const SESSION_LENGTH = 20;
+const SESSION_LENGTHS = [5, 10, 20] as const;
+type SessionLength = (typeof SESSION_LENGTHS)[number];
 
 type PickerOption = {
   value: string;
@@ -126,7 +127,13 @@ export function PracticeSession() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [session, setSession] = useState<Question[] | null>(null);
+  const [sessionLength, setSessionLength] = useState<SessionLength>(20);
   const [activePool, setActivePool] = useState<Question[]>([]);
+  const [sessionMissedIds, setSessionMissedIds] = useState<number[]>([]);
+  const [isReviewSession, setIsReviewSession] = useState(false);
+  const [starredMode, setStarredMode] = useState(false);
+  const [starredPool, setStarredPool] = useState<Question[]>([]);
+  const [loadingSpecialMode, setLoadingSpecialMode] = useState(true);
   const [position, setPosition] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -140,9 +147,29 @@ export function PracticeSession() {
       count: item.count,
     })),
   );
-  const selectedPool = selectedCategories.length === 0
-    ? questions
-    : questions.filter((question) => {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get("category");
+    if (category && taxonomyCategories.some((item) => item.name === category)) {
+      setSelectedCategories([category]);
+    }
+    if (params.get("starred") === "1") {
+      setStarredMode(true);
+      getStarredQuestionIds().then((ids) => {
+        const idSet = new Set(ids);
+        setStarredPool(questions.filter((question) => idSet.has(question.id)));
+        setLoadingSpecialMode(false);
+      });
+    } else {
+      setLoadingSpecialMode(false);
+    }
+  }, []);
+
+  const selectedPool = starredMode
+    ? starredPool
+    : selectedCategories.length === 0
+      ? questions
+      : questions.filter((question) => {
       if (!question.taxonomy.category || !selectedCategories.includes(question.taxonomy.category)) {
         return false;
       }
@@ -154,13 +181,15 @@ export function PracticeSession() {
   const finished = session !== null && position >= session.length;
   const answered = selected !== null;
 
-  const beginSession = (pool: Question[]) => {
-    const nextSession = getRandomQuestionsFromPool(pool, SESSION_LENGTH);
+  const beginSession = (pool: Question[], length = sessionLength, review = false) => {
+    const nextSession = getRandomQuestionsFromPool(pool, length);
     setActivePool(pool);
     setSession(nextSession);
     setPosition(0);
     setSelected(null);
     setCorrectCount(0);
+    setSessionMissedIds([]);
+    setIsReviewSession(review);
   };
 
   const returnToSetup = () => {
@@ -169,6 +198,8 @@ export function PracticeSession() {
     setPosition(0);
     setSelected(null);
     setCorrectCount(0);
+    setSessionMissedIds([]);
+    setIsReviewSession(false);
   };
 
   return (
@@ -176,7 +207,7 @@ export function PracticeSession() {
       <div className="page-shell practice-shell">
         {session === null ? (
           <>
-            <div className="page-heading"><div><p className="eyebrow">Choose your focus</p><h1>Practice</h1></div></div>
+            <div className="page-heading"><div><p className="eyebrow">Learn smarter. Practise better.</p><h1>Learn &amp; Practice</h1></div></div>
             <section className="learn-launch-card">
               <div className="learn-launch-copy">
                 <p className="eyebrow">Adaptive learning</p>
@@ -187,6 +218,17 @@ export function PracticeSession() {
               <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>
             </section>
 
+            ${starredMode ? (
+              <section className="learn-launch-card starred-practice-banner">
+                <div className="learn-launch-copy">
+                  <p className="eyebrow">Saved for later</p>
+                  <h2>Practise your starred questions.</h2>
+                  <p>{loadingSpecialMode ? "Loading your saved questions…" : `You have ${starredPool.length} starred question${starredPool.length === 1 ? "" : "s"} ready to practise.`}</p>
+                  <div className="learn-launch-points"><span>Saved questions only</span><span>Fresh attempt history</span><span>Review every answer</span></div>
+                </div>
+                <button className="button button-secondary" type="button" onClick={() => { window.history.replaceState({}, "", "/practice"); setStarredMode(false); }}>Back to all practice</button>
+              </section>
+            ) : null}
             <section className="practice-setup question-card">
               <p className="eyebrow">Question set</p>
               <div className="practice-filters">
@@ -234,18 +276,24 @@ export function PracticeSession() {
                   ]}
                 />
               </div>
-              <div className="practice-start-row"><p>{Math.min(SESSION_LENGTH, selectedPool.length)} questions in this session</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0} onClick={() => beginSession(selectedPool)}>Start practice <span aria-hidden="true">→</span></button></div>
+              <div className="practice-length-row">
+                <span>Session length</span>
+                <div className="practice-length-options" role="group" aria-label="Session length">
+                  {SESSION_LENGTHS.map((length) => <button key={length} className={sessionLength === length ? "practice-length-option practice-length-option-active" : "practice-length-option"} type="button" onClick={() => setSessionLength(length)}>{length}<small>{length === 5 ? "2 min" : length === 10 ? "5 min" : "10 min"}</small></button>)}
+                </div>
+              </div>
+              <div className="practice-start-row"><p>{Math.min(sessionLength, selectedPool.length)} questions in this session</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0 || loadingSpecialMode} onClick={() => beginSession(selectedPool)}>{starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span></button></div>
             </section>
           </>
         ) : finished || !current ? (
-          <section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">Session complete</p><h2>Good work. Keep it rolling.</h2><p>You answered {session.length} questions and got {correctCount} correct.</p><div className="practice-completion-actions"><button className="button button-primary" type="button" onClick={() => beginSession(activePool)}>Practise another set <span aria-hidden="true">→</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Choose another topic</button></div></section>
+          <section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">{isReviewSession ? "Review complete" : "Session complete"}</p><h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2><p>You answered {session.length} questions and got {correctCount} correct.</p><div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{session.length - correctCount}</strong><span>Incorrect</span></div><div><strong>{Math.round((correctCount / Math.max(1, session.length)) * 100)}%</strong><span>Accuracy</span></div><div><strong>{sessionMissedIds.length}</strong><span>To review</span></div></div><div className="practice-completion-actions">{sessionMissedIds.length > 0 && !isReviewSession && <button className="button button-primary" type="button" onClick={() => { const retryPool = sessionMissedIds.map((id) => questions.find((question) => question.id === id)).filter((question): question is Question => Boolean(question)); beginSession(retryPool, retryPool.length, true); }}>Retry {sessionMissedIds.length} mistake{sessionMissedIds.length === 1 ? "" : "s"} <span aria-hidden="true">→</span></button>}{sessionMissedIds.length > 0 && <Link className="button button-secondary" href="/mistakes">Review my mistakes</Link>}<button className="button button-secondary" type="button" onClick={() => beginSession(activePool)}>Practise another set <span aria-hidden="true">↻</span></button><button className="button button-quiet" type="button" onClick={returnToSetup}>Choose another topic</button></div></section>
         ) : (
           <>
-            <div className="page-heading"><div><p className="eyebrow">{selectedCategories.length === 0 ? "All questions" : `${selectedCategories.length} categor${selectedCategories.length === 1 ? "y" : "ies"}${selectedSubcategories.length ? ` · ${selectedSubcategories.length} subcategor${selectedSubcategories.length === 1 ? "y" : "ies"}` : ""}`}</p><h1>Practice session</h1></div><div className="practice-heading-actions"><button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Change topic</button></div></div>
+            <div className="page-heading"><div><p className="eyebrow">{isReviewSession ? "Review mistakes" : starredMode ? "Starred questions" : selectedCategories.length === 0 ? "All questions" : `${selectedCategories.length} categor${selectedCategories.length === 1 ? "y" : "ies"}${selectedSubcategories.length ? ` · ${selectedSubcategories.length} subcategor${selectedSubcategories.length === 1 ? "y" : "ies"}` : ""}`}</p><h1>Practice session</h1></div><div className="practice-heading-actions"><button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Change topic</button></div></div>
             <div className="practice-meta"><ProgressBar current={position + 1} total={session.length} label="Session progress" /><ScoreDisplay correct={correctCount} attempted={position + (answered ? 1 : 0)} /></div>
             <QuestionCard question={current} eyebrow={`${current.taxonomy.category ? `${current.taxonomy.category} · ` : ""}Question ${position + 1}`}>
               {current.answers.map((answer, index) => (
-                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); void recordQuestionAttempt(current, answer, answer === current.correctAnswer, "practice"); }} />
+                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); else setSessionMissedIds((ids) => ids.includes(current.id) ? ids : [...ids, current.id]); void recordQuestionAttempt(current, answer, answer === current.correctAnswer, "practice"); }} />
               ))}
             </QuestionCard>
             {answered && <div className="feedback-block"><p className={`feedback-line ${selected === current.correctAnswer ? "feedback-good" : "feedback-bad"}`} role="status"><strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong> {selected === current.correctAnswer ? "That’s the right answer." : "The correct answer is highlighted above."}</p><ExplanationCard explanation={current.explanation} /><button className="button button-primary continue-button" type="button" onClick={() => { setPosition((step) => step + 1); setSelected(null); }}>{position + 1 === session.length ? "Finish session" : "Next question"}<span aria-hidden="true">→</span></button></div>}
