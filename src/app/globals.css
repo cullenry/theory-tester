@@ -1398,8 +1398,8 @@ html.dark .explanation-copy {
 
 /* Daily mission */
 .daily-mission-section {
-  width: min(1000px, calc(100% - 48px));
-  margin: 14px auto 0;
+  width: 100%;
+  margin: 14px 0 0;
 }
 .daily-mission-card {
   padding: 20px;
@@ -1734,7 +1734,7 @@ html.dark .test-ready-note {
 
 @media (max-width: 520px) {
   .daily-mission-section {
-    width: calc(100% - 24px);
+    width: 100%;
   }
   .daily-mission-card {
     padding: 17px;
