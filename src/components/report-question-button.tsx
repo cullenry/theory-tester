@@ -134,7 +134,7 @@ export function ReportQuestionButton({ questionId, questionText }: ReportQuestio
                   onClick={() => setReasonMenuOpen((value) => !value)}
                 >
                   <span>{reason}</span>
-                  <span className="report-select-chevron" aria-hidden="true">⌄</span>
+                  <span className="report-select-chevron" aria-hidden="true" />
                 </button>
 
                 {reasonMenuOpen && (
