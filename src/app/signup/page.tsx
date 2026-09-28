@@ -9,7 +9,7 @@ export default function SignupPage() {
     <main className="auth-main">
       <div className="auth-shell">
         <div className="auth-side">
-          <p className="eyebrow">Your TheoryTester account</p>
+          <p className="eyebrow">Your TheoryPrep account</p>
           <h2>Make practice stick.</h2>
           <p>Create your account now, then build on it as we add saved progress, mock-test history and more.</p>
           <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>PASS</span></div>
