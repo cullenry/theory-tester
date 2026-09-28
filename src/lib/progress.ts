@@ -27,12 +27,12 @@ let bookmarkCache: Set<number> | null = null;
 let bookmarkCacheUserId: string | null = null;
 let bookmarkCachePromise: Promise<Set<number>> | null = null;
 
-async function loadBookmarkCache() {
+async function loadBookmarkCache(): Promise<Set<number>> {
   const supabase = createClient();
   const { data: user } = await supabase.auth.getUser();
 
   if (!user.user) {
-    bookmarkCache = new Set();
+    bookmarkCache = new Set<number>();
     bookmarkCacheUserId = null;
     bookmarkCachePromise = null;
     return bookmarkCache;
@@ -42,23 +42,28 @@ async function loadBookmarkCache() {
   if (bookmarkCachePromise && bookmarkCacheUserId === user.user.id) return bookmarkCachePromise;
 
   bookmarkCacheUserId = user.user.id;
-  bookmarkCachePromise = supabase
-    .from("question_bookmarks")
-    .select("question_id")
-    .eq("user_id", user.user.id)
-    .order("created_at", { ascending: false })
-    .then(({ data, error }) => {
-      if (error) {
-        console.warn("Could not load starred questions:", error.message);
-        bookmarkCache = new Set();
-      } else {
-        bookmarkCache = new Set((data ?? []).map((row) => row.question_id));
-      }
-      bookmarkCachePromise = null;
-      return bookmarkCache;
-    });
+  bookmarkCachePromise = (async () => {
+    const { data, error } = await supabase
+      .from("question_bookmarks")
+      .select("question_id")
+      .eq("user_id", user.user.id)
+      .order("created_at", { ascending: false });
 
-  return bookmarkCachePromise;
+    if (error) {
+      console.warn("Could not load starred questions:", error.message);
+      bookmarkCache = new Set<number>();
+    } else {
+      bookmarkCache = new Set<number>((data ?? []).map((row) => row.question_id));
+    }
+
+    return bookmarkCache;
+  })();
+
+  try {
+    return await bookmarkCachePromise;
+  } finally {
+    bookmarkCachePromise = null;
+  }
 }
 
 export async function getStarredQuestionIds() {
