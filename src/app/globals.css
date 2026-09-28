@@ -2372,15 +2372,6 @@ html.dark .home-exam-date-badge span {
   background: #edf5ef;
   color: var(--green-dark);
 }
-.question-report-button span:last-child {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 .report-backdrop {
   position: fixed;
   inset: 0;
