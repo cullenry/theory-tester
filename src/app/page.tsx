@@ -80,7 +80,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <footer className="site-footer"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">T</span><span>Theory<span className="brand-accent">Tester</span></span></Link><span>Practice with purpose. Drive with confidence.</span><Link href="/questions">Explore the question library <span aria-hidden="true">→</span></Link></footer>
+      <footer className="site-footer"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">T</span><span>Theory<span className="brand-accent">Prep</span></span></Link><span>Practice with purpose. Drive with confidence.</span><Link href="/questions">Explore the question library <span aria-hidden="true">→</span></Link></footer>
     </main>
   );
 }
