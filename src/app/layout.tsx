@@ -2,9 +2,20 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
+const siteUrl = "https://theoryprep.irish";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: { default: "TheoryPrep | Irish Driving Theory Practice", template: "%s | TheoryPrep" },
-  description: "Practise Irish driving theory questions, take a mock test and build confidence for test day.",
+  description: "Practise Irish driving theory questions, learn from explanations, take mock tests and prepare for test day.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "TheoryPrep | Irish Driving Theory Practice",
+    description: "Learn, practise and prepare for the Irish driving theory test.",
+    url: siteUrl,
+    siteName: "TheoryPrep",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

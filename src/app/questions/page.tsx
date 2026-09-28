@@ -3,7 +3,11 @@ import type { Metadata } from "next";
 import { QuestionBrowser } from "@/components/question-browser";
 import { questions } from "@/lib/questions";
 
-export const metadata: Metadata = { title: "Question Library", description: "Search and browse Irish driving theory test questions by category." };
+export const metadata: Metadata = {
+  title: "Question Library",
+  description: "Search and browse Irish driving theory test questions by category.",
+  alternates: { canonical: "/questions" },
+};
 
 export default function QuestionsPage() {
   return (

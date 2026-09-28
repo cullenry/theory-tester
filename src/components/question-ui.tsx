@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { Question } from "@/lib/questions";
 import { QuestionStarButton } from "@/components/question-star-button";
 import { ReadingModeToggle } from "@/components/reading-mode-toggle";
+import { ReportQuestionButton } from "@/components/report-question-button";
 
 type AnswerOptionProps = {
   answer: string;
@@ -43,6 +44,7 @@ export function QuestionCard({ question, eyebrow, children }: { question: Questi
         <div className="question-card-tools">
           <ReadingModeToggle />
           <QuestionStarButton questionId={question.id} />
+          <ReportQuestionButton questionId={question.id} questionText={question.question} />
         </div>
       </div>
       <h1 className="question-title" id={"question-title-" + question.id}>{question.question}</h1>

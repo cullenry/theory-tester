@@ -8,7 +8,13 @@ type DetailPageProps = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const { id } = await params;
   const question = getQuestionById(Number(id));
-  return { title: question ? `Question ${question.id}` : "Question not found", description: question?.question ?? "Browse Irish driving theory questions." };
+  return question
+    ? {
+        title: `Question ${question.id}: ${question.question.slice(0, 70)}`,
+        description: `${question.question} — answer and explanation for Irish driving theory practice.`,
+        alternates: { canonical: `/questions/${question.id}` },
+      }
+    : { title: "Question not found", description: "Browse Irish driving theory questions." };
 }
 
 export default async function QuestionDetailPage({ params }: DetailPageProps) {

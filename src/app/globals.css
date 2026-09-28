@@ -2350,3 +2350,272 @@ html.dark .home-exam-date-badge span {
     flex: 1;
   }
 }
+
+/* Reports, legal pages and support */
+.question-report-button {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+.question-report-button:hover {
+  border-color: #8fae98;
+  background: #edf5ef;
+  color: var(--green-dark);
+}
+.question-report-button span:last-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.report-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(20, 30, 24, .42);
+}
+.report-dialog {
+  width: min(520px, 100%);
+  max-height: min(720px, calc(100vh - 40px));
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(15, 30, 21, .22);
+}
+.report-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.report-dialog-header h2 {
+  margin: 5px 0 0;
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+.report-close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 20px;
+}
+.report-field {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+.report-field > span {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.report-field select,
+.report-field textarea {
+  width: 100%;
+  border: 1px solid #cddbd0;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+}
+.report-field select {
+  min-height: 42px;
+  padding: 0 10px;
+}
+.report-field textarea {
+  min-height: 100px;
+  padding: 10px;
+  resize: vertical;
+  line-height: 1.6;
+}
+.report-note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+.legal-shell {
+  width: min(760px, 100%);
+}
+.legal-shell > h1 {
+  margin: 8px 0 10px;
+  font-family: Georgia, serif;
+  font-size: 40px;
+  font-weight: 500;
+}
+.legal-intro {
+  max-width: 650px;
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.legal-card {
+  margin-top: 12px;
+  padding: 19px 20px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+}
+.legal-card h2 {
+  margin: 0 0 7px;
+  font-size: 15px;
+}
+.legal-card p {
+  margin: 0 0 9px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.legal-card p:last-child { margin-bottom: 0; }
+.support-grid,
+.feedback-grid {
+  display: grid;
+  gap: 10px;
+}
+.support-card,
+.feedback-card {
+  display: grid;
+  grid-template-columns: 34px 1fr 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+}
+a.support-card:hover,
+a.feedback-card:hover {
+  border-color: #8fae98;
+  background: #edf5ef;
+}
+.support-icon,
+.feedback-card-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid #cde0d2;
+  border-radius: 9px;
+  background: #edf6f0;
+  color: var(--green);
+  font-weight: 900;
+}
+.support-card h2,
+.feedback-card h2 {
+  margin: 0 0 3px;
+  font-size: 13px;
+}
+.support-card p,
+.feedback-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.feedback-note {
+  margin: 15px 0 20px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.support-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 17px;
+}
+.site-footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px 13px;
+}
+.site-footer-links a {
+  color: var(--green);
+  font-weight: 750;
+}
+.site-footer-links .support-link {
+  padding: 5px 9px;
+  border: 1px solid #b9d4c0;
+  border-radius: 7px;
+  background: #f1f8f3;
+}
+@media (max-width: 760px) {
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .site-footer-links {
+    justify-content: flex-start;
+  }
+  .report-actions,
+  .support-actions {
+    flex-wrap: wrap;
+  }
+}
+html.dark .question-report-button,
+html.dark .report-close,
+html.dark .report-dialog,
+html.dark .legal-card,
+html.dark .support-card,
+html.dark .feedback-card {
+  background: var(--surface);
+}
+html.dark .question-report-button:hover,
+html.dark a.support-card:hover,
+html.dark a.feedback-card:hover {
+  border-color: #6f9077;
+  background: #263428;
+}
+html.dark .report-dialog {
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+}
+html.dark .report-field select,
+html.dark .report-field textarea {
+  border-color: #48544b;
+  background: #202520;
+  color: #ededed;
+}
+html.dark .support-icon,
+html.dark .feedback-card-icon {
+  border-color: #496552;
+  background: #223127;
+}
+html.dark .site-footer-links .support-link {
+  border-color: #4a6751;
+  background: #233229;
+}
