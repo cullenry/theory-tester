@@ -8,20 +8,24 @@ export function ReadingModeToggle() {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    const isEnabled = document.documentElement.classList.contains("reading-mode");
-    setEnabled(isEnabled);
+    const syncState = () => setEnabled(document.documentElement.classList.contains("reading-mode"));
+    syncState();
   }, []);
 
   function toggleReadingMode() {
-    const nextEnabled = !enabled;
+    const nextEnabled = !document.documentElement.classList.contains("reading-mode");
     document.documentElement.classList.toggle("reading-mode", nextEnabled);
-    localStorage.setItem(STORAGE_KEY, nextEnabled ? "on" : "off");
+    try {
+      localStorage.setItem(STORAGE_KEY, nextEnabled ? "on" : "off");
+    } catch {
+      // The visual preference still works when storage is unavailable.
+    }
     setEnabled(nextEnabled);
   }
 
   return (
     <button
-      className={"reading-mode-toggle" + (enabled ? " reading-mode-toggle-active" : "")}
+      className={"reading-mode-toggle reading-mode-toggle-inline" + (enabled ? " reading-mode-toggle-active" : "")}
       type="button"
       onClick={toggleReadingMode}
       aria-label={enabled ? "Turn off easier reading mode" : "Turn on easier reading mode"}
@@ -29,7 +33,7 @@ export function ReadingModeToggle() {
       title={enabled ? "Turn off easier reading mode" : "Easier reading mode"}
     >
       <span className="reading-mode-icon" aria-hidden="true">Aa</span>
-      <span className="reading-mode-label">Reading</span>
+      <span className="reading-mode-label">Easier reading</span>
     </button>
   );
 }
