@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 const BASE_URL = "https://theory-tester.com";
 const QUESTIONS_URL = `${BASE_URL}/questions`;
 const OUTPUT_DIR = "src/data";
-const OUTPUT_FILE = `${OUTPUT_DIR}/questions.json";
+const OUTPUT_FILE = `${OUTPUT_DIR}/questions.json`;
 const DELAY_MS = 500;
 const MAX_QUESTIONS = Number(process.env.MAX_QUESTIONS || 805);
 
@@ -11,16 +11,16 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function clean(value) {
   return value
-    .replace(/\\s+/g, " ")
-    .replace(/\\u00a0/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/\u00a0/g, " ")
     .trim();
 }
 
 function stripTags(value) {
   return clean(
     value
-      .replace(/<script[\\s\\S]*?<\\/script>/gi, "")
-      .replace(/<style[\\s\\S]*?<\\/style>/gi, "")
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/<style[\s\S]*?<\/style>/gi, "")
       .replace(/<[^>]+>/g, " ")
       .replace(/&nbsp;/g, " ")
       .replace(/&amp;/g, "&")
@@ -41,19 +41,19 @@ function firstMatch(html, patterns) {
 
 function extractQuestion(html, id) {
   const title = firstMatch(html, [
-    /<h1[^>]*>([\\s\\S]*?)<\\/h1>/i,
-    /<h2[^>]*>([\\s\\S]*?)<\\/h2>/i,
+    /<h1[^>]*>([\s\S]*?)<\/h1>/i,
+    /<h2[^>]*>([\s\S]*?)<\/h2>/i,
   ]);
 
   const category = firstMatch(html, [
-    /(?:Category|category)[^<]{0,100}<[^>]*>([\\s\\S]*?)<\\/[^>]+>/i,
+    /(?:Category|category)[^<]{0,100}<[^>]*>([\s\S]*?)<\/[^>]+>/i,
   ]);
 
   const answerMatches = [...html.matchAll(
-    /<(?:li|label|p|div)[^>]*>([\\s\\S]*?(?:answer|option)[\\s\\S]*?)<\\/(?:li|label|p|div)>/gi
-  )].map((m) => stripTags(m[1]));
+    /<(?:li|label|p|div)[^>]*>([\s\S]*?(?:answer|option)[\s\S]*?)<\/(?:li|label|p|div)>/gi
+  )].map((match) => stripTags(match[1]));
 
-  const uniqueAnswers = [...new Set(answerMatches.filter((x) => x.length > 1))];
+  const uniqueAnswers = [...new Set(answerMatches.filter((answer) => answer.length > 1))];
 
   const imageMatch = html.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["'][^>]*>/i);
   const image = imageMatch?.[1]
@@ -61,7 +61,7 @@ function extractQuestion(html, id) {
     : null;
 
   const explanation = firstMatch(html, [
-    /(?:Explanation|explanation)[^<]*<[^>]*>([\\s\\S]*?)<\\/[^>]+>/i,
+    /(?:Explanation|explanation)[^<]*<[^>]*>([\s\S]*?)<\/[^>]+>/i,
   ]);
 
   return {
@@ -95,7 +95,7 @@ async function main() {
   console.log(`Fetching question index: ${QUESTIONS_URL}`);
   const indexHtml = await fetchPage(QUESTIONS_URL);
 
-  const discoveredIds = [...indexHtml.matchAll(/\\/questions\\/(\\d+)/g)]
+  const discoveredIds = [...indexHtml.matchAll(/\/questions\/(\d+)/g)]
     .map((match) => Number(match[1]))
     .filter((id) => Number.isInteger(id) && id > 0);
 
@@ -113,19 +113,19 @@ async function main() {
 
   for (let index = 0; index < ids.length; index += 1) {
     const id = ids[index];
-    process.stdout.write(`\\rScraping ${index + 1}/${ids.length} — question ${id}   `);
+    process.stdout.write(`\rScraping ${index + 1}/${ids.length} — question ${id}   `);
 
     try {
       const html = await fetchPage(`${BASE_URL}/questions/${id}`);
       const question = extractQuestion(html, id);
 
       if (!question.question) {
-        console.warn(`\\nWarning: question ${id} did not produce a question title.`);
+        console.warn(`\nWarning: question ${id} did not produce a question title.`);
       }
 
       questions.push(question);
     } catch (error) {
-      console.warn(`\\nWarning: failed question ${id}: ${error.message}`);
+      console.warn(`\nWarning: failed question ${id}: ${error.message}`);
     }
 
     if (index < ids.length - 1) {
@@ -147,14 +147,14 @@ async function main() {
       },
       null,
       2
-    ) + "\\n",
+    ) + "\n",
     "utf8"
   );
 
-  console.log(`\\n\\nSaved ${questions.length} questions to ${OUTPUT_FILE}`);
+  console.log(`\n\nSaved ${questions.length} questions to ${OUTPUT_FILE}`);
 }
 
 main().catch((error) => {
-  console.error("\\nScraper failed:", error.message);
+  console.error("\nScraper failed:", error.message);
   process.exit(1);
 });
