@@ -87,7 +87,7 @@ function LockedStreakWidget() {
             <h2>Sign in to view your progress.</h2>
             <p>Your streaks, questions answered and practice history will appear here.</p>
           </div>
-          <Link className="button button-primary home-streak-signin" href="/login?next=/progress">
+          <Link className="button button-primary home-streak-signin" href="/login">
             Sign in <span aria-hidden="true">→</span>
           </Link>
         </div>
