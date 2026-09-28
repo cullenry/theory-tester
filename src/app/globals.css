@@ -2019,3 +2019,150 @@ html.dark.reading-mode .reading-mode-toggle-active {
 .progress-shell > .daily-mission-section {
   margin-bottom: 14px;
 }
+
+
+/* Homepage exam countdown */
+.home-exam-section {
+  width: 100%;
+  margin: 14px 0 0;
+}
+.home-exam-card {
+  min-width: 0;
+  padding: 20px 21px;
+  border: 1px solid #d4e3d8;
+  border-radius: 12px;
+  background: #f4f9f5;
+  box-shadow: 0 7px 22px rgba(26,54,36,.035);
+}
+.home-exam-setup,
+.home-exam-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+}
+.home-exam-copy,
+.home-exam-setup > div {
+  min-width: 0;
+}
+.home-exam-card h2 {
+  margin: 5px 0 5px;
+  font-family: Georgia, serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -.3px;
+}
+.home-exam-card p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+.home-exam-date-control {
+  display: grid;
+  min-width: 150px;
+  gap: 6px;
+}
+.home-exam-date-control span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.home-exam-date-control input {
+  min-height: 42px;
+  padding: 0 10px;
+  border: 1px solid #cddbd0;
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+}
+.home-exam-date-control input:focus-visible {
+  outline: 3px solid #75bd91;
+  outline-offset: 2px;
+}
+.home-exam-actions {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex: 0 0 auto;
+}
+.home-exam-date-badge {
+  display: grid;
+  min-width: 92px;
+  min-height: 74px;
+  place-items: center;
+  align-content: center;
+  padding: 8px 12px;
+  border: 1px solid #c3ddcb;
+  border-radius: 11px;
+  background: #e7f2ea;
+}
+.home-exam-date-badge strong {
+  color: var(--green-dark);
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+.home-exam-date-badge span {
+  margin-top: 3px;
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.home-exam-change {
+  min-height: 42px;
+  padding-inline: 13px;
+  font-size: 11px;
+}
+html.dark .home-exam-card {
+  border-color: #3e5143;
+  background: #18211b;
+}
+html.dark .home-exam-date-control input,
+html.dark .home-exam-change {
+  border-color: #48544b;
+  background: #202520;
+  color: #ededed;
+}
+html.dark .home-exam-date-badge {
+  border-color: #496552;
+  background: #223127;
+}
+html.dark .home-exam-date-badge strong {
+  color: #c4ebcf;
+}
+html.dark .home-exam-date-badge span {
+  color: #a9d5b3;
+}
+@media (max-width: 760px) {
+  .home-exam-setup,
+  .home-exam-content {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .home-exam-date-control {
+    width: 100%;
+  }
+  .home-exam-date-control input {
+    width: 100%;
+  }
+  .home-exam-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .home-exam-date-badge {
+    min-width: 86px;
+  }
+  .home-exam-change {
+    flex: 1;
+  }
+}
