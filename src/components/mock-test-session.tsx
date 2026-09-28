@@ -178,7 +178,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 40 
         <div className="page-heading"><div><p className="eyebrow">{timeExpired ? "Time limit reached" : "Mock test complete"}</p><h1>{activeFormat.title} Complete</h1></div><span className="result-grade">{percentage}%</span></div>
         <div className="result-scoreline"><strong>{correctCount} / {test.length}</strong><span>{percentage}% correct</span></div>
         <div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{incorrectCount}</strong><span>Incorrect</span></div><div><strong>{unansweredCount}</strong><span>Unanswered</span></div><div><strong>{percentage}%</strong><span>Percentage</span></div></div>
-        <div className="results-actions"><button className="button button-primary" type="button" onClick={retakeTest}>Retake {activeFormat.title} <span aria-hidden="true">↻</span></button><Link className="button button-secondary" href="/">Back to Home</Link></div>
+        <div className="results-actions"><button className="button button-primary" type="button" onClick={retakeTest}>Retake {activeFormat.title} <span aria-hidden="true">↻</span></button>{incorrectCount > 0 && <Link className="button button-secondary" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/">Back to Home</Link></div>
         <section className="review-section"><p className="eyebrow">Answer review</p><h2>Every question, at a glance</h2><ol className="review-list">{test.map((question, index) => {
           const response = responses[index];
           const unanswered = response === null;
