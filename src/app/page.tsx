@@ -3,6 +3,7 @@ import Link from "next/link";
 import { questions } from "@/lib/questions";
 import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
+import { HomeExamCountdown } from "@/components/home-exam-countdown";
 
 const modes = [
   { number: "01", title: "Learn & Practice", description: "Build weak spots, reinforce what you know and practise questions at your own pace.", href: "/practice", action: "Start learning" },
@@ -42,6 +43,7 @@ export default function Home() {
 
       <div className="home-learning-widgets">
         <HomeStreakWidget />
+        <HomeExamCountdown />
         <DailyMission />
       </div>
 
