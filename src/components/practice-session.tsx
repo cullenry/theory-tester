@@ -279,7 +279,7 @@ export function PracticeSession() {
               <div className="practice-length-row">
                 <span>Session length</span>
                 <div className="practice-length-options" role="group" aria-label="Session length">
-                  {SESSION_LENGTHS.map((length) => <button key={length} className={sessionLength === length ? "practice-length-option practice-length-option-active" : "practice-length-option"} type="button" onClick={() => setSessionLength(length)}>{length}<small>{length === 5 ? "2 min" : length === 10 ? "5 min" : "10 min"}</small></button>)}
+                  {SESSION_LENGTHS.map((length) => <button key={length} className={sessionLength === length ? "practice-length-option practice-length-option-active" : "practice-length-option"} type="button" onClick={() => setSessionLength(length)}>{length === 5 ? "Quick 5" : length === 10 ? "Quick 10" : "Full 20"}<small>{length} questions</small></button>)}
                 </div>
               </div>
               <div className="practice-start-row"><p>{Math.min(sessionLength, selectedPool.length)} questions in this session</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0 || loadingSpecialMode} onClick={() => beginSession(selectedPool)}>{starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span></button></div>
