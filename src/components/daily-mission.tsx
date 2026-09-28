@@ -82,8 +82,8 @@ export function DailyMission() {
         </div>
         <div className="daily-mission-progress"><span style={{ width: `${(completed / GOALS.length) * 100}%` }} /></div>
         <div className="daily-mission-actions">
-          {status.learn === 0 && <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>}
-          {status.learn && status.answered < GOALS[0].target && <Link className="button button-primary" href="/practice">Answer more questions <span aria-hidden="true">→</span></Link>}
+          {status.learn === 0 && <Link className="button button-primary" href="/practice/learn">Learn <span aria-hidden="true">→</span></Link>}
+          {status.learn === 1 && status.answered < GOALS[0].target && <Link className="button button-primary" href="/practice">Answer more questions <span aria-hidden="true">→</span></Link>}
           {completed === GOALS.length && <Link className="button button-secondary" href="/progress">View your progress <span aria-hidden="true">→</span></Link>}
         </div>
       </div>
