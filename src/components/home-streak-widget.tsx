@@ -47,10 +47,62 @@ function getWeekActivity(days: Set<string>) {
   });
 }
 
+function LockedStreakWidget() {
+  const previewDays = ["M", "T", "W", "T", "F", "S", "S"];
+
+  return (
+    <section className="home-streak-section" aria-label="Your TheoryTester streak">
+      <div className="home-streak-inner home-streak-locked">
+        <div className="home-streak-locked-blur" aria-hidden="true">
+          <div className="home-streak-copy">
+            <div className="home-streak-icon">🔥</div>
+            <div>
+              <p className="eyebrow">Your practice streak</p>
+              <h2>7 days strong.</h2>
+              <p>Nice work. Keep the run going.</p>
+            </div>
+          </div>
+
+          <div className="home-streak-week">
+            {previewDays.map((day, index) => (
+              <div className="home-streak-day" key={day + index}>
+                <span>{day}</span>
+                <i className="home-streak-dot home-streak-dot-active" />
+              </div>
+            ))}
+          </div>
+
+          <div className="home-streak-stats">
+            <span><strong>7</strong> day best</span>
+            <span><strong>128</strong> questions answered</span>
+          </div>
+
+          <span className="home-streak-link">View my progress ↗</span>
+        </div>
+
+        <div className="home-streak-locked-overlay">
+          <span className="home-streak-lock" aria-hidden="true">🔒</span>
+          <div>
+            <p className="eyebrow">Make your practice count</p>
+            <h2>Sign in to view your progress.</h2>
+            <p>Your streaks, questions answered and practice history will appear here.</p>
+          </div>
+          <Link className="button button-primary home-streak-signin" href="/login?next=/progress">
+            Sign in <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HomeStreakWidget() {
   const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
   useEffect(() => { getProgressData().then(setProgress); }, []);
-  if (!progress?.user || !progress.available) return null;
+
+  if (!progress) return null;
+  if (!progress.user) return <LockedStreakWidget />;
+  if (!progress.available) return null;
 
   const streak = getStreak(progress.attempts);
   const week = getWeekActivity(streak.days);
