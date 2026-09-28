@@ -176,6 +176,16 @@ export function PracticeSession() {
         {session === null ? (
           <>
             <div className="page-heading"><div><p className="eyebrow">Choose your focus</p><h1>Practice</h1></div></div>
+            <section className="learn-launch-card">
+              <div className="learn-launch-copy">
+                <p className="eyebrow">Adaptive learning</p>
+                <h2>Learn, not just practise.</h2>
+                <p>Learn mode uses your own results to prioritise weak spots, space out reinforcement and bring missed questions back at the end.</p>
+                <div className="learn-launch-points"><span>Weak spots first</span><span>Spaced reinforcement</span><span>Retry missed questions</span></div>
+              </div>
+              <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>
+            </section>
+
             <section className="practice-setup question-card">
               <p className="eyebrow">Question set</p>
               <div className="practice-filters">
