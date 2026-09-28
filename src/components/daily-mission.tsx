@@ -1,0 +1,88 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { getProgressData } from "@/lib/progress";
+
+const GOALS = [
+  { id: "answered", title: "Answer 20 questions", target: 20 },
+  { id: "correct", title: "Get 16 correct", target: 16 },
+  { id: "learn", title: "Complete a Learn session", target: 1 },
+] as const;
+
+function localDateKey(value: string | Date) {
+  const date = value instanceof Date ? value : new Date(value);
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+export function DailyMission() {
+  const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
+  const [learnDone, setLearnDone] = useState(false);
+
+  useEffect(() => {
+    getProgressData(2000).then(setProgress);
+    const today = localDateKey(new Date());
+    setLearnDone(localStorage.getItem("theorytester-learn-completed") === today);
+  }, []);
+
+  const todayStats = useMemo(() => {
+    if (!progress) return { answered: 0, correct: 0 };
+    const today = localDateKey(new Date());
+    const attempts = progress.attempts.filter((attempt) => localDateKey(attempt.created_at) === today && attempt.selected_answer !== null);
+    return {
+      answered: attempts.length,
+      correct: attempts.filter((attempt) => attempt.is_correct).length,
+    };
+  }, [progress]);
+
+  if (!progress) return null;
+
+  if (!progress.user) {
+    return (
+      <section className="daily-mission-section" aria-label="Daily mission">
+        <div className="daily-mission-card daily-mission-locked">
+          <div><p className="eyebrow">Today’s mission</p><h2>Build a little momentum.</h2><p>Sign in to track your daily questions, accuracy and Learn sessions.</p></div>
+          <Link className="button button-secondary" href="/login">Sign in <span aria-hidden="true">→</span></Link>
+        </div>
+      </section>
+    );
+  }
+
+  const status = {
+    answered: Math.min(GOALS[0].target, todayStats.answered),
+    correct: Math.min(GOALS[1].target, todayStats.correct),
+    learn: learnDone ? 1 : 0,
+  };
+  const completed = GOALS.filter((goal) => status[goal.id] >= goal.target).length;
+
+  return (
+    <section className="daily-mission-section" aria-label="Daily mission">
+      <div className="daily-mission-card">
+        <div className="daily-mission-header">
+          <div><p className="eyebrow">Today’s mission</p><h2>Three small wins.</h2></div>
+          <span className="daily-mission-count">{completed}/{GOALS.length} complete</span>
+        </div>
+        <div className="daily-mission-grid">
+          {GOALS.map((goal) => {
+            const value = status[goal.id];
+            const done = value >= goal.target;
+            return <div className={done ? "daily-mission-goal daily-mission-goal-done" : "daily-mission-goal"} key={goal.id}>
+              <span aria-hidden="true">{done ? "✓" : "○"}</span>
+              <div><strong>{goal.title}</strong><small>{goal.id === "answered" ? `${value}/${goal.target} today` : goal.id === "correct" ? `${value}/${goal.target} today` : done ? "Completed today" : "Not completed yet"}</small></div>
+            </div>;
+          })}
+        </div>
+        <div className="daily-mission-progress"><span style={{ width: `${(completed / GOALS.length) * 100}%` }} /></div>
+        <div className="daily-mission-actions">
+          {!status.learn && <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>}
+          {status.learn && status.answered < GOALS[0].target && <Link className="button button-primary" href="/practice">Answer more questions <span aria-hidden="true">→</span></Link>}
+          {completed === GOALS.length && <Link className="button button-secondary" href="/progress">View your progress <span aria-hidden="true">→</span></Link>}
+        </div>
+      </div>
+    </section>
+  );
+}
