@@ -27,6 +27,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+        <Link className="nav-link nav-sign-in" href="/login">Sign in</Link>
         <ThemeToggle />
       </div>
     </header>

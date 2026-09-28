@@ -368,3 +368,51 @@ html.dark ::selection { background: #2c5a3c; color: #e4f2e7; }
   .theme-toggle-label { display: none; }
   .main-nav { padding-right: 48px; }
 }
+
+
+/* Authentication */
+.auth-main { min-height: calc(100vh - 76px); display: grid; place-items: center; padding: 64px 24px 88px; background: var(--paper); }
+.auth-shell { display: grid; grid-template-columns: minmax(260px, .8fr) minmax(400px, 1fr); width: min(900px, 100%); overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 18px 55px rgba(25, 62, 41, .08); }
+.auth-side { display: flex; min-height: 520px; flex-direction: column; justify-content: center; padding: 50px 42px; background: #edf5ee; border-right: 1px solid var(--line); }
+.auth-side h2 { margin: 10px 0 15px; font-family: Georgia, "Times New Roman", serif; font-size: 42px; font-weight: 500; letter-spacing: -.8px; line-height: 1.04; }
+.auth-side > p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
+.auth-side-line { display: flex; align-items: center; gap: 9px; margin-top: 36px; color: var(--green); font-size: 9px; font-weight: 800; letter-spacing: 1px; }
+.auth-side-line i { width: 4px; height: 4px; border-radius: 50%; background: #73937b; }
+.auth-card { padding: 48px 44px 42px; }
+.auth-card-top { display: flex; align-items: center; gap: 14px; }
+.auth-mark { display: grid; width: 38px; height: 38px; flex: 0 0 38px; place-items: center; border-radius: 11px 11px 11px 4px; background: var(--green); color: white; font-family: Georgia, serif; font-size: 23px; font-weight: 700; }
+.auth-card h1 { margin: 7px 0 0; font-family: Georgia, "Times New Roman", serif; font-size: 34px; font-weight: 500; letter-spacing: -.6px; line-height: 1.05; }
+.auth-intro { margin: 20px 0 27px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.auth-form { display: grid; gap: 17px; }
+.auth-field { display: grid; gap: 7px; color: #55635a; font-size: 12px; font-weight: 700; }
+.auth-input { width: 100%; min-height: 48px; padding: 0 13px; border: 1px solid #d7e0d9; border-radius: 9px; background: #fff; color: var(--ink); outline: none; font-size: 14px; transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }
+.auth-input::placeholder { color: #98a39c; }
+.auth-input:hover { border-color: #b5c6ba; }
+.auth-input:focus { border-color: #72aa88; box-shadow: 0 0 0 3px rgba(38, 125, 80, .1); }
+.auth-submit { width: 100%; margin-top: 3px; min-height: 50px; }
+.auth-message { margin: -2px 0 0; padding: 11px 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+.auth-error { border: 1px solid #e0b0a9; background: #fff3f1; color: #8d342b; }
+.auth-success { border: 1px solid #c7dfce; background: #eff8f1; color: #20653c; }
+.auth-switch { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px; margin-top: 26px; color: var(--muted); font-size: 12px; }
+.auth-switch a { color: var(--green); font-weight: 750; }
+.auth-switch a:hover { text-decoration: underline; }
+html.dark .auth-main { background: #0b0b0b; }
+html.dark .auth-shell { background: #181818; box-shadow: 0 20px 60px rgba(0,0,0,.28); }
+html.dark .auth-side { background: #151515; }
+html.dark .auth-field { color: #aeb6b0; }
+html.dark .auth-input { border-color: #3d3d3d; background: #111; color: var(--ink); }
+html.dark .auth-input:hover { border-color: #5a5a5a; }
+html.dark .auth-input:focus { border-color: #6e9c7a; box-shadow: 0 0 0 3px rgba(94, 162, 117, .14); }
+html.dark .auth-input::placeholder { color: #747474; }
+html.dark .auth-error { border-color: #744843; background: #291a18; color: #efa49b; }
+html.dark .auth-success { border-color: #3e5d46; background: #1a291e; color: #a8d9b4; }
+html.dark .nav-sign-in { color: var(--green); font-weight: 750; }
+
+@media (max-width: 760px) {
+  .auth-main { min-height: calc(100vh - 140px); padding: 28px 16px 55px; }
+  .auth-shell { grid-template-columns: 1fr; width: min(520px, 100%); }
+  .auth-side { min-height: auto; padding: 28px 24px 24px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .auth-side h2 { font-size: 33px; }
+  .auth-side-line { margin-top: 23px; }
+  .auth-card { padding: 30px 24px 28px; }
+}
