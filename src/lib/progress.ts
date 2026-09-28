@@ -23,6 +23,88 @@ export type MockTestResult = {
   created_at: string;
 };
 
+let bookmarkCache: Set<number> | null = null;
+let bookmarkCacheUserId: string | null = null;
+let bookmarkCachePromise: Promise<Set<number>> | null = null;
+
+async function loadBookmarkCache() {
+  const supabase = createClient();
+  const { data: user } = await supabase.auth.getUser();
+
+  if (!user.user) {
+    bookmarkCache = new Set();
+    bookmarkCacheUserId = null;
+    bookmarkCachePromise = null;
+    return bookmarkCache;
+  }
+
+  if (bookmarkCache && bookmarkCacheUserId === user.user.id) return bookmarkCache;
+  if (bookmarkCachePromise && bookmarkCacheUserId === user.user.id) return bookmarkCachePromise;
+
+  bookmarkCacheUserId = user.user.id;
+  bookmarkCachePromise = supabase
+    .from("question_bookmarks")
+    .select("question_id")
+    .eq("user_id", user.user.id)
+    .order("created_at", { ascending: false })
+    .then(({ data, error }) => {
+      if (error) {
+        console.warn("Could not load starred questions:", error.message);
+        bookmarkCache = new Set();
+      } else {
+        bookmarkCache = new Set((data ?? []).map((row) => row.question_id));
+      }
+      bookmarkCachePromise = null;
+      return bookmarkCache;
+    });
+
+  return bookmarkCachePromise;
+}
+
+export async function getStarredQuestionIds() {
+  return [...(await loadBookmarkCache())];
+}
+
+export async function toggleQuestionBookmark(questionId: number) {
+  const supabase = createClient();
+  const { data: user } = await supabase.auth.getUser();
+
+  if (!user.user) {
+    return { signedIn: false, starred: false, available: false };
+  }
+
+  const cache = await loadBookmarkCache();
+  const currentlyStarred = cache.has(questionId);
+
+  if (currentlyStarred) {
+    const { error } = await supabase
+      .from("question_bookmarks")
+      .delete()
+      .eq("user_id", user.user.id)
+      .eq("question_id", questionId);
+
+    if (error) {
+      console.warn("Could not unstar question:", error.message);
+      return { signedIn: true, starred: true, available: !error.message.toLowerCase().includes("does not exist") };
+    }
+
+    cache.delete(questionId);
+    return { signedIn: true, starred: false, available: true };
+  }
+
+  const { error } = await supabase
+    .from("question_bookmarks")
+    .insert({ user_id: user.user.id, question_id: questionId });
+
+  if (error) {
+    console.warn("Could not star question:", error.message);
+    return { signedIn: true, starred: false, available: !error.message.toLowerCase().includes("does not exist") };
+  }
+
+  cache.add(questionId);
+  return { signedIn: true, starred: true, available: true };
+}
+
 export async function recordQuestionAttempt(question: Question, selectedAnswer: string | null, isCorrect: boolean, mode: AttemptMode) {
   const supabase = createClient();
   const { data: user } = await supabase.auth.getUser();
@@ -38,8 +120,8 @@ export async function recordMockTest(result: { formatId: string; questionCount: 
   const { data: user } = await supabase.auth.getUser();
   if (!user.user) return;
   const { error } = await supabase.from("mock_tests").insert({
-    user_id: user.user.id, format_id: result.formatId, question_count: result.questionCount, correct_count: result.correctCount,
-    answered_count: result.answeredCount, percentage: result.percentage, time_expired: result.timeExpired,
+    user_id: user.user.id, format_id: result.formatId, question_count: result.questionCount, correct_count: result.correctCount, answered_count: result.answeredCount,
+    percentage: result.percentage, time_expired: result.timeExpired,
   });
   if (error) console.warn("Could not save mock test:", error.message);
 }
@@ -47,19 +129,37 @@ export async function recordMockTest(result: { formatId: string; questionCount: 
 export async function getProgressData(limit = 2000) {
   const supabase = createClient();
   const { data: user } = await supabase.auth.getUser();
-  if (!user.user) return { user: null, attempts: [] as QuestionAttempt[], mockTests: [] as MockTestResult[], available: false };
+  if (!user.user) {
+    return {
+      user: null,
+      attempts: [] as QuestionAttempt[],
+      mockTests: [] as MockTestResult[],
+      starredQuestionIds: [] as number[],
+      available: false,
+      bookmarksAvailable: false,
+    };
+  }
 
-  const [attemptsResult, mocksResult] = await Promise.all([
+  const [attemptsResult, mocksResult, bookmarksResult] = await Promise.all([
     supabase.from("question_attempts").select("id, question_id, is_correct, selected_answer, mode, created_at").eq("user_id", user.user.id).order("created_at", { ascending: false }).limit(limit),
     supabase.from("mock_tests").select("id, format_id, question_count, correct_count, answered_count, percentage, time_expired, created_at").eq("user_id", user.user.id).order("created_at", { ascending: false }).limit(100),
+    supabase.from("question_bookmarks").select("question_id").eq("user_id", user.user.id).order("created_at", { ascending: false }).limit(500),
   ]);
 
-  const missing = [attemptsResult.error, mocksResult.error].some((error) => error?.code === "42P01" || error?.message?.toLowerCase().includes("does not exist"));
+  const missing = [attemptsResult.error, mocksResult.error].some((error) =>
+    error?.code === "42P01" || error?.message?.toLowerCase().includes("does not exist")
+  );
+  const bookmarksMissing =
+    bookmarksResult.error?.code === "42P01" ||
+    bookmarksResult.error?.message?.toLowerCase().includes("does not exist");
+
   return {
     user: user.user,
     attempts: (attemptsResult.data ?? []) as QuestionAttempt[],
     mockTests: (mocksResult.data ?? []) as MockTestResult[],
+    starredQuestionIds: bookmarksMissing ? [] : (bookmarksResult.data ?? []).map((row) => row.question_id),
     available: !missing && !attemptsResult.error && !mocksResult.error,
+    bookmarksAvailable: !bookmarksMissing && !bookmarksResult.error,
   };
 }
 
