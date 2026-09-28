@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { questions } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
+import { DailyMission } from "@/components/daily-mission";
 import { getProgressData, type QuestionAttempt } from "@/lib/progress";
 
 type CategoryStat = { name: string; attempted: number; correct: number; accuracy: number };
@@ -227,6 +228,7 @@ export function ProgressDashboard() {
     <Readiness accuracy={accuracy} mockAverage={averageMock} coverage={topicCoverage} />
     <div className="progress-main-grid"><section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Topic performance</p><h2>Where to focus</h2></div></div>{sortedWeak.length === 0 ? <div className="chart-empty">Start practising to build topic-level insights.</div> : <div className="topic-performance-list">{sortedWeak.slice(0, 6).map((category) => <div className="topic-performance-row" key={category.name}><div className="topic-performance-copy"><strong>{category.name}</strong><small>{category.attempted} questions attempted</small></div><span>{category.accuracy}%</span><div className="topic-performance-bar"><i style={{ width: category.accuracy + "%" }} /></div><Link href={"/practice?category=" + encodeURIComponent(category.name)}>Practise</Link></div>)}</div>}</section>
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mistakes</p><h2>Practise what you missed</h2></div><Link href="/mistakes">All mistakes ↗</Link></div>{latestMistakes.length === 0 ? <div className="chart-empty">Your recent incorrect answers will collect here.</div> : <div className="mistake-list">{latestMistakes.map((question) => <Link href={"/questions/" + question.id} className="mistake-row" key={question.id}><span>×</span><strong>{question.question}</strong><small>Question {question.id}</small></Link>)}</div>}{latestMistakes.length > 0 && <Link className="button button-secondary progress-inline-button" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}</section></div>
+    <DailyMission />
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Achievements</p><h2>Keep building</h2></div></div><div className="achievement-grid">{achievements.map((achievement) => <div className={"achievement-card " + (achievement.earned ? "achievement-earned" : "")} key={achievement.title}><span>{achievement.icon}</span><div><strong>{achievement.title}</strong><small>{achievement.earned ? "Unlocked" : "Keep practising"}</small></div></div>)}</div></section>
     <div className="progress-cta-row"><Link className="button button-secondary" href="/challenge">🔥 Daily Challenge</Link><Link className="button button-primary" href="/practice">Start a practice set <span aria-hidden="true">→</span></Link></div>
     </>}
