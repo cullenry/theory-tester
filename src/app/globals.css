@@ -195,19 +195,19 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 /* Dark theme */
 html.dark {
   color-scheme: dark;
-  --paper: #111713;
-  --surface: #1a211c;
-  --ink: #e8eee9;
-  --muted: #9ca9a1;
-  --line: #303b33;
-  --green: #67b58a;
-  --green-dark: #88c8a2;
-  --green-soft: #1d3025;
+  --paper: #0b0b0b;
+  --surface: #181818;
+  --ink: #f2f2f2;
+  --muted: #a3a3a3;
+  --line: #303030;
+  --green: #61b979;
+  --green-dark: #7bc78f;
+  --green-soft: #252525;
   --red: #e58b81;
 }
 
 html.dark body { background: var(--paper); color: var(--ink); }
-html.dark .site-header { border-bottom-color: #29342d; background: rgba(17, 23, 19, .94); }
+html.dark .site-header { border-bottom-color: #292929; background: rgba(11, 11, 11, .96); }
 html.dark .nav-link { color: #b6c1b9; }
 html.dark .nav-link:hover { background: var(--green-soft); color: #bfe6cb; }
 
@@ -231,12 +231,12 @@ html.dark .nav-link:hover { background: var(--green-soft); color: #bfe6cb; }
 .theme-toggle > span:first-child { font-size: 15px; line-height: 1; }
 .theme-toggle-label { line-height: 1; }
 
-html.dark .theme-toggle { border-color: #3c4a41; background: #1b231e; color: #c6d0c9; }
-html.dark .theme-toggle:hover { border-color: #5d8068; background: #223027; color: #d5ecdc; }
+html.dark .theme-toggle { border-color: #3c4a41; background: #1b1b1b; color: #d0d0d0; }
+html.dark .theme-toggle:hover { border-color: #5f5f5f; background: #242424; color: #ffffff; }
 
 html.dark .hero-section {
-  background-color: #17221b;
-  background-image: linear-gradient(rgba(126, 192, 148, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(126, 192, 148, .055) 1px, transparent 1px);
+  background-color: #101010;
+  background-image: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
 }
 html.dark .hero-description,
 html.dark .pathway-copy p:not(.eyebrow),
@@ -247,19 +247,19 @@ html.dark .hero-bottom-line { color: #99a79f; }
 html.dark .hero-proof strong { color: var(--ink); }
 html.dark .proof-separator { background: #4b5a50; }
 
-html.dark .button-secondary { border-color: #3a493f; background: #1c251f; color: #d8e1db; }
-html.dark .button-secondary:hover { border-color: #597063; background: #222d26; }
+html.dark .button-secondary { border-color: #404040; background: #1d1d1d; color: #e2e2e2; }
+html.dark .button-secondary:hover { border-color: #5b5b5b; background: #252525; }
 html.dark .button-quiet { color: var(--green); }
 
 html.dark .modes-section,
 html.dark .pathway-section { color: var(--ink); }
-html.dark .mode-row:hover { background: #1a2a20; }
+html.dark .mode-row:hover { background: #1c1c1c; }
 html.dark .mode-number { color: #738078; }
-html.dark .site-footer { background: #111713; color: var(--muted); }
+html.dark .site-footer { background: #0b0b0b; color: var(--muted); }
 html.dark .site-footer .brand { color: var(--ink); }
 html.dark .app-main { background: var(--paper); }
 
-html.dark .progress-track { background: #303a33; }
+html.dark .progress-track { background: #2a2a2a; }
 html.dark .progress-value { background: #5cae7e; }
 html.dark .score-display,
 html.dark .progress-heading { color: var(--muted); }
@@ -285,22 +285,22 @@ html.dark .mock-format-card,
 html.dark .test-chip,
 html.dark .exam-timer { box-shadow: 0 8px 24px rgba(0, 0, 0, .16); }
 
-html.dark .answer-option { border-color: #354239; background: #1b231e; color: #d7e0d9; }
-html.dark .answer-option:hover:not(:disabled) { border-color: #60816b; background: #202c24; }
-html.dark .answer-letter { border-color: #415047; color: #adbbb2; }
-html.dark .answer-selected { border-color: #62876e; background: #213127; }
+html.dark .answer-option { border-color: #393939; background: #1b1b1b; color: #dddddd; }
+html.dark .answer-option:hover:not(:disabled) { border-color: #616161; background: #232323; }
+html.dark .answer-letter { border-color: #4a4a4a; color: #b8b8b8; }
+html.dark .answer-selected { border-color: #6d6d6d; background: #262626; }
 html.dark .answer-correct { border-color: #4d9b6b; background: #183224; color: #9cdbb1; }
 html.dark .answer-correct .answer-letter { border-color: #669b7a; background: #202c24; color: #a9e1ba; }
 html.dark .answer-incorrect { border-color: #945c55; background: #321d1b; color: #eda29a; }
 html.dark .answer-incorrect .answer-letter { border-color: #99665f; background: #2b211f; color: #eda29a; }
 
-html.dark .explanation-card { border-color: #34483a; background: #1b2b21; }
+html.dark .explanation-card { border-color: #3a3a3a; background: #1d1d1d; }
 html.dark .explanation-icon { background: #284535; color: #84c99c; }
 html.dark .explanation-card p { color: #aab7ae; }
 
 html.dark .test-chip { border-color: #3c4a40; color: #b6c2ba; }
 html.dark .mock-format-card { border-color: var(--line); }
-html.dark .mock-format-featured { border-color: #42624e; background: #18291f; }
+html.dark .mock-format-featured { border-color: #444444; background: #181818; }
 html.dark .mock-format-description { color: #b6c1b9; }
 
 html.dark .exam-timer { border-color: #3b4b40; color: #9bd2ad; }
@@ -324,41 +324,41 @@ html.dark .browser-controls select,
 html.dark .practice-filters select { border-color: #3a473e; background: #1a211c; color: var(--ink); }
 html.dark .browser-controls select:disabled,
 html.dark .practice-filters select:disabled { background: #202720; color: #7f8d83; }
-html.dark .question-list-row:hover { background: #1a2a20; }
+html.dark .question-list-row:hover { background: #1c1c1c; }
 html.dark .question-list-copy small,
 html.dark .question-list-id { color: #829087; }
 html.dark .empty-state { border-color: #486050; }
 html.dark .taxonomy-details { border-color: var(--line); }
-html.dark .question-type-badge { border-color: #3d5545; background: #1d2c22; color: #9fc7aa; }
+html.dark .question-type-badge { border-color: #414141; background: #202020; color: #b7d8bf; }
 
 html.dark .back-link,
 html.dark .mode-action,
 html.dark .row-arrow { color: var(--green); }
 
-html.dark .topic-picker-trigger { border-color: #3a473e; background: #1a211c; color: var(--ink); }
-html.dark .topic-picker-trigger:hover:not(:disabled) { border-color: #5f8269; background: #1e2922; }
+html.dark .topic-picker-trigger { border-color: #3d3d3d; background: #181818; color: var(--ink); }
+html.dark .topic-picker-trigger:hover:not(:disabled) { border-color: #626262; background: #202020; }
 html.dark .topic-picker-trigger-open { border-color: #659277; box-shadow: 0 0 0 3px rgba(94, 162, 117, .15); }
 html.dark .topic-picker-trigger:disabled { background: #202720; color: #78857c; }
-html.dark .topic-picker-menu { border-color: #3a493f; background: #1a211c; box-shadow: 0 18px 42px rgba(0, 0, 0, .35), 0 3px 10px rgba(0, 0, 0, .2); }
+html.dark .topic-picker-menu { border-color: #3a3a3a; background: #181818; box-shadow: 0 18px 42px rgba(0, 0, 0, .5), 0 3px 10px rgba(0, 0, 0, .25); }
 html.dark .topic-picker-menu-heading { color: #849188; }
 html.dark .topic-picker-option { color: var(--ink); }
-html.dark .topic-picker-option:hover { background: #202d25; }
-html.dark .topic-picker-option-selected { background: #213127; }
-html.dark .topic-picker-checkbox { border-color: #4a594f; background: #202820; }
+html.dark .topic-picker-option:hover { background: #222222; }
+html.dark .topic-picker-option-selected { background: #262626; }
+html.dark .topic-picker-checkbox { border-color: #4b4b4b; background: #222222; }
 html.dark .topic-picker-option-copy strong { color: #d2dbd4; }
 html.dark .topic-picker-option-selected .topic-picker-option-copy strong { color: #9ed1ad; }
-html.dark .topic-picker-options::-webkit-scrollbar-thumb { border-color: #1a211c; background: #58685d; }
+html.dark .topic-picker-options::-webkit-scrollbar-thumb { border-color: #181818; background: #555555; }
 html.dark .topic-picker-options::-webkit-scrollbar-thumb:hover { background: #72877a; }
 
 html.dark .library-intro,
-html.dark .mock-intro { border-color: var(--line); background: #18231c; }
+html.dark .mock-intro { border-color: var(--line); background: #181818; }
 html.dark .library-intro-art,
-html.dark .mock-intro-art { background: #202820; }
+html.dark .mock-intro-art { background: #202020; }
 
 html.dark .pathway-art,
 html.dark .hero-art,
-html.dark .mock-format-heading-art { background: #1d2a21; }
-html.dark .road-illustration { box-shadow: 0 18px 48px rgba(0, 0, 0, .2); }
+html.dark .mock-format-heading-art { background: #202020; }
+html.dark .road-illustration { box-shadow: 0 18px 48px rgba(0, 0, 0, .35); }
 
 html.dark .focus-visible { outline-color: #78c596; }
 html.dark ::selection { background: #2c5a3c; color: #e4f2e7; }
