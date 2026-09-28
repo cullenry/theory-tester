@@ -36,6 +36,15 @@ export function LearnSession() {
   const [retryCorrectCount, setRetryCorrectCount] = useState(0);
 
   useEffect(() => {
+    if (phase !== "complete") return;
+    try {
+      localStorage.setItem("theorytester-learn-completed", new Date().toISOString().slice(0, 10));
+    } catch {
+      // Daily mission progress remains optional if local storage is unavailable.
+    }
+  }, [phase]);
+
+  useEffect(() => {
     let active = true;
 
     getProgressData(2000).then((data) => {
@@ -159,7 +168,7 @@ export function LearnSession() {
             </div>
             <div className="results-actions">
               <button className="button button-primary" type="button" onClick={restart}>Start another Learn session <span aria-hidden="true">↻</span></button>
-              <Link className="button button-secondary" href="/practice">Back to Practice</Link>
+              <Link className="button button-secondary" href="/mistakes">Review all mistakes</Link><Link className="button button-secondary" href="/practice">Back to Learn &amp; Practice</Link>
             </div>
           </div>
         </div>
