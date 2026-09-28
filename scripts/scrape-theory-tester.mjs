@@ -38,6 +38,10 @@ function firstMatch(html, patterns) {
   return null;
 }
 
+function cleanExplanation(value) {
+  return value ? value.replace(/^(?:Explantion|Explanation):\s*/i, "").trim() : null;
+}
+
 function extractQuestion(html, id) {
   const question = firstMatch(html, [
     /<h1[^>]*class=["'][^"']*pageHeading[^"']*["'][^>]*>([\s\S]*?)<\/h1>/i,
@@ -61,9 +65,9 @@ function extractQuestion(html, id) {
     ? stripTags(correctMatch[1].replace(/<input[^>]*>/gi, "").replace(/<[^>]+>/g, " "))
     : null;
 
-  const explanation = firstMatch(html, [
+  const explanation = cleanExplanation(firstMatch(html, [
     /<div[^>]*class=["'][^"']*p-questionSingle-explanation[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
-  ]);
+  ]));
 
   const category = firstMatch(html, [
     /<div[^>]*class=["'][^"']*p-questionSingle-heading[^"']*["'][^>]*>[\s\S]*?<h3[^>]*>([\s\S]*?)<\/h3>/i,
