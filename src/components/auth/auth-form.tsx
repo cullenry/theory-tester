@@ -76,15 +76,15 @@ export function AuthForm({ mode }: AuthFormProps) {
       <div className="auth-card-top">
         <span className="auth-mark" aria-hidden="true">T</span>
         <div>
-          <p className="eyebrow">TheoryTester account</p>
+          <p className="eyebrow">TheoryPrep account</p>
           <h1>{isSignup ? "Create your account." : "Welcome back."}</h1>
         </div>
       </div>
 
       <p className="auth-intro">
         {isSignup
-          ? "Create an account and keep your TheoryTester practice in one place."
-          : "Sign in to carry on with your TheoryTester practice."}
+          ? "Create an account and keep your TheoryPrep practice in one place."
+          : "Sign in to carry on with your TheoryPrep practice."}
       </p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
