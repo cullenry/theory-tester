@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const REPORT_REASONS = [
   "Question appears incorrect",
@@ -19,10 +19,34 @@ export function ReportQuestionButton({ questionId, questionText }: ReportQuestio
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<(typeof REPORT_REASONS)[number]>(REPORT_REASONS[0]);
   const [details, setDetails] = useState("");
+  const [reasonMenuOpen, setReasonMenuOpen] = useState(false);
+  const reasonMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!reasonMenuOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!reasonMenuRef.current?.contains(event.target as Node)) {
+        setReasonMenuOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setReasonMenuOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [reasonMenuOpen]);
 
   function openReport() {
     setReason(REPORT_REASONS[0]);
     setDetails("");
+    setReasonMenuOpen(false);
     setOpen(true);
   }
 
@@ -48,6 +72,7 @@ export function ReportQuestionButton({ questionId, questionText }: ReportQuestio
 
     window.open(url, "_blank", "noopener,noreferrer");
     setOpen(false);
+    setReasonMenuOpen(false);
   }
 
   return (
@@ -68,7 +93,10 @@ export function ReportQuestionButton({ questionId, questionText }: ReportQuestio
           className="report-backdrop"
           role="presentation"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setOpen(false);
+            if (event.target === event.currentTarget) {
+              setOpen(false);
+              setReasonMenuOpen(false);
+            }
           }}
         >
           <div
@@ -86,25 +114,53 @@ export function ReportQuestionButton({ questionId, questionText }: ReportQuestio
                 className="report-close"
                 type="button"
                 aria-label="Close report dialog"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  setReasonMenuOpen(false);
+                }}
               >
                 ×
               </button>
             </div>
 
-            <label className="report-field">
+            <div className="report-field">
               <span>What is the issue?</span>
-              <select
-                value={reason}
-                onChange={(event) =>
-                  setReason(event.target.value as (typeof REPORT_REASONS)[number])
-                }
-              >
-                {REPORT_REASONS.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
+              <div className="report-select-wrap" ref={reasonMenuRef}>
+                <button
+                  className={"report-select-trigger" + (reasonMenuOpen ? " is-open" : "")}
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded={reasonMenuOpen}
+                  onClick={() => setReasonMenuOpen((value) => !value)}
+                >
+                  <span>{reason}</span>
+                  <span className="report-select-chevron" aria-hidden="true">⌄</span>
+                </button>
+
+                {reasonMenuOpen && (
+                  <div className="report-select-menu" role="listbox" aria-label="Issue type">
+                    {REPORT_REASONS.map((item) => (
+                      <button
+                        key={item}
+                        className={"report-select-option" + (item === reason ? " is-selected" : "")}
+                        type="button"
+                        role="option"
+                        aria-selected={item === reason}
+                        onClick={() => {
+                          setReason(item);
+                          setReasonMenuOpen(false);
+                        }}
+                      >
+                        <span>{item}</span>
+                        {item === reason && (
+                          <span className="report-select-check" aria-hidden="true">✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
 
             <label className="report-field">
               <span>Anything else we should know?</span>
