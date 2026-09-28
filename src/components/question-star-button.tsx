@@ -48,7 +48,6 @@ export function QuestionStarButton({ questionId }: { questionId: number }) {
       title={starred ? "Unstar question" : "Star question"}
     >
       <span aria-hidden="true">{starred ? "★" : "☆"}</span>
-      <span className="question-star-label">{starred ? "Starred" : "Star"}</span>
     </button>
   );
 }
