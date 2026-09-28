@@ -1402,11 +1402,12 @@ html.dark .explanation-copy {
   margin: 14px auto 0;
 }
 .daily-mission-card {
-  padding: 20px;
+  min-width: 0;
+  padding: 21px;
   border: 1px solid var(--line);
-  border-radius: 13px;
+  border-radius: 12px;
   background: var(--surface);
-  box-shadow: 0 8px 24px rgba(26,54,36,.035);
+  box-shadow: 0 7px 22px rgba(26,54,36,.035);
 }
 .daily-mission-header {
   display: flex;
