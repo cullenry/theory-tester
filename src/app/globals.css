@@ -2013,3 +2013,9 @@ html.dark.reading-mode .reading-mode-toggle-active {
   font-size: 13px;
   letter-spacing: -.08em;
 }
+
+
+/* Keep the standalone mission card separated from the next Progress widget. */
+.progress-shell > .daily-mission-section {
+  margin-bottom: 14px;
+}
