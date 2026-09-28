@@ -1,7 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 
-const BASE_URL = "https://theory-tester.com";
-const QUESTIONS_URL = `${BASE_URL}/questions`;
+const BASE_URL = "http://theory-tester.com";
 const OUTPUT_DIR = "src/data";
 const OUTPUT_FILE = `${OUTPUT_DIR}/questions.json`;
 const DELAY_MS = 500;
@@ -92,22 +91,12 @@ async function fetchPage(url) {
 }
 
 async function main() {
-  console.log(`Fetching question index: ${QUESTIONS_URL}`);
-  const indexHtml = await fetchPage(QUESTIONS_URL);
+  const ids = Array.from(
+    { length: MAX_QUESTIONS },
+    (_, index) => index + 1
+  );
 
-  const discoveredIds = [...indexHtml.matchAll(/\/questions\/(\d+)/g)]
-    .map((match) => Number(match[1]))
-    .filter((id) => Number.isInteger(id) && id > 0);
-
-  const ids = [...new Set(discoveredIds)]
-    .filter((id) => id <= MAX_QUESTIONS)
-    .sort((a, b) => a - b);
-
-  if (!ids.length) {
-    throw new Error("No question links were found on the question index.");
-  }
-
-  console.log(`Found ${ids.length} question links.`);
+  console.log(`Checking ${ids.length} possible question URLs.`);
 
   const questions = [];
 
@@ -125,7 +114,9 @@ async function main() {
 
       questions.push(question);
     } catch (error) {
-      console.warn(`\nWarning: failed question ${id}: ${error.message}`);
+      if (!String(error.message).includes("404")) {
+        console.warn(`\nWarning: failed question ${id}: ${error.message}`);
+      }
     }
 
     if (index < ids.length - 1) {
