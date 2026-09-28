@@ -92,9 +92,9 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <Link className="brand" href="/" aria-label="TheoryTester home">
+        <Link className="brand" href="/" aria-label="TheoryPrep home">
           <span className="brand-mark" aria-hidden="true">T</span>
-          <span>Theory<span className="brand-accent">Tester</span></span>
+          <span>Theory<span className="brand-accent">Prep</span></span>
         </Link>
 
         <nav className="main-nav" aria-label="Main navigation">
