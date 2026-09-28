@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard, ScoreDisplay } from "@/components/question-ui";
 import { getRandomQuestionsFromPool, questions, type Question } from "@/lib/questions";
-import { getQuestionsByCategory, getQuestionsBySubcategory, taxonomyCategories } from "@/lib/question-taxonomy";
+import { taxonomyCategories } from "@/lib/question-taxonomy";
 
 const SESSION_LENGTH = 20;
 
@@ -11,11 +11,12 @@ type PickerOption = {
   value: string;
   label: string;
   count?: number;
+  detail?: string;
 };
 
 function TopicPicker({
   label,
-  value,
+  values,
   placeholder,
   options,
   disabled = false,
@@ -24,7 +25,7 @@ function TopicPicker({
   onChange,
 }: {
   label: string;
-  value: string;
+  values: string[];
   placeholder: string;
   options: PickerOption[];
   disabled?: boolean;
@@ -32,8 +33,9 @@ function TopicPicker({
   onOpen: () => void;
   onChange: (value: string) => void;
 }) {
-  const selectedOption = options.find((option) => option.value === value);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const isAll = values.length === 0;
+  const selectedOptions = options.filter((option) => values.includes(option.value));
 
   useEffect(() => {
     if (!open) return;
@@ -55,6 +57,16 @@ function TopicPicker({
     };
   }, [open, onOpen]);
 
+  const triggerTitle = isAll
+    ? options[0]?.label ?? placeholder
+    : selectedOptions.length === 1
+      ? selectedOptions[0].label
+      : `${selectedOptions.length} ${label === "Category" ? "categories" : "subcategories"} selected`;
+
+  const triggerCount = isAll
+    ? options[0]?.count
+    : selectedOptions.reduce((total, option) => total + (option.count ?? 0), 0);
+
   return (
     <div className="topic-picker" ref={wrapperRef}>
       <span className="topic-picker-label">{label}</span>
@@ -67,18 +79,21 @@ function TopicPicker({
         onClick={onOpen}
       >
         <span className="topic-picker-trigger-copy">
-          <strong>{selectedOption?.label ?? placeholder}</strong>
-          {selectedOption?.count !== undefined && <small>{selectedOption.count} questions</small>}
+          <strong>{triggerTitle}</strong>
+          {triggerCount !== undefined && <small>{triggerCount} questions</small>}
         </span>
-        <span className={`topic-picker-chevron ${open ? "topic-picker-chevron-open" : ""}`} aria-hidden="true">⌄</span>
+        <span className={`topic-picker-chevron ${open ? "topic-picker-chevron-open" : ""}`} aria-hidden="true" />
       </button>
 
       {open && !disabled && (
-        <div className="topic-picker-menu" role="listbox" aria-label={label}>
-          <div className="topic-picker-menu-heading">Choose {label.toLowerCase()}</div>
+        <div className="topic-picker-menu" role="listbox" aria-label={label} aria-multiselectable="true">
+          <div className="topic-picker-menu-heading">
+            <span>Choose {label.toLowerCase()}</span>
+            <span>{isAll ? "All selected" : `${values.length} selected`}</span>
+          </div>
           <div className="topic-picker-options">
             {options.map((option) => {
-              const selected = option.value === value;
+              const selected = option.value === "all" ? isAll : values.includes(option.value);
               return (
                 <button
                   key={option.value}
@@ -91,12 +106,14 @@ function TopicPicker({
                   <span className="topic-picker-checkbox" aria-hidden="true">{selected ? "✓" : ""}</span>
                   <span className="topic-picker-option-copy">
                     <strong>{option.label}</strong>
+                    {option.detail && <small>{option.detail}</small>}
                     {option.count !== undefined && <small>{option.count} questions</small>}
                   </span>
                 </button>
               );
             })}
           </div>
+          <button className="topic-picker-done" type="button" onClick={onOpen}>Done <span aria-hidden="true">✓</span></button>
         </div>
       )}
     </div>
@@ -104,20 +121,33 @@ function TopicPicker({
 }
 
 export function PracticeSession() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("all");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [session, setSession] = useState<Question[] | null>(null);
   const [activePool, setActivePool] = useState<Question[]>([]);
   const [position, setPosition] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [openPicker, setOpenPicker] = useState<"category" | "subcategory" | null>(null);
-  const selectedCategorySummary = taxonomyCategories.find((item) => item.name === selectedCategory);
-  const selectedPool = selectedCategory === "all"
+  const selectedCategorySummaries = taxonomyCategories.filter((item) => selectedCategories.includes(item.name));
+  const availableSubcategoryOptions = selectedCategorySummaries.flatMap((category) =>
+    category.subcategories.map((item) => ({
+      value: `${category.name}\u0000${item.name}`,
+      label: item.name,
+      detail: category.name,
+      count: item.count,
+    })),
+  );
+  const selectedPool = selectedCategories.length === 0
     ? questions
-    : selectedSubcategory === "all"
-      ? getQuestionsByCategory(selectedCategory)
-      : getQuestionsBySubcategory(selectedCategory, selectedSubcategory);
+    : questions.filter((question) => {
+      if (!question.taxonomy.category || !selectedCategories.includes(question.taxonomy.category)) {
+        return false;
+      }
+      if (selectedSubcategories.length === 0) return true;
+      const subcategoryKey = `${question.taxonomy.category}\u0000${question.taxonomy.subcategory}`;
+      return selectedSubcategories.includes(subcategoryKey);
+    });
   const current = session?.[position];
   const finished = session !== null && position >= session.length;
   const answered = selected !== null;
@@ -150,11 +180,21 @@ export function PracticeSession() {
               <div className="practice-filters">
                 <TopicPicker
                   label="Category"
-                  value={selectedCategory}
+                  values={selectedCategories}
                   placeholder="All questions"
                   open={openPicker === "category"}
                   onOpen={() => setOpenPicker((current) => current === "category" ? null : "category")}
-                  onChange={(value) => { setSelectedCategory(value); setSelectedSubcategory("all"); setOpenPicker(null); }}
+                  onChange={(value) => {
+                    if (value === "all") {
+                      setSelectedCategories([]);
+                      setSelectedSubcategories([]);
+                      return;
+                    }
+                    setSelectedCategories((current) =>
+                      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+                    );
+                    setSelectedSubcategories([]);
+                  }}
                   options={[
                     { value: "all", label: "All questions", count: questions.length },
                     ...taxonomyCategories.map((item) => ({ value: item.name, label: item.name, count: item.count })),
@@ -162,16 +202,24 @@ export function PracticeSession() {
                 />
                 <TopicPicker
                   label="Subcategory"
-                  value={selectedSubcategory}
+                  values={selectedSubcategories}
                   placeholder="Choose a category first"
-                  disabled={!selectedCategorySummary}
+                  disabled={selectedCategories.length === 0}
                   open={openPicker === "subcategory"}
                   onOpen={() => setOpenPicker((current) => current === "subcategory" ? null : "subcategory")}
-                  onChange={(value) => { setSelectedSubcategory(value); setOpenPicker(null); }}
-                  options={selectedCategorySummary ? [
-                    { value: "all", label: "All subcategories", count: selectedCategorySummary.count },
-                    ...selectedCategorySummary.subcategories.map((item) => ({ value: item.name, label: item.name, count: item.count })),
-                  ] : []}
+                  onChange={(value) => {
+                    if (value === "all") {
+                      setSelectedSubcategories([]);
+                      return;
+                    }
+                    setSelectedSubcategories((current) =>
+                      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+                    );
+                  }}
+                  options={[
+                    { value: "all", label: "All subcategories", count: selectedCategorySummaries.reduce((total, item) => total + item.count, 0) },
+                    ...availableSubcategoryOptions,
+                  ]}
                 />
               </div>
               <div className="practice-start-row"><p>{Math.min(SESSION_LENGTH, selectedPool.length)} questions in this session</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0} onClick={() => beginSession(selectedPool)}>Start practice <span aria-hidden="true">→</span></button></div>
@@ -181,7 +229,7 @@ export function PracticeSession() {
           <section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">Session complete</p><h2>Good work. Keep it rolling.</h2><p>You answered {session.length} questions and got {correctCount} correct.</p><div className="practice-completion-actions"><button className="button button-primary" type="button" onClick={() => beginSession(activePool)}>Practise another set <span aria-hidden="true">→</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Choose another topic</button></div></section>
         ) : (
           <>
-            <div className="page-heading"><div><p className="eyebrow">{selectedCategory === "all" ? "All questions" : selectedCategorySummary?.name}{selectedSubcategory !== "all" ? ` · ${selectedSubcategory}` : ""}</p><h1>Practice session</h1></div><div className="practice-heading-actions"><button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Change topic</button></div></div>
+            <div className="page-heading"><div><p className="eyebrow">{selectedCategories.length === 0 ? "All questions" : `${selectedCategories.length} categor${selectedCategories.length === 1 ? "y" : "ies"}${selectedSubcategories.length ? ` · ${selectedSubcategories.length} subcategor${selectedSubcategories.length === 1 ? "y" : "ies"}` : ""}`}</p><h1>Practice session</h1></div><div className="practice-heading-actions"><button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Change topic</button></div></div>
             <div className="practice-meta"><ProgressBar current={position + 1} total={session.length} label="Session progress" /><ScoreDisplay correct={correctCount} attempted={position + (answered ? 1 : 0)} /></div>
             <QuestionCard question={current} eyebrow={`${current.taxonomy.category ? `${current.taxonomy.category} · ` : ""}Question ${position + 1}`}>
               {current.answers.map((answer, index) => (
