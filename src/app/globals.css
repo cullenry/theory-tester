@@ -1058,3 +1058,218 @@ html.dark .starred-empty code {
     font-size: 12px;
   }
 }
+
+
+/* Adaptive Learn mode */
+.learn-launch-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 15px;
+  padding: 25px 26px;
+  border: 1px solid #c7ddcd;
+  border-radius: 13px;
+  background: #eff7f1;
+  box-shadow: 0 8px 24px rgba(26,54,36,.035);
+}
+.learn-launch-copy {
+  min-width: 0;
+}
+.learn-launch-card h2 {
+  margin: 7px 0 8px;
+  font-family: Georgia, serif;
+  font-size: 27px;
+  font-weight: 500;
+  letter-spacing: -.4px;
+}
+.learn-launch-card p:not(.eyebrow) {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.learn-launch-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+.learn-launch-points span {
+  padding: 6px 9px;
+  border: 1px solid #d2e4d6;
+  border-radius: 999px;
+  background: rgba(255,255,255,.68);
+  color: #44604d;
+  font-size: 10px;
+  font-weight: 750;
+}
+.learn-launch-card > .button {
+  flex: 0 0 auto;
+  min-width: 140px;
+}
+
+.learn-loading {
+  padding: 80px 20px;
+  color: var(--muted);
+  text-align: center;
+}
+.learn-intro-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+  padding: 13px 15px;
+  border: 1px solid #d8e5db;
+  border-radius: 10px;
+  background: #f6faf7;
+}
+.learn-intro-strip > div {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 10px;
+}
+.learn-status-dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px #deeee2;
+}
+.learn-intro-strip strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+.learn-intro-strip p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.learn-signin-link {
+  flex: 0 0 auto;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.learn-heading-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.learn-session-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+  margin: 11px 0 14px;
+}
+.learn-kind-badge {
+  padding: 6px 9px;
+  border: 1px solid #d6e5da;
+  border-radius: 999px;
+  background: #f4f9f5;
+  color: #45634e;
+  font-size: 10px;
+  font-weight: 800;
+}
+.learn-session-note-copy {
+  color: var(--muted);
+  font-size: 10px;
+}
+.learn-complete-card {
+  padding: 45px 30px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(26,54,36,.035);
+}
+.learn-complete-card h1 {
+  max-width: 660px;
+  margin: 8px auto 12px;
+  font-family: Georgia, serif;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -.5px;
+  line-height: 1.12;
+}
+.learn-complete-card > p:not(.eyebrow) {
+  max-width: 640px;
+  margin: 0 auto 24px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+html.dark .learn-launch-card {
+  border-color: #405748;
+  background: #151d17;
+}
+html.dark .learn-launch-points span {
+  border-color: #3b5041;
+  background: #1c261f;
+  color: #9fc5a8;
+}
+html.dark .learn-intro-strip {
+  border-color: #3c483f;
+  background: #151915;
+}
+html.dark .learn-kind-badge {
+  border-color: #3c4d42;
+  background: #1c241e;
+  color: #9fc5a8;
+}
+html.dark .learn-complete-card {
+  box-shadow: 0 8px 24px rgba(0,0,0,.16);
+}
+
+@media (max-width: 760px) {
+  .learn-launch-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    padding: 21px 19px;
+  }
+  .learn-launch-card h2 {
+    font-size: 24px;
+  }
+  .learn-launch-card > .button {
+    width: 100%;
+  }
+  .learn-intro-strip {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .learn-signin-link {
+    margin-left: 19px;
+  }
+  .learn-session-note {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .learn-heading-actions .button {
+    min-height: 42px;
+  }
+  .learn-complete-card {
+    padding: 34px 18px;
+  }
+  .learn-complete-card h1 {
+    font-size: 29px;
+  }
+  .learn-complete-card .results-actions {
+    justify-content: stretch;
+  }
+  .learn-complete-card .results-actions .button {
+    flex: 1 1 100%;
+  }
+}
