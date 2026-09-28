@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard, ScoreDisplay } from "@/components/question-ui";
 import { getRandomQuestionsFromPool, questions, type Question } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
+import { recordQuestionAttempt } from "@/lib/progress";
 
 const SESSION_LENGTH = 20;
 
@@ -233,7 +234,7 @@ export function PracticeSession() {
             <div className="practice-meta"><ProgressBar current={position + 1} total={session.length} label="Session progress" /><ScoreDisplay correct={correctCount} attempted={position + (answered ? 1 : 0)} /></div>
             <QuestionCard question={current} eyebrow={`${current.taxonomy.category ? `${current.taxonomy.category} · ` : ""}Question ${position + 1}`}>
               {current.answers.map((answer, index) => (
-                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); }} />
+                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); void recordQuestionAttempt(current, answer, answer === current.correctAnswer, "practice"); }} />
               ))}
             </QuestionCard>
             {answered && <div className="feedback-block"><p className={`feedback-line ${selected === current.correctAnswer ? "feedback-good" : "feedback-bad"}`} role="status"><strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong> {selected === current.correctAnswer ? "That’s the right answer." : "The correct answer is highlighted above."}</p><ExplanationCard explanation={current.explanation} /><button className="button button-primary continue-button" type="button" onClick={() => { setPosition((step) => step + 1); setSelected(null); }}>{position + 1 === session.length ? "Finish session" : "Next question"}<span aria-hidden="true">→</span></button></div>}
