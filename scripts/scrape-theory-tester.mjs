@@ -129,7 +129,7 @@ async function main() {
       const html = await fetchPage(`${BASE_URL}/questions/${id}`);
       const question = extractQuestion(html, id);
 
-      if (!question.question || question.answers.length !== 4) {
+      if (!question.question || question.answers.length < 3 || question.answers.length > 4) {
         console.warn(
           `\nWarning: question ${id} parsed unexpectedly (${question.answers.length} answers).`
         );
