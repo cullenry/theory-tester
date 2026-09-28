@@ -1758,3 +1758,24 @@ html.dark .test-ready-note {
   margin-right: 0;
   margin-left: 0;
 }
+
+
+/* Shared homepage widget column */
+.home-learning-widgets {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+}
+.home-learning-widgets .home-streak-section,
+.home-learning-widgets .daily-mission-section {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+.home-learning-widgets .daily-mission-section {
+  margin-top: 14px;
+}
+@media (max-width: 600px) {
+  .home-learning-widgets {
+    width: calc(100% - 24px);
+  }
+}
