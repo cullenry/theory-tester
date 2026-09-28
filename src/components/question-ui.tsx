@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { Question } from "@/lib/questions";
+import { QuestionStarButton } from "@/components/question-star-button";
 
 type AnswerOptionProps = {
   answer: string;
@@ -35,9 +36,12 @@ export function QuestionImage({ question }: { question: Question }) {
 
 export function QuestionCard({ question, eyebrow, children }: { question: Question; eyebrow: string; children: ReactNode }) {
   return (
-    <section className="question-card" aria-labelledby="question-title" data-question-id={question.id}>
-      <p className="eyebrow">{eyebrow}</p>
-      <h1 className="question-title" id="question-title">{question.question}</h1>
+    <section className="question-card" aria-labelledby={"question-title-" + question.id} data-question-id={question.id}>
+      <div className="question-card-heading">
+        <p className="eyebrow">{eyebrow}</p>
+        <QuestionStarButton questionId={question.id} />
+      </div>
+      <h1 className="question-title" id={"question-title-" + question.id}>{question.question}</h1>
       <QuestionImage question={question} />
       <div className="answer-list">{children}</div>
     </section>
