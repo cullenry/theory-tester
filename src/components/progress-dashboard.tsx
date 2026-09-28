@@ -74,9 +74,10 @@ function AccuracyChart({ attempts }: { attempts: QuestionAttempt[] }) {
 }
 
 function getReadinessComment(score: number) {
-  if (score >= 95) return "Excellent preparation. You're looking very strong.";
-  if (score >= 90) return "Great shape. Keep the momentum going.";
-  if (score >= 80) return "Solid preparation. A little more practice can tighten things up.";
+  if (score === 100) return "Outstanding preparation. Your recorded performance is exceptionally strong.";
+  if (score >= 95) return "Excellent preparation. You're in very strong shape for test day.";
+  if (score >= 90) return "Great shape. Keep the momentum going and stay sharp.";
+  if (score >= 80) return "Solid preparation. A little more targeted practice can tighten things up.";
   if (score >= 70) return "You're building well. Focus on your weaker areas next.";
   if (score >= 60) return "Good start. More practice across your weaker topics should help.";
   if (score >= 40) return "Keep going. Use Learn mode to target the areas giving you trouble.";
