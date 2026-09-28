@@ -1273,3 +1273,434 @@ html.dark .learn-complete-card {
     flex: 1 1 100%;
   }
 }
+
+
+/* Learn & Practice upgrades */
+.practice-length-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.practice-length-row > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.practice-length-options {
+  display: flex;
+  gap: 6px;
+}
+.practice-length-option {
+  display: grid;
+  min-width: 74px;
+  min-height: 44px;
+  place-items: center;
+  gap: 1px;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 850;
+}
+.practice-length-option small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 700;
+}
+.practice-length-option-active {
+  border-color: var(--green);
+  background: var(--green);
+  color: white;
+}
+.practice-length-option-active small {
+  color: rgba(255,255,255,.8);
+}
+.starred-practice-banner {
+  border-color: #d9c58a;
+  background: #fbf8ec;
+}
+.starred-practice-banner .learn-launch-points span {
+  border-color: #e5dcbf;
+  color: #77612b;
+}
+.explanation-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.explanation-heading .eyebrow {
+  margin-bottom: 2px;
+}
+.explanation-copy {
+  margin: 12px 0 0;
+  line-height: 1.72;
+}
+.starred-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+/* Daily mission */
+.daily-mission-section {
+  width: min(1000px, calc(100% - 48px));
+  margin: 14px auto 0;
+}
+.daily-mission-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(26,54,36,.035);
+}
+.daily-mission-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.daily-mission-header h2 {
+  margin: 5px 0 0;
+  font-family: Georgia, serif;
+  font-size: 23px;
+  font-weight: 500;
+}
+.daily-mission-count {
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+.daily-mission-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 17px;
+}
+.daily-mission-goal {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: transparent;
+}
+.daily-mission-goal > span {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+.daily-mission-goal div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.daily-mission-goal strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.daily-mission-goal small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.daily-mission-goal-done {
+  border-color: #cfe0d3;
+  background: #f2f8f3;
+}
+.daily-mission-goal-done > span {
+  border-color: #9bc4a7;
+  background: #deefe3;
+  color: var(--green);
+}
+.daily-mission-progress {
+  height: 5px;
+  margin-top: 13px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line);
+}
+.daily-mission-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--green);
+  transition: width .25s ease;
+}
+.daily-mission-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 13px;
+}
+.daily-mission-locked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.daily-mission-locked h2 {
+  margin: 5px 0;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+.daily-mission-locked p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* Readiness and Test Ready */
+.readiness-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 13px;
+}
+.text-action {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 850;
+}
+.text-action:hover { text-decoration: underline; }
+.readiness-delta {
+  font-size: 9px;
+  font-weight: 800;
+}
+.readiness-delta-up { color: var(--green); }
+.readiness-delta-down { color: #a54e45; }
+
+.test-ready-hero {
+  align-items: center;
+}
+.test-ready-score {
+  display: grid;
+  min-width: 130px;
+  place-items: center;
+  padding: 17px 18px;
+  border: 1px solid #c7ddcd;
+  border-radius: 13px;
+  background: #eff7f1;
+}
+.test-ready-score strong {
+  font-family: Georgia, serif;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: .95;
+}
+.test-ready-score span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+.test-ready-score small {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.test-ready-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.test-ready-note h2 {
+  margin: 5px 0 7px;
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+.test-ready-note p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.ready-check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 15px;
+}
+.ready-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.ready-check-mark {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+.ready-check div {
+  display: grid;
+  gap: 3px;
+}
+.ready-check strong {
+  font-size: 11px;
+}
+.ready-check p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+.ready-check-done {
+  border-color: #cfe0d3;
+  background: #f2f8f3;
+}
+.ready-check-done .ready-check-mark {
+  border-color: #9bc4a7;
+  background: #deefe3;
+  color: var(--green);
+}
+.ready-focus-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 15px;
+}
+.ready-focus-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.ready-focus-row:last-child { border-bottom: 0; }
+.ready-focus-row > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.ready-focus-row strong {
+  font-size: 12px;
+}
+.ready-focus-row small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+html.dark .starred-practice-banner {
+  border-color: #5a4d2d;
+  background: #211e15;
+}
+html.dark .starred-practice-banner .learn-launch-points span {
+  border-color: #53482b;
+  color: #d8bf76;
+}
+html.dark .daily-mission-card,
+html.dark .test-ready-score {
+  background: var(--surface);
+}
+html.dark .daily-mission-goal-done,
+html.dark .ready-check-done {
+  border-color: #42614b;
+  background: #1a271e;
+}
+html.dark .daily-mission-goal-done > span,
+html.dark .ready-check-done .ready-check-mark {
+  border-color: #547f60;
+  background: #23352a;
+}
+html.dark .test-ready-note {
+  background: var(--surface);
+}
+
+@media (max-width: 760px) {
+  .practice-length-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .practice-length-options {
+    width: 100%;
+  }
+  .practice-length-option {
+    flex: 1;
+  }
+  .daily-mission-grid {
+    grid-template-columns: 1fr;
+  }
+  .daily-mission-locked,
+  .test-ready-note {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .daily-mission-actions,
+  .test-ready-note .button {
+    justify-content: stretch;
+    width: 100%;
+  }
+  .daily-mission-actions .button {
+    flex: 1;
+  }
+  .ready-check-grid {
+    grid-template-columns: 1fr;
+  }
+  .ready-focus-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .ready-focus-row .button {
+    width: 100%;
+  }
+  .test-ready-score {
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .daily-mission-section {
+    width: calc(100% - 24px);
+  }
+  .daily-mission-card {
+    padding: 17px;
+  }
+  .daily-mission-header {
+    flex-direction: column;
+  }
+  .starred-actions {
+    display: grid;
+  }
+  .starred-actions .button {
+    width: 100%;
+  }
+}
