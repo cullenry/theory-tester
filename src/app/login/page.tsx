@@ -4,7 +4,14 @@ export const metadata = {
   title: "Sign in",
 };
 
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams?: Promise<{ next?: string | string[] }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const next = Array.isArray(params?.next) ? params.next[0] : params?.next;
+
   return (
     <main className="auth-main">
       <div className="auth-shell">
@@ -14,7 +21,7 @@ export default function LoginPage() {
           <p>Sign in and get straight back to practising the Irish driving theory questions you need.</p>
           <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>DRIVE WITH CONFIDENCE</span></div>
         </div>
-        <AuthForm mode="login" />
+        <AuthForm mode="login" redirectTo={next} />
       </div>
     </main>
   );
