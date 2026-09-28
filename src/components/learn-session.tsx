@@ -24,6 +24,7 @@ function kindLabel(item: LearningItem) {
 export function LearnSession() {
   const [loading, setLoading] = useState(true);
   const [userSignedIn, setUserSignedIn] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [plan, setPlan] = useState<LearningItem[]>([]);
   const [phase, setPhase] = useState<Phase>("core");
   const [position, setPosition] = useState(0);
@@ -36,15 +37,15 @@ export function LearnSession() {
   const [retryCorrectCount, setRetryCorrectCount] = useState(0);
 
   useEffect(() => {
-    if (phase !== "complete") return;
+    if (phase !== "complete" || !userId) return;
     try {
       const today = new Date();
       const todayKey = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
-      localStorage.setItem("theorytester-learn-completed", todayKey);
+      localStorage.setItem("theorytester-learn-completed-" + userId, todayKey);
     } catch {
       // Daily mission progress remains optional if local storage is unavailable.
     }
-  }, [phase]);
+  }, [phase, userId]);
 
   useEffect(() => {
     let active = true;
@@ -52,6 +53,7 @@ export function LearnSession() {
     getProgressData(2000).then((data) => {
       if (!active) return;
       setUserSignedIn(Boolean(data.user));
+      setUserId(data.user?.id ?? null);
       setPlan(buildPlanFromAttempts(data.attempts));
       setLoading(false);
     });
@@ -138,6 +140,7 @@ export function LearnSession() {
 
     const data = await getProgressData(2000);
     setUserSignedIn(Boolean(data.user));
+    setUserId(data.user?.id ?? null);
     setPlan(buildPlanFromAttempts(data.attempts));
     setLoading(false);
   }
