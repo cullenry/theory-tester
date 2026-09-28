@@ -40,8 +40,10 @@ export default function Home() {
         <div className="hero-bottom-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>DRIVE WITH CONFIDENCE</span></div>
       </section>
 
-      <HomeStreakWidget />
-      <DailyMission />
+      <div className="home-learning-widgets">
+        <HomeStreakWidget />
+        <DailyMission />
+      </div>
 
       <section className="pathway-section" aria-labelledby="pathway-title">
         <div className="pathway-copy">
