@@ -47,7 +47,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
         password,
         options: {
           data: { full_name: fullName.trim() },
-          emailRedirectTo: window.location.origin + "/auth/callback",
+          emailRedirectTo: window.location.origin + "/auth/callback?next=" + encodeURIComponent(safeRedirectTo),
         },
       });
 
@@ -132,7 +132,9 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
 
       <div className="auth-switch">
         <span>{isSignup ? "Already have an account?" : "Don't have an account?"}</span>
-        <Link href={isSignup ? "/login" : "/signup"}>{isSignup ? "Sign in" : "Create one"}</Link>
+        <Link href={(isSignup ? "/login" : "/signup") + (safeRedirectTo !== "/" ? "?next=" + encodeURIComponent(safeRedirectTo) : "")}>
+          {isSignup ? "Sign in" : "Create one"}
+        </Link>
       </div>
     </div>
   );
