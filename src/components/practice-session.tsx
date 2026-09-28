@@ -218,7 +218,7 @@ export function PracticeSession() {
               <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>
             </section>
 
-            ${starredMode ? (
+            {starredMode ? (
               <section className="learn-launch-card starred-practice-banner">
                 <div className="learn-launch-copy">
                   <p className="eyebrow">Saved for later</p>
