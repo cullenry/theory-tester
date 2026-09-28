@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { questions } from "@/lib/questions";
 
@@ -22,14 +23,36 @@ export default function Home() {
             </div>
             <div className="hero-proof"><strong>{questions.length}</strong><span>questions in the library</span><span className="proof-separator" /><span>Made for Ireland</span></div>
           </div>
-          <div className="road-illustration" aria-hidden="true">
-            <div className="road-sun" /><div className="road-hill road-hill-back" /><div className="road-hill road-hill-front" />
-            <div className="roadway"><span /><span /><span /></div>
-            <div className="road-sign"><i /><b>TEST<br />READY</b></div>
-            <div className="road-caption">Every journey<br />starts with knowing.</div>
+          <div className="hero-art">
+            <Image
+              src="/images/theorytester-good-luck.png"
+              alt="Illustration of a car on an Irish country road with Learn, Practise and Pass signs"
+              width={748}
+              height={480}
+              priority
+              sizes="(max-width: 760px) 100vw, 560px"
+            />
           </div>
         </div>
         <div className="hero-bottom-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>DRIVE WITH CONFIDENCE</span></div>
+      </section>
+
+      <section className="pathway-section" aria-labelledby="pathway-title">
+        <div className="pathway-copy">
+          <p className="eyebrow">A simple route to test day</p>
+          <h2 id="pathway-title">Learn. Practise. Pass.</h2>
+          <p>Start by getting familiar with the rules, build confidence with focused practice, then put yourself under time pressure with a mock test.</p>
+          <Link className="button button-secondary" href="/practice">Start practising <span aria-hidden="true">→</span></Link>
+        </div>
+        <div className="pathway-art">
+          <Image
+            src="/images/theorytester-learn-practise-pass.png"
+            alt="Illustration showing learn, practise and pass for Irish driving theory preparation"
+            width={745}
+            height={480}
+            sizes="(max-width: 760px) 100vw, 520px"
+          />
+        </div>
       </section>
 
       <section className="modes-section" aria-labelledby="modes-title">
