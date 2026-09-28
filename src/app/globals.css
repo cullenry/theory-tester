@@ -1398,8 +1398,8 @@ html.dark .explanation-copy {
 
 /* Daily mission */
 .daily-mission-section {
-  width: 100%;
-  margin: 14px 0 0;
+  width: min(1000px, calc(100% - 48px));
+  margin: 14px auto 0;
 }
 .daily-mission-card {
   padding: 20px;
@@ -1734,7 +1734,7 @@ html.dark .test-ready-note {
 
 @media (max-width: 520px) {
   .daily-mission-section {
-    width: 100%;
+    width: calc(100% - 24px);
   }
   .daily-mission-card {
     padding: 17px;
@@ -1748,4 +1748,13 @@ html.dark .test-ready-note {
   .starred-actions .button {
     width: 100%;
   }
+}
+
+
+/* Keep embedded progress widgets aligned to the progress shell while preserving the homepage width. */
+.app-main .daily-mission-section {
+  width: 100%;
+  max-width: none;
+  margin-right: 0;
+  margin-left: 0;
 }
