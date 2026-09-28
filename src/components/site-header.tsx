@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ReadingModeToggle } from "@/components/reading-mode-toggle";
 
 const navigation = [
   { href: "/", label: "Home" },
@@ -146,7 +145,6 @@ export function SiteHeader() {
             <Link className="nav-link nav-sign-in" href="/login">Sign in</Link>
           )}
 
-          <ReadingModeToggle />
           <ThemeToggle />
         </div>
       </div>
