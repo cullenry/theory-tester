@@ -1,4 +1,4 @@
-# Theory Tester
+# TheoryPrep
 
 A modern driving theory test practice platform built with Next.js, TypeScript and Tailwind CSS.
 
