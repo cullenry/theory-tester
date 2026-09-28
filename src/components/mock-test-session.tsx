@@ -120,25 +120,19 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 40 
     return (
       <main className="app-main"><div className="page-shell practice-shell">
         <div className="page-heading"><div><p className="eyebrow">Timed exam</p><h1>Mock test</h1></div></div>
-        <section className="mock-intro" aria-labelledby="mock-intro-title">
-          <div className="mock-intro-copy">
-            <p className="eyebrow">Ready for the road?</p>
-            <h2 id="mock-intro-title">Test yourself under pressure.</h2>
-            <p>Choose a timed format, work through the questions without feedback, then review your result when you finish.</p>
-          </div>
-          <div className="mock-intro-art">
-            <Image
-              src="/images/theorytester-test-ready.png"
-              alt="Illustration of an Irish road with a Test Ready sign"
-              width={745}
-              height={460}
-              sizes="(max-width: 760px) 100vw, 430px"
-            />
-          </div>
-        </section>
-
         <section className="mock-format-section" aria-labelledby="mock-config-title">
-          <div className="mock-format-heading"><p className="eyebrow">Test format</p><h2 id="mock-config-title">Choose a test format</h2></div>
+          <div className="mock-format-heading-row">
+            <div className="mock-format-heading"><p className="eyebrow">Test format</p><h2 id="mock-config-title">Choose a test format</h2></div>
+            <div className="mock-format-heading-art">
+              <Image
+                src="/images/theorytester-test-ready.png"
+                alt="Illustration of an Irish road with a Test Ready sign"
+                width={745}
+                height={460}
+                sizes="260px"
+              />
+            </div>
+          </div>
           <div className="mock-format-grid">
             <TestFormatCard format={TEST_FORMATS[0]} featured onStart={(format) => startTest(format, initialQuestions)} />
             <h3 className="mock-quick-heading">Quick tests</h3>

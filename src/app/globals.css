@@ -183,3 +183,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .library-intro-copy h2, .mock-intro-copy h2 { font-size: 27px; }
   .library-intro-art, .mock-intro-art { max-height: 280px; }
 }
+
+ 
+.mock-format-heading-row { display: grid; grid-template-columns: minmax(0, 1fr) 270px; align-items: center; gap: 28px; margin-bottom: 18px; }
+.mock-format-heading-art { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: #edf5ee; box-shadow: 0 8px 24px rgba(25, 62, 41, .06); }
+.mock-format-heading-art img { display: block; width: 100%; height: auto; }
+.mock-format-section { margin-top: 6px; }
+@media (max-width: 760px) {
+  .mock-format-heading-row { grid-template-columns: 1fr; gap: 14px; }
+  .mock-format-heading-art { width: min(100%, 360px); }
+}
