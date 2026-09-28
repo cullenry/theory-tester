@@ -416,3 +416,29 @@ html.dark .nav-sign-in { color: var(--green); font-weight: 750; }
   .auth-side-line { margin-top: 23px; }
   .auth-card { padding: 30px 24px 28px; }
 }
+
+
+.header-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.account-menu { position: relative; }
+.account-trigger { display: inline-flex; min-height: 38px; align-items: center; gap: 7px; padding: 4px 10px 4px 6px; border: 1px solid #d6e0d8; border-radius: 999px; background: #fff; color: #536158; cursor: pointer; font-size: 12px; font-weight: 750; transition: background .18s ease, border-color .18s ease, color .18s ease; }
+.account-trigger:hover { border-color: #9db6a4; background: #f7fbf8; color: var(--green-dark); }
+.account-avatar { display: grid; width: 27px; height: 27px; place-items: center; border-radius: 50%; background: var(--green); color: #fff; font-size: 11px; font-weight: 800; }
+.account-name { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-chevron { width: 7px; height: 7px; margin: -3px 1px 0 1px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform .18s ease; }
+.account-chevron-open { margin-top: 3px; transform: rotate(-135deg); }
+.account-popover { position: absolute; top: calc(100% + 8px); right: 0; z-index: 40; min-width: 150px; padding: 7px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); box-shadow: 0 15px 38px rgba(18, 36, 24, .14); }
+.account-popover-label { padding: 8px 9px 7px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .7px; text-transform: uppercase; }
+.account-signout { display: block; width: 100%; padding: 9px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); cursor: pointer; font-size: 12px; font-weight: 700; text-align: left; }
+.account-signout:hover { background: var(--green-soft); color: var(--green-dark); }
+html.dark .account-trigger { border-color: #404040; background: #1b1b1b; color: #cfcfcf; }
+html.dark .account-trigger:hover { border-color: #616161; background: #242424; color: #fff; }
+html.dark .account-popover { background: #181818; box-shadow: 0 15px 40px rgba(0,0,0,.4); }
+html.dark .account-signout:hover { background: #262626; color: #fff; }
+
+@media (max-width: 760px) {
+  .header-actions { position: absolute; top: 13px; right: 0; gap: 5px; }
+  .account-name { display: none; }
+  .account-trigger { min-height: 34px; padding: 3px 8px 3px 5px; }
+  .account-avatar { width: 25px; height: 25px; }
+  .account-chevron { display: none; }
+}

@@ -14,6 +14,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const isSignup = mode === "signup";
   const supabase = createClient();
 
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,6 +32,11 @@ export function AuthForm({ mode }: AuthFormProps) {
       return;
     }
 
+    if (isSignup && !fullName.trim()) {
+      setErrorMessage("Please enter your name.");
+      return;
+    }
+
     setIsLoading(true);
 
     if (isSignup) {
@@ -38,6 +44,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         email,
         password,
         options: {
+          data: { full_name: fullName.trim() },
           emailRedirectTo: window.location.origin + "/auth/callback",
         },
       });
@@ -51,10 +58,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         setSuccessMessage("Account created. Check your email to confirm your address.");
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         setErrorMessage(error.message);
@@ -84,46 +88,35 @@ export function AuthForm({ mode }: AuthFormProps) {
       </p>
 
       <form className="auth-form" onSubmit={handleSubmit}>
+        {isSignup && (
+          <label className="auth-field">
+            <span>Your name</span>
+            <input className="auth-input" type="text" autoComplete="name" value={fullName}
+              onChange={(event) => setFullName(event.target.value)} placeholder="Ryan Cullen" required />
+          </label>
+        )}
+
         <label className="auth-field">
           <span>Email address</span>
-          <input
-            className="auth-input"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="you@example.com"
-            required
-          />
+          <input className="auth-input" type="email" autoComplete="email" value={email}
+            onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required />
         </label>
 
         <label className="auth-field">
           <span>Password</span>
-          <input
-            className="auth-input"
-            type="password"
-            autoComplete={isSignup ? "new-password" : "current-password"}
-            value={password}
+          <input className="auth-input" type="password"
+            autoComplete={isSignup ? "new-password" : "current-password"} value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder={isSignup ? "At least 6 characters" : "Your password"}
-            minLength={isSignup ? 6 : undefined}
-            required
-          />
+            minLength={isSignup ? 6 : undefined} required />
         </label>
 
         {isSignup && (
           <label className="auth-field">
             <span>Confirm password</span>
-            <input
-              className="auth-input"
-              type="password"
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              placeholder="Enter your password again"
-              minLength={6}
-              required
-            />
+            <input className="auth-input" type="password" autoComplete="new-password"
+              value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
+              placeholder="Enter your password again" minLength={6} required />
           </label>
         )}
 
@@ -137,9 +130,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
       <div className="auth-switch">
         <span>{isSignup ? "Already have an account?" : "Don't have an account?"}</span>
-        <Link href={isSignup ? "/login" : "/signup"}>
-          {isSignup ? "Sign in" : "Create one"}
-        </Link>
+        <Link href={isSignup ? "/login" : "/signup"}>{isSignup ? "Sign in" : "Create one"}</Link>
       </div>
     </div>
   );

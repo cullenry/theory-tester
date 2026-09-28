@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigation = [
@@ -8,7 +12,60 @@ const navigation = [
   { href: "/questions", label: "Questions" },
 ];
 
+function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
+  const metadataName =
+    typeof user.user_metadata?.full_name === "string"
+      ? user.user_metadata.full_name.trim()
+      : typeof user.user_metadata?.name === "string"
+        ? user.user_metadata.name.trim()
+        : "";
+
+  if (metadataName) return metadataName;
+
+  const emailName = user.email?.split("@")[0]?.replace(/[._-]+/g, " ").trim();
+  if (!emailName) return "Account";
+
+  return emailName.split(" ").filter(Boolean).map((part) =>
+    part.charAt(0).toUpperCase() + part.slice(1)
+  ).join(" ");
+}
+
 export function SiteHeader() {
+  const supabase = useMemo(() => createClient(), []);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (mounted) setUserName(data.user ? getDisplayName(data.user) : null);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return;
+
+      if (event === "SIGNED_OUT" || !session?.user) {
+        setUserName(null);
+        setAccountOpen(false);
+      } else {
+        setUserName(getDisplayName(session.user));
+      }
+    });
+
+    return () => {
+      mounted = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  async function handleSignOut() {
+    setIsSigningOut(true);
+    await supabase.auth.signOut();
+    setIsSigningOut(false);
+  }
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -16,19 +73,51 @@ export function SiteHeader() {
           <span className="brand-mark" aria-hidden="true">T</span>
           <span>Theory<span className="brand-accent">Tester</span></span>
         </Link>
+
         <nav className="main-nav" aria-label="Main navigation">
           {navigation.map((item) => (
-            <Link
-              className="nav-link"
-              href={item.href}
-              key={item.href}
-            >
+            <Link className="nav-link" href={item.href} key={item.href}>
               {item.label}
             </Link>
           ))}
         </nav>
-        <Link className="nav-link nav-sign-in" href="/login">Sign in</Link>
-        <ThemeToggle />
+
+        <div className="header-actions">
+          {userName ? (
+            <div className="account-menu">
+              <button
+                className="account-trigger"
+                type="button"
+                aria-expanded={accountOpen}
+                aria-haspopup="menu"
+                onClick={() => setAccountOpen((open) => !open)}
+              >
+                <span className="account-avatar" aria-hidden="true">{userName.charAt(0).toUpperCase()}</span>
+                <span className="account-name">{userName}</span>
+                <span className={accountOpen ? "account-chevron account-chevron-open" : "account-chevron"} aria-hidden="true" />
+              </button>
+
+              {accountOpen && (
+                <div className="account-popover" role="menu">
+                  <div className="account-popover-label">Signed in</div>
+                  <button
+                    className="account-signout"
+                    type="button"
+                    role="menuitem"
+                    onClick={handleSignOut}
+                    disabled={isSigningOut}
+                  >
+                    {isSigningOut ? "Signing out…" : "Sign out"}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link className="nav-link nav-sign-in" href="/login">Sign in</Link>
+          )}
+
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
