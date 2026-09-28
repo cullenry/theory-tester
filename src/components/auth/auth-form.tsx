@@ -8,11 +8,13 @@ type AuthMode = "login" | "signup";
 
 type AuthFormProps = {
   mode: AuthMode;
+  redirectTo?: string;
 };
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, redirectTo }: AuthFormProps) {
   const isSignup = mode === "signup";
   const supabase = createClient();
+  const safeRedirectTo = redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//") ? redirectTo : "/";
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,7 +54,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (error) {
         setErrorMessage(error.message);
       } else if (data.session) {
-        window.location.href = "/";
+        window.location.href = safeRedirectTo;
         return;
       } else {
         setSuccessMessage("Account created. Check your email to confirm your address.");
@@ -63,7 +65,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (error) {
         setErrorMessage(error.message);
       } else {
-        window.location.href = "/";
+        window.location.href = safeRedirectTo;
         return;
       }
     }
