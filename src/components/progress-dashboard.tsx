@@ -73,9 +73,20 @@ function AccuracyChart({ attempts }: { attempts: QuestionAttempt[] }) {
   return <div className="accuracy-chart"><svg viewBox="0 0 100 100" role="img" aria-label="Accuracy over the last fourteen active days"><line x1="0" y1="92" x2="100" y2="92" className="chart-grid-line" /><line x1="0" y1="53" x2="100" y2="53" className="chart-grid-line" /><line x1="0" y1="14" x2="100" y2="14" className="chart-grid-line" /><polyline points={coordinates} className="chart-line" /></svg><div className="chart-labels"><span>{formatDate(points[0].date)}</span><span>{formatDate(points[points.length - 1].date)}</span></div></div>;
 }
 
+function getReadinessComment(score: number) {
+  if (score >= 95) return "Excellent preparation. You're looking very strong.";
+  if (score >= 90) return "Great shape. Keep the momentum going.";
+  if (score >= 80) return "Solid preparation. A little more practice can tighten things up.";
+  if (score >= 70) return "You're building well. Focus on your weaker areas next.";
+  if (score >= 60) return "Good start. More practice across your weaker topics should help.";
+  if (score >= 40) return "Keep going. Use Learn mode to target the areas giving you trouble.";
+  return "Just getting started. Build consistency with regular practice.";
+}
+
 function Readiness({ accuracy, mockAverage, coverage }: { accuracy: number; mockAverage: number; coverage: number }) {
   const score = Math.round(accuracy * 0.45 + mockAverage * 0.35 + coverage * 0.2);
-  return <section className="progress-feature-card readiness-card"><div><p className="eyebrow">Practice benchmark</p><h2>Test readiness</h2><p>Based on your question accuracy, mock-test performance and topic coverage. It is a practice metric, not a prediction of your test result.</p></div><div className="readiness-score"><strong>{score}</strong><span>/100</span></div><div className="readiness-bar"><span style={{ width: score + "%" }} /></div><div className="readiness-facts"><span>{accuracy}% question accuracy</span><span>{mockAverage}% mock average</span><span>{coverage}% topic coverage</span></div></section>;
+  const comment = getReadinessComment(score);
+  return <section className="progress-feature-card readiness-card"><div><p className="eyebrow">Practice benchmark</p><h2>Test readiness</h2><p>Based on your question accuracy, mock-test performance and topic coverage. It is a practice metric, not a prediction of your test result.</p><p className="readiness-comment">{comment}</p></div><div className="readiness-score"><strong>{score}</strong><span>/100</span></div><div className="readiness-bar"><span style={{ width: score + "%" }} /></div><div className="readiness-facts"><span>{accuracy}% question accuracy</span><span>{mockAverage}% mock average</span><span>{coverage}% topic coverage</span></div></section>;
 }
 
 function StarredQuestions({ questionIds, bookmarksAvailable }: { questionIds: number[]; bookmarksAvailable: boolean }) {
