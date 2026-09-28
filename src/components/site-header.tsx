@@ -6,7 +6,6 @@ const navigation = [
   { href: "/practice", label: "Practice" },
   { href: "/mock-test", label: "Mock test" },
   { href: "/questions", label: "Questions" },
-  { href: "https://ryan-portfolio-qd24ddmsb-cullenry.vercel.app/", label: "Contact me", external: true },
 ];
 
 export function SiteHeader() {
@@ -23,8 +22,6 @@ export function SiteHeader() {
               className="nav-link"
               href={item.href}
               key={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
             >
               {item.label}
             </Link>
