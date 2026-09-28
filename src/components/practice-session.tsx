@@ -113,7 +113,7 @@ function TopicPicker({
               );
             })}
           </div>
-          <button className="topic-picker-done" type="button" onClick={onOpen}>Done <span aria-hidden="true">✓</span></button>
+
         </div>
       )}
     </div>

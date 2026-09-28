@@ -151,9 +151,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .topic-picker-option-copy small { color: var(--muted); font-size: 11px; line-height: 1.25; }
 .topic-picker-option-selected .topic-picker-option-copy strong { color: var(--green-dark); }
 .topic-picker-option:focus-visible { outline: 3px solid #75bd91; outline-offset: -2px; } 
-.topic-picker-done { display: flex; width: calc(100% - 12px); min-height: 40px; align-items: center; justify-content: space-between; margin: 0 6px 7px; padding: 0 11px; border: 1px solid #dce7df; border-radius: 8px; background: #f7fbf8; color: var(--green-dark); cursor: pointer; font-size: 12px; font-weight: 750; transition: background .16s ease, border-color .16s ease; }
-.topic-picker-done:hover { border-color: #b8d1bf; background: #edf7f0; }
-
 
 
  
