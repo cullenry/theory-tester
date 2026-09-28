@@ -1780,3 +1780,82 @@ html.dark .test-ready-note {
     width: calc(100% - 24px);
   }
 }
+
+
+/* Accessibility */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+  padding: 10px 14px;
+  border: 2px solid var(--green-dark);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  transform: translateY(-160%);
+  transition: transform .15s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+#main-content:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 3px solid #257c50 !important;
+  outline-offset: 3px;
+}
+.nav-link[aria-current="page"] {
+  color: var(--green-dark);
+  background: #e7f2ea;
+}
+html.dark .skip-link {
+  border-color: #9ac5a6;
+  background: #191919;
+  color: #f1f1f1;
+}
+html.dark :focus-visible {
+  outline-color: #a8ddb6 !important;
+}
+html.dark .nav-link[aria-current="page"] {
+  color: #c4ebcf;
+  background: #263d2d;
+}
+
+/* Respect the operating system's reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Give users asking for higher contrast a clearer UI without changing the normal palette. */
+@media (prefers-contrast: more) {
+  :root {
+    --line: #aebdb3;
+    --muted: #4e5b53;
+  }
+  .answer-option,
+  .button-secondary,
+  .progress-feature-card,
+  .stat-card,
+  .question-card,
+  .daily-mission-card {
+    border-width: 2px;
+  }
+  .answer-option:hover:not(:disabled) {
+    border-color: var(--green-dark);
+    background: #d8e9dc;
+  }
+}
