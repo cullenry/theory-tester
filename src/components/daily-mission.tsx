@@ -25,9 +25,13 @@ export function DailyMission() {
 
   useEffect(() => {
     getProgressData(2000).then(setProgress);
-    const today = localDateKey(new Date());
-    setLearnDone(localStorage.getItem("theorytester-learn-completed") === today);
   }, []);
+
+  useEffect(() => {
+    if (!progress?.user) return;
+    const today = localDateKey(new Date());
+    setLearnDone(localStorage.getItem("theorytester-learn-completed-" + progress.user.id) === today);
+  }, [progress?.user?.id]);
 
   const todayStats = useMemo(() => {
     if (!progress) return { answered: 0, correct: 0 };
