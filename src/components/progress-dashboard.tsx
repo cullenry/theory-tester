@@ -161,7 +161,7 @@ export function ProgressDashboard() {
 
   return <main className="app-main"><div className="page-shell progress-shell">
     <div className="progress-hero"><div><p className="eyebrow">Your TheoryTester</p><h1>Hello, {getDisplayName(data.user)}.</h1><p>See what you know, where you can improve and how your practice is building over time.</p></div><Link className="button button-primary" href="/practice">Practise now <span aria-hidden="true">→</span></Link></div>
-    {!data.available && <div className="setup-note"><strong>One database step left.</strong> Run <code>supabase/migrations/001_progress.sql</code> in your Supabase SQL Editor to turn on saved progress.</div>
+    {!data.available && <div className="setup-note"><strong>One database step left.</strong> Run <code>supabase/migrations/001_progress.sql</code> in your Supabase SQL Editor to turn on saved progress.</div>}
     <div className="progress-tabs" role="tablist" aria-label="My progress sections">
       <button className={activeTab === "overview" ? "progress-tab progress-tab-active" : "progress-tab"} type="button" role="tab" aria-selected={activeTab === "overview"} onClick={() => setActiveTab("overview")}>Overview</button>
       <button className={activeTab === "starred" ? "progress-tab progress-tab-active" : "progress-tab"} type="button" role="tab" aria-selected={activeTab === "starred"} onClick={() => setActiveTab("starred")}>★ Starred questions <span>{data.starredQuestionIds.length}</span></button>
