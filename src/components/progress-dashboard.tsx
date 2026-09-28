@@ -7,6 +7,7 @@ import { taxonomyCategories } from "@/lib/question-taxonomy";
 import { getProgressData, type QuestionAttempt } from "@/lib/progress";
 
 type CategoryStat = { name: string; attempted: number; correct: number; accuracy: number };
+type ProgressTab = "overview" | "starred";
 
 function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
   const name = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name.trim() : "";
@@ -77,8 +78,50 @@ function Readiness({ accuracy, mockAverage, coverage }: { accuracy: number; mock
   return <section className="progress-feature-card readiness-card"><div><p className="eyebrow">Practice benchmark</p><h2>Test readiness</h2><p>Based on your question accuracy, mock-test performance and topic coverage. It is a practice metric, not a prediction of your test result.</p></div><div className="readiness-score"><strong>{score}</strong><span>/100</span></div><div className="readiness-bar"><span style={{ width: score + "%" }} /></div><div className="readiness-facts"><span>{accuracy}% question accuracy</span><span>{mockAverage}% mock average</span><span>{coverage}% topic coverage</span></div></section>;
 }
 
+function StarredQuestions({ questionIds, bookmarksAvailable }: { questionIds: number[]; bookmarksAvailable: boolean }) {
+  const starredQuestions = questionIds
+    .map((id) => questions.find((question) => question.id === id))
+    .filter((question): question is (typeof questions)[number] => Boolean(question));
+
+  return (
+    <section className="progress-feature-card starred-questions-panel">
+      <div className="feature-card-heading">
+        <div>
+          <p className="eyebrow">Saved for later</p>
+          <h2>Starred questions</h2>
+        </div>
+        <span>{starredQuestions.length} saved</span>
+      </div>
+      {!bookmarksAvailable ? (
+        <div className="chart-empty starred-empty">
+          <strong>One database step left.</strong>
+          <span>Run <code>supabase/migrations/002_question_bookmarks.sql</code> in Supabase to save starred questions.</span>
+        </div>
+      ) : starredQuestions.length === 0 ? (
+        <div className="chart-empty starred-empty">
+          <strong>No starred questions yet.</strong>
+          <span>Tap the ☆ Star button on any question to save it here.</span>
+        </div>
+      ) : (
+        <div className="starred-question-list">
+          {starredQuestions.map((question, index) => (
+            <Link className="starred-question-row" href={"/questions/" + question.id} key={question.id}>
+              <span className="starred-question-star" aria-hidden="true">★</span>
+              <div>
+                <strong>{question.question}</strong>
+                <small>Question {index + 1} · {question.taxonomy.category ?? "General"}</small>
+              </div>
+              <span className="row-arrow" aria-hidden="true">↗</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 export function ProgressDashboard() {
   const [data, setData] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
+  const [activeTab, setActiveTab] = useState<ProgressTab>("overview");
   useEffect(() => { getProgressData().then(setData); }, []);
 
   if (!data) return <main className="app-main"><div className="page-shell progress-shell"><div className="progress-loading">Loading your progress…</div></div></main>;
@@ -118,7 +161,12 @@ export function ProgressDashboard() {
 
   return <main className="app-main"><div className="page-shell progress-shell">
     <div className="progress-hero"><div><p className="eyebrow">Your TheoryTester</p><h1>Hello, {getDisplayName(data.user)}.</h1><p>See what you know, where you can improve and how your practice is building over time.</p></div><Link className="button button-primary" href="/practice">Practise now <span aria-hidden="true">→</span></Link></div>
-    {!data.available && <div className="setup-note"><strong>One database step left.</strong> Run <code>supabase/migrations/001_progress.sql</code> in your Supabase SQL Editor to turn on saved progress.</div>}
+    {!data.available && <div className="setup-note"><strong>One database step left.</strong> Run <code>supabase/migrations/001_progress.sql</code> in your Supabase SQL Editor to turn on saved progress.</div>
+    <div className="progress-tabs" role="tablist" aria-label="My progress sections">
+      <button className={activeTab === "overview" ? "progress-tab progress-tab-active" : "progress-tab"} type="button" role="tab" aria-selected={activeTab === "overview"} onClick={() => setActiveTab("overview")}>Overview</button>
+      <button className={activeTab === "starred" ? "progress-tab progress-tab-active" : "progress-tab"} type="button" role="tab" aria-selected={activeTab === "starred"} onClick={() => setActiveTab("starred")}>★ Starred questions <span>{data.starredQuestionIds.length}</span></button>
+    </div>
+    {activeTab === "starred" ? <StarredQuestions questionIds={data.starredQuestionIds} bookmarksAvailable={data.bookmarksAvailable} /> : <>
     <div className="stats-grid"><StatCard label="Questions answered" value={answeredAttempts.length.toLocaleString()} detail="Across all practice modes" /><StatCard label="Accuracy" value={accuracy + "%"} detail={correct ? correct + " correct answers" : "Start answering to build your stats"} /><StatCard label="Current streak" value={streak.current + " day" + (streak.current === 1 ? "" : "s")} detail={streak.best + "-day best"} /><StatCard label="Mock tests" value={String(data.mockTests.length)} detail={bestMock ? "Best score " + bestMock + "%" : "Take your first mock"} /></div>
     <div className="progress-main-grid"><section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Your trend</p><h2>Accuracy over time</h2></div><span>{answeredAttempts.length ? accuracy + "% overall" : "No data yet"}</span></div><AccuracyChart attempts={data.attempts} /></section>
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mock tests</p><h2>Recent results</h2></div><Link href="/mock-test">Take one ↗</Link></div>{data.mockTests.length === 0 ? <div className="chart-empty">Your completed mock tests will appear here.</div> : <div className="mock-history-list">{data.mockTests.slice(0, 5).map((test) => <div className="mock-history-row" key={test.id}><div><strong>{test.question_count} Question Test</strong><small>{formatDate(test.created_at)} · {test.time_expired ? "Time expired" : "Completed"}</small></div><strong>{test.correct_count}/{test.question_count}</strong><span>{test.percentage}%</span></div>)}</div>}</section></div>
@@ -127,5 +175,6 @@ export function ProgressDashboard() {
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mistakes</p><h2>Practise what you missed</h2></div><Link href="/mistakes">All mistakes ↗</Link></div>{latestMistakes.length === 0 ? <div className="chart-empty">Your recent incorrect answers will collect here.</div> : <div className="mistake-list">{latestMistakes.map((question) => <Link href={"/questions/" + question.id} className="mistake-row" key={question.id}><span>×</span><strong>{question.question}</strong><small>Question {question.id}</small></Link>)}</div>}{latestMistakes.length > 0 && <Link className="button button-secondary progress-inline-button" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}</section></div>
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Achievements</p><h2>Keep building</h2></div></div><div className="achievement-grid">{achievements.map((achievement) => <div className={"achievement-card " + (achievement.earned ? "achievement-earned" : "")} key={achievement.title}><span>{achievement.icon}</span><div><strong>{achievement.title}</strong><small>{achievement.earned ? "Unlocked" : "Keep practising"}</small></div></div>)}</div></section>
     <div className="progress-cta-row"><Link className="button button-secondary" href="/challenge">🔥 Daily Challenge</Link><Link className="button button-primary" href="/practice">Start a practice set <span aria-hidden="true">→</span></Link></div>
+    </>}
   </div></main>;
 }
