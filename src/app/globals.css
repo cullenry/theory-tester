@@ -22,7 +22,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 ::selection { background: #cde8d5; color: #123d2b; }
 
 .site-header { position: relative; z-index: 2; border-bottom: 1px solid rgba(21, 63, 42, .1); background: rgba(255,255,255,.94); }
-.header-inner { width: min(1160px, calc(100% - 48px)); min-height: 76px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.header-inner { position: relative; width: min(1160px, calc(100% - 48px)); min-height: 76px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 800; letter-spacing: -.5px; white-space: nowrap; }
 .brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 9px 9px 9px 3px; background: var(--green); color: white; font-family: Georgia, serif; font-size: 20px; font-weight: 700; }
 .brand-accent { color: var(--green); }
@@ -254,6 +254,7 @@ html.dark .button-quiet { color: var(--green); }
 html.dark .modes-section,
 html.dark .pathway-section { color: var(--ink); }
 html.dark .mode-row:hover { background: #1a2a20; }
+html.dark .mode-number { color: #738078; }
 html.dark .site-footer { background: #111713; color: var(--muted); }
 html.dark .site-footer .brand { color: var(--ink); }
 html.dark .app-main { background: var(--paper); }
