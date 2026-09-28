@@ -21,7 +21,7 @@ export default function Home() {
               <Link className="button button-primary" href="/practice">Start Practising <span aria-hidden="true">→</span></Link>
               <Link className="button button-secondary" href="/mock-test">Take a Mock Test</Link>
             </div>
-            <div className="hero-proof"><strong>{questions.length}</strong><span>questions in the library</span><span className="proof-separator" /><span>Made for Ireland</span></div>
+            <div className="hero-proof"><strong>{questions.length}</strong><span>questions in the library</span><span className="proof-separator" /><span>Based on official RSA material</span></div>
           </div>
           <div className="hero-art">
             <Image
