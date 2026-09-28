@@ -2058,21 +2058,27 @@ html.dark.reading-mode .reading-mode-toggle-active {
   font-size: 11px;
   line-height: 1.55;
 }
-.home-exam-date-control {
-  display: grid;
-  min-width: 150px;
-  gap: 6px;
+.home-exam-picker {
+  position: relative;
+  min-width: 180px;
 }
-.home-exam-date-control span {
+.home-exam-picker-label {
+  display: block;
+  margin-bottom: 6px;
   color: var(--muted);
   font-size: 9px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: .06em;
 }
-.home-exam-date-control input {
-  min-height: 42px;
-  padding: 0 10px;
+.home-exam-date-trigger {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 11px 0 12px;
   border: 1px solid #cddbd0;
   border-radius: 8px;
   background: white;
@@ -2080,10 +2086,140 @@ html.dark.reading-mode .reading-mode-toggle-active {
   cursor: pointer;
   font-size: 11px;
   font-weight: 700;
+  text-align: left;
 }
-.home-exam-date-control input:focus-visible {
-  outline: 3px solid #75bd91;
-  outline-offset: 2px;
+.home-exam-date-trigger:hover,
+.home-exam-date-trigger-open {
+  border-color: #7fa58a;
+  background: #f8fcf9;
+}
+.home-exam-calendar-icon {
+  color: var(--green);
+  font-size: 16px;
+  line-height: 1;
+}
+.home-exam-calendar {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  width: 300px;
+  padding: 14px;
+  border: 1px solid #d7e3da;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 35px rgba(25, 48, 34, .13);
+}
+.home-exam-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+.home-exam-calendar-header strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+}
+.home-exam-calendar-nav {
+  display: flex;
+  gap: 5px;
+}
+.home-exam-calendar-nav button,
+.home-exam-calendar-footer button {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border: 1px solid #d9e3dc;
+  border-radius: 7px;
+  background: #f8faf8;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+}
+.home-exam-calendar-nav button:hover,
+.home-exam-calendar-footer button:hover {
+  border-color: #8eae97;
+  background: #eaf4ed;
+  color: var(--green-dark);
+}
+.home-exam-calendar-week,
+.home-exam-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.home-exam-calendar-week {
+  margin-bottom: 5px;
+}
+.home-exam-calendar-week span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+}
+.home-exam-calendar-day {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+}
+.home-exam-calendar-day:hover:not(:disabled) {
+  border-color: #8fb39a;
+  background: #e7f2ea;
+  color: var(--green-dark);
+}
+.home-exam-calendar-day-muted {
+  color: #b4bdb7;
+  font-weight: 500;
+}
+.home-exam-calendar-day:disabled {
+  color: #c6cdc8;
+  cursor: not-allowed;
+}
+.home-exam-calendar-day-today {
+  border-color: #b8cfbe;
+}
+.home-exam-calendar-day-selected {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+.home-exam-calendar-day-selected:hover:not(:disabled) {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+  color: #fff;
+}
+.home-exam-calendar-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e2e9e4;
+}
+.home-exam-calendar-footer button {
+  width: auto;
+  height: auto;
+  min-height: 30px;
+  padding: 0 10px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--green);
+  font-size: 10px;
+}
+.home-exam-calendar-footer button:hover {
+  border-color: #b7d1bd;
+  background: #edf5ef;
 }
 .home-exam-actions {
   display: flex;
@@ -2122,6 +2258,52 @@ html.dark.reading-mode .reading-mode-toggle-active {
   padding-inline: 13px;
   font-size: 11px;
 }
+html.dark .home-exam-date-trigger {
+  border-color: #48544b;
+  background: #202520;
+  color: #ededed;
+}
+html.dark .home-exam-date-trigger:hover,
+html.dark .home-exam-date-trigger-open {
+  border-color: #6f9077;
+  background: #253129;
+}
+html.dark .home-exam-calendar {
+  border-color: #3f4c42;
+  background: #191d1a;
+  box-shadow: 0 16px 35px rgba(0,0,0,.32);
+}
+html.dark .home-exam-calendar-nav button {
+  border-color: #465148;
+  background: #222722;
+  color: #ededed;
+}
+html.dark .home-exam-calendar-nav button:hover {
+  border-color: #6f9077;
+  background: #29372d;
+  color: #c4ebcf;
+}
+html.dark .home-exam-calendar-day {
+  color: #e8ece9;
+}
+html.dark .home-exam-calendar-day-muted,
+html.dark .home-exam-calendar-day:disabled {
+  color: #666d68;
+}
+html.dark .home-exam-calendar-day:hover:not(:disabled) {
+  border-color: #6f9077;
+  background: #29372d;
+  color: #c4ebcf;
+}
+html.dark .home-exam-calendar-day-today {
+  border-color: #5b7663;
+}
+html.dark .home-exam-calendar-footer {
+  border-top-color: #344038;
+}
+html.dark .home-exam-calendar-footer button {
+  color: #a9d5b3;
+}
 html.dark .home-exam-card {
   border-color: #3e5143;
   background: #18211b;
@@ -2149,11 +2331,13 @@ html.dark .home-exam-date-badge span {
     flex-direction: column;
     gap: 15px;
   }
-  .home-exam-date-control {
+  .home-exam-picker {
     width: 100%;
   }
-  .home-exam-date-control input {
-    width: 100%;
+  .home-exam-calendar {
+    left: 0;
+    right: auto;
+    width: min(300px, calc(100vw - 48px));
   }
   .home-exam-actions {
     width: 100%;
