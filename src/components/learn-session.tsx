@@ -149,7 +149,7 @@ export function LearnSession() {
             <p className="eyebrow">Learn session complete</p>
             <h1>Good work. Your weak spots got another look.</h1>
             <p>
-              You answered {plan.length} core questions, got {correctCount} right and revisited {retryIds.length} question{retryIds.length === 1 ? "" : "s"} you missed.
+              You answered {plan.length} core questions, got {coreCorrectCount} right and revisited {retryIds.length} question{retryIds.length === 1 ? "" : "s"} you missed.
             </p>
             <div className="results-summary results-summary-four">
               <div><strong>{coreCorrectCount}</strong><span>Core correct</span></div>
