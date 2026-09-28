@@ -100,6 +100,7 @@ export function SiteHeader() {
               {accountOpen && (
                 <div className="account-popover" role="menu">
                   <div className="account-popover-label">Signed in</div>
+                  <Link className="account-progress-link" href="/progress">View my progress <span aria-hidden="true">↗</span></Link>
                   <button
                     className="account-signout"
                     type="button"

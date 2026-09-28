@@ -6,6 +6,7 @@ const modes = [
   { number: "01", title: "Practice mode", description: "Work through questions at your own pace, with instant answers and clear explanations.", href: "/practice", action: "Start practising" },
   { number: "02", title: "Mock test", description: "Take a focused 40-question test, then review every answer when you finish.", href: "/mock-test", action: "Take a mock test" },
   { number: "03", title: "Question library", description: "Browse the full question bank, search by phrase and filter by category.", href: "/questions", action: "Browse questions" },
+  { number: "04", title: "Daily challenge", description: "Take ten fresh questions each day and keep your practice streak moving.", href: "/challenge", action: "Take today’s challenge" },
 ];
 
 export default function Home() {
