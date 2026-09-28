@@ -85,7 +85,7 @@ function getReadinessComment(score: number) {
   return "Just getting started. Build consistency with regular practice.";
 }
 
-function Readiness({ accuracy, mockAverage, coverage }: { accuracy: number; mockAverage: number; coverage: number }) {
+function Readiness({ accuracy, mockAverage, coverage, userId }: { accuracy: number; mockAverage: number; coverage: number; userId: string }) {
   const score = Math.round(accuracy * 0.45 + mockAverage * 0.35 + coverage * 0.2);
   const comment = getReadinessComment(score);
   const [history, setHistory] = useState<Array<{ date: string; score: number }>>([]);
@@ -93,15 +93,16 @@ function Readiness({ accuracy, mockAverage, coverage }: { accuracy: number; mock
   useEffect(() => {
     try {
       const today = new Date().toISOString().slice(0, 10);
-      const stored = JSON.parse(localStorage.getItem("theorytester-readiness-history") ?? "[]") as Array<{ date: string; score: number }>;
+      const storageKey = "theorytester-readiness-history-" + userId;
+      const stored = JSON.parse(localStorage.getItem(storageKey) ?? "[]") as Array<{ date: string; score: number }>;
       const withoutToday = stored.filter((entry) => entry.date !== today).filter((entry) => entry.date >= new Date(Date.now() - 31 * 86400000).toISOString().slice(0, 10));
       const next = [...withoutToday, { date: today, score }].slice(-31);
-      localStorage.setItem("theorytester-readiness-history", JSON.stringify(next));
+      localStorage.setItem(storageKey, JSON.stringify(next));
       setHistory(next);
     } catch {
       setHistory([]);
     }
-  }, [score]);
+  }, [score, userId]);
 
   const previous = history.length > 1 ? history[history.length - 2] : null;
   const delta = previous ? score - previous.score : null;
@@ -225,7 +226,7 @@ export function ProgressDashboard() {
     <div className="stats-grid"><StatCard label="Questions answered" value={answeredAttempts.length.toLocaleString()} detail="Across all practice modes" /><StatCard label="Accuracy" value={accuracy + "%"} detail={correct ? correct + " correct answers" : "Start answering to build your stats"} /><StatCard label="Current streak" value={streak.current + " day" + (streak.current === 1 ? "" : "s")} detail={streak.best + "-day best"} /><StatCard label="Mock tests" value={String(data.mockTests.length)} detail={bestMock ? "Best score " + bestMock + "%" : "Take your first mock"} /></div>
     <div className="progress-main-grid"><section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Your trend</p><h2>Accuracy over time</h2></div><span>{answeredAttempts.length ? accuracy + "% overall" : "No data yet"}</span></div><AccuracyChart attempts={data.attempts} /></section>
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mock tests</p><h2>Recent results</h2></div><Link href="/mock-test">Take one ↗</Link></div>{data.mockTests.length === 0 ? <div className="chart-empty">Your completed mock tests will appear here.</div> : <div className="mock-history-list">{data.mockTests.slice(0, 5).map((test) => <div className="mock-history-row" key={test.id}><div><strong>{test.question_count} Question Test</strong><small>{formatDate(test.created_at)} · {test.time_expired ? "Time expired" : "Completed"}</small></div><strong>{test.correct_count}/{test.question_count}</strong><span>{test.percentage}%</span></div>)}</div>}</section></div>
-    <Readiness accuracy={accuracy} mockAverage={averageMock} coverage={topicCoverage} />
+    <Readiness accuracy={accuracy} mockAverage={averageMock} coverage={topicCoverage} userId={data.user.id} />
     <div className="progress-main-grid"><section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Topic performance</p><h2>Where to focus</h2></div></div>{sortedWeak.length === 0 ? <div className="chart-empty">Start practising to build topic-level insights.</div> : <div className="topic-performance-list">{sortedWeak.slice(0, 6).map((category) => <div className="topic-performance-row" key={category.name}><div className="topic-performance-copy"><strong>{category.name}</strong><small>{category.attempted} questions attempted</small></div><span>{category.accuracy}%</span><div className="topic-performance-bar"><i style={{ width: category.accuracy + "%" }} /></div><Link href={"/practice?category=" + encodeURIComponent(category.name)}>Practise</Link></div>)}</div>}</section>
     <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mistakes</p><h2>Practise what you missed</h2></div><Link href="/mistakes">All mistakes ↗</Link></div>{latestMistakes.length === 0 ? <div className="chart-empty">Your recent incorrect answers will collect here.</div> : <div className="mistake-list">{latestMistakes.map((question) => <Link href={"/questions/" + question.id} className="mistake-row" key={question.id}><span>×</span><strong>{question.question}</strong><small>Question {question.id}</small></Link>)}</div>}{latestMistakes.length > 0 && <Link className="button button-secondary progress-inline-button" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}</section></div>
     <DailyMission />
