@@ -442,3 +442,137 @@ html.dark .account-signout:hover { background: #262626; color: #fff; }
   .account-avatar { width: 25px; height: 25px; }
   .account-chevron { display: none; }
 }
+
+
+/* Progress, personalised practice and daily challenge */
+.account-progress-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 9px; border-radius: 7px; color: var(--green); font-size: 12px; font-weight: 750; }
+.account-progress-link:hover { background: var(--green-soft); color: var(--green-dark); }
+
+.progress-shell { width: min(980px, 100%); }
+.progress-loading { padding: 70px 20px; color: var(--muted); text-align: center; }
+.progress-hero { display: flex; align-items: end; justify-content: space-between; gap: 26px; margin-bottom: 26px; }
+.progress-hero h1 { margin: 8px 0 11px; font-family: Georgia, "Times New Roman", serif; font-size: 40px; font-weight: 500; letter-spacing: -.7px; line-height: 1.08; }
+.progress-hero p:not(.eyebrow) { max-width: 570px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.progress-login-state { padding: 62px 28px; }
+.progress-login-state h1 { margin: 8px 0 12px; font-family: Georgia, serif; font-size: 34px; font-weight: 500; }
+.progress-login-state p:not(.eyebrow) { max-width: 520px; margin: 0 auto 24px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.progress-login-state .button { margin-top: 2px; }
+.setup-note { margin-bottom: 17px; padding: 12px 14px; border: 1px solid #dccd9e; border-radius: 9px; background: #fff9e8; color: #73591e; font-size: 12px; line-height: 1.55; }
+.setup-note code { padding: 2px 5px; border-radius: 4px; background: rgba(115,89,30,.08); font-family: Consolas, monospace; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.stat-card { display: grid; min-height: 138px; align-content: space-between; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 7px 22px rgba(26,54,36,.035); }
+.stat-card > span { color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .45px; }
+.stat-card strong { margin-top: 9px; font-family: Georgia, serif; font-size: 30px; font-weight: 500; letter-spacing: -.35px; }
+.stat-card small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+.progress-main-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-bottom: 14px; }
+.progress-feature-card { min-width: 0; padding: 21px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 7px 22px rgba(26,54,36,.035); }
+.feature-card-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.feature-card-heading h2, .readiness-card h2 { margin: 7px 0 0; font-family: Georgia, serif; font-size: 25px; font-weight: 500; letter-spacing: -.3px; }
+.feature-card-heading > span, .feature-card-heading > a { margin-top: 4px; color: var(--green); font-size: 11px; font-weight: 750; }
+.feature-card-heading > a:hover { text-decoration: underline; }
+.chart-empty { display: grid; min-height: 176px; place-items: center; padding: 20px; color: var(--muted); font-size: 13px; line-height: 1.6; text-align: center; }
+.accuracy-chart { margin-top: 17px; }
+.accuracy-chart svg { display: block; width: 100%; height: 190px; overflow: visible; }
+.chart-grid-line { stroke: var(--line); stroke-width: .6; }
+.chart-line { fill: none; stroke: var(--green); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.chart-labels { display: flex; justify-content: space-between; margin-top: -1px; color: var(--muted); font-size: 10px; }
+.mock-history-list { display: grid; gap: 2px; margin-top: 14px; }
+.mock-history-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; padding: 13px 2px; border-bottom: 1px solid var(--line); }
+.mock-history-row:last-child { border-bottom: 0; }
+.mock-history-row div { display: grid; gap: 4px; min-width: 0; }
+.mock-history-row strong { font-size: 12px; line-height: 1.35; }
+.mock-history-row small, .mock-history-row span { color: var(--muted); font-size: 10px; }
+.mock-history-row > span { color: var(--green); font-weight: 750; }
+
+.readiness-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 13px 28px; margin-bottom: 14px; }
+.readiness-card > div:first-child p:not(.eyebrow) { max-width: 650px; margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+.readiness-score { display: flex; align-items: baseline; gap: 4px; }
+.readiness-score strong { font-family: Georgia, serif; font-size: 44px; font-weight: 500; line-height: 1; }
+.readiness-score span { color: var(--muted); font-size: 13px; }
+.readiness-bar { grid-column: 1 / -1; height: 8px; overflow: hidden; border-radius: 999px; background: #e8eee9; }
+.readiness-bar span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+.readiness-facts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: 11px; }
+.readiness-facts span::before { content: "•"; margin-right: 6px; color: var(--green); }
+
+.topic-performance-list { display: grid; gap: 11px; margin-top: 15px; }
+.topic-performance-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 5px 13px; align-items: center; }
+.topic-performance-copy { display: grid; min-width: 0; gap: 2px; }
+.topic-performance-copy strong { overflow: hidden; font-size: 12px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.topic-performance-copy small { color: var(--muted); font-size: 10px; }
+.topic-performance-row > span { color: var(--green); font-size: 12px; font-weight: 800; }
+.topic-performance-bar { grid-column: 1 / 2; height: 6px; overflow: hidden; border-radius: 99px; background: #e8eee9; }
+.topic-performance-bar i { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+.topic-performance-row > a { grid-column: 2; grid-row: 2; color: var(--green); font-size: 10px; font-weight: 750; }
+
+.mistake-list { display: grid; gap: 2px; margin-top: 14px; }
+.mistake-row { display: grid; grid-template-columns: 25px 1fr; gap: 7px 9px; align-items: start; padding: 12px 4px; border-bottom: 1px solid var(--line); }
+.mistake-row:last-child { border-bottom: 0; }
+.mistake-row > span { display: grid; width: 21px; height: 21px; place-items: center; border-radius: 50%; background: #f9e9e6; color: #9c4137; font-size: 12px; font-weight: 800; }
+.mistake-row strong { overflow: hidden; font-size: 12px; line-height: 1.45; text-overflow: ellipsis; }
+.mistake-row small { grid-column: 2; color: var(--muted); font-size: 10px; }
+.progress-inline-button { width: 100%; margin-top: 13px; }
+
+.achievement-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 9px; margin-top: 15px; }
+.achievement-card { display: flex; min-width: 0; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: transparent; opacity: .55; }
+.achievement-card > span { display: grid; width: 31px; height: 31px; flex: 0 0 31px; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font-size: 10px; font-weight: 850; }
+.achievement-card div { display: grid; gap: 3px; min-width: 0; }
+.achievement-card strong { font-size: 11px; }
+.achievement-card small { color: var(--muted); font-size: 9px; }
+.achievement-earned { opacity: 1; border-color: #c5ddcc; background: #f1f8f3; }
+.achievement-earned > span { border-color: #9bc4a7; background: #deefe3; color: var(--green); }
+.achievement-earned small { color: var(--green); font-weight: 750; }
+.progress-cta-row { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+
+.mistake-setup-card { padding: 35px; }
+.mistake-setup-card > h1 { margin: 8px 0 11px; font-family: Georgia, serif; font-size: 34px; font-weight: 500; letter-spacing: -.5px; }
+.mistakes-setup-copy { max-width: 620px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.mistake-count-strip { display: flex; align-items: center; gap: 11px; margin-top: 23px; padding: 12px 13px; border: 1px solid var(--line); border-radius: 9px; background: #f6faf7; }
+.mistake-count-strip span { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 50%; background: var(--green); color: white; font-size: 14px; font-weight: 800; }
+.mistake-count-strip small { color: var(--muted); font-size: 11px; }
+
+.challenge-intro { margin-bottom: 20px; }
+
+html.dark .setup-note { border-color: #5a4d2d; background: #2a2417; color: #dfbf72; }
+html.dark .setup-note code { background: rgba(223,191,114,.08); }
+html.dark .stat-card,
+html.dark .progress-feature-card,
+html.dark .mistake-count-strip { background: var(--surface); box-shadow: 0 8px 24px rgba(0,0,0,.16); }
+html.dark .readiness-bar,
+html.dark .topic-performance-bar { background: #292929; }
+html.dark .achievement-earned { border-color: #42614b; background: #1a271e; }
+html.dark .achievement-earned > span { border-color: #547f60; background: #23352a; }
+html.dark .mistake-row > span { background: #35201d; color: #eea39a; }
+
+@media (max-width: 900px) {
+  .header-inner { gap: 14px; }
+  .main-nav { gap: 2px; }
+  .nav-link { padding-inline: 10px; }
+  .account-name { max-width: 90px; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+@media (max-width: 760px) {
+  .progress-hero { align-items: flex-start; flex-direction: column; }
+  .progress-hero h1 { font-size: 32px; }
+  .progress-main-grid { grid-template-columns: 1fr; }
+  .readiness-card { grid-template-columns: 1fr auto; }
+  .achievement-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .mistake-setup-card { padding: 24px 20px; }
+  .mistake-setup-card > h1 { font-size: 29px; }
+  .progress-cta-row { justify-content: stretch; }
+  .progress-cta-row .button { flex: 1; }
+  .account-progress-link { font-size: 11px; }
+}
+
+@media (max-width: 520px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { min-height: 126px; padding: 15px; }
+  .stat-card strong { font-size: 25px; }
+  .progress-feature-card { padding: 17px; }
+  .achievement-grid { grid-template-columns: 1fr; }
+  .mock-history-row { grid-template-columns: 1fr auto; }
+  .mock-history-row > span { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+  .readiness-score strong { font-size: 38px; }
+}
