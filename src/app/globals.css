@@ -2501,11 +2501,18 @@ html.dark .home-exam-date-badge span {
   box-shadow: 0 0 0 3px rgba(38, 125, 80, .1);
 }
 .report-select-chevron {
-  flex: 0 0 auto;
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1;
-  transform: translateY(-1px);
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  margin: -4px 3px 0 0;
+  border-right: 2px solid var(--green);
+  border-bottom: 2px solid var(--green);
+  transform: rotate(45deg);
+  transition: transform .18s ease;
+}
+.report-select-trigger.is-open .report-select-chevron {
+  margin-top: 4px;
+  transform: rotate(-135deg);
 }
 .report-select-menu {
   position: absolute;
