@@ -43,7 +43,7 @@ export function QuestionCard({ question, eyebrow, children }: { question: Questi
       </div>
       <h1 className="question-title" id={"question-title-" + question.id}>{question.question}</h1>
       <QuestionImage question={question} />
-      <div className="answer-list">{children}</div>
+      <div className="answer-list" role="group" aria-labelledby={"question-title-" + question.id}>{children}</div>
     </section>
   );
 }
@@ -65,8 +65,8 @@ export function ProgressBar({ current, total, label }: { current: number; total:
   const percent = total > 0 ? Math.min(100, (current / total) * 100) : 0;
   return (
     <div className="progress-wrap" aria-label={`${label}: ${current} of ${total}`}>
-      <div className="progress-heading"><span>{label}</span><span>{current} of {total}</span></div>
-      <div className="progress-track" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={current}>
+      <div className="progress-heading"><span id={label.replace(/\s+/g, "-").toLowerCase() + "-label"}>{label}</span><span>{current} of {total}</span></div>
+      <div className="progress-track" role="progressbar" aria-labelledby={label.replace(/\s+/g, "-").toLowerCase() + "-label"} aria-valuemin={0} aria-valuemax={total} aria-valuenow={current} aria-valuetext={current + " of " + total}>
         <span className="progress-value" style={{ width: `${percent}%` }} />
       </div>
     </div>
