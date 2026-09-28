@@ -52,8 +52,11 @@ export function ExplanationCard({ explanation }: { explanation: string | null })
   if (!explanation) return null;
   return (
     <aside className="explanation-card" aria-label="Explanation">
-      <span className="explanation-icon" aria-hidden="true">i</span>
-      <div><h2>Why this is the answer</h2><p>{explanation}</p></div>
+      <div className="explanation-heading">
+        <span className="explanation-icon" aria-hidden="true">i</span>
+        <div><p className="eyebrow">Explanation</p><h2>Why this is the answer</h2></div>
+      </div>
+      <p className="explanation-copy">{explanation}</p>
     </aside>
   );
 }
