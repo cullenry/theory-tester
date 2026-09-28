@@ -181,7 +181,7 @@ export function PracticeSession() {
   const finished = session !== null && position >= session.length;
   const answered = selected !== null;
 
-  const beginSession = (pool: Question[], length = sessionLength, review = false) => {
+  const beginSession = (pool: Question[], length: number = sessionLength, review = false) => {
     const nextSession = getRandomQuestionsFromPool(pool, length);
     setActivePool(pool);
     setSession(nextSession);
