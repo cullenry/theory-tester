@@ -49,14 +49,16 @@ async function loadBookmarkCache(): Promise<Set<number>> {
       .eq("user_id", user.user.id)
       .order("created_at", { ascending: false });
 
+    const nextCache = error
+      ? new Set<number>()
+      : new Set<number>((data ?? []).map((row) => row.question_id));
+
     if (error) {
       console.warn("Could not load starred questions:", error.message);
-      bookmarkCache = new Set<number>();
-    } else {
-      bookmarkCache = new Set<number>((data ?? []).map((row) => row.question_id));
     }
 
-    return bookmarkCache;
+    bookmarkCache = nextCache;
+    return nextCache;
   })();
 
   try {
