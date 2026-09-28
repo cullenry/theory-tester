@@ -60,8 +60,8 @@ function hoursSince(value: string | null, now: number) {
   return Math.max(0, (now - new Date(value).getTime()) / 3_600_000);
 }
 
-function priorityFor(question: Question, stats: LearningStats | undefined, now: number) {
-  if (!stats) return 45;
+function priorityFor(question: Question, stats: LearningStats | undefined, categoryWeakness: number, now: number) {
+  if (!stats) return 45 + categoryWeakness * 18;
 
   const accuracy = stats.correct / Math.max(1, stats.attempts);
   const struggleScore = (1 - accuracy) * 62;
@@ -76,7 +76,7 @@ function priorityFor(question: Question, stats: LearningStats | undefined, now: 
 
   const lessRecentPenalty = accuracy >= 0.9 && lastWrongHours > 168 ? -8 : 0;
 
-  return Math.max(1, struggleScore + incorrectDepth + recentWrongBonus + spacingDue + lessRecentPenalty);
+  return Math.max(1, struggleScore + incorrectDepth + recentWrongBonus + spacingDue + lessRecentPenalty + categoryWeakness * 18);
 }
 
 function weightedPick(
@@ -112,6 +112,21 @@ export function buildLearningPlan(
   count = 20,
 ): LearningItem[] {
   const stats = buildStats(attempts);
+  const questionMap = new Map(questions.map((question) => [question.id, question]));
+  const categoryStats = new Map<string, { attempts: number; correct: number }>();
+
+  for (const attempt of attempts) {
+    if (attempt.selected_answer === null) continue;
+    const question = questionMap.get(attempt.question_id);
+    const category = question?.taxonomy.category;
+    if (!category) continue;
+
+    const entry = categoryStats.get(category) ?? { attempts: 0, correct: 0 };
+    entry.attempts += 1;
+    if (attempt.is_correct) entry.correct += 1;
+    categoryStats.set(category, entry);
+  }
+
   const now = Date.now();
 
   const focus: LearningItem[] = [];
@@ -120,7 +135,15 @@ export function buildLearningPlan(
 
   for (const question of questions) {
     const questionStats = stats.get(question.id);
-    const priority = priorityFor(question, questionStats, now);
+    const category = question.taxonomy.category;
+    const categoryEntry = category ? categoryStats.get(category) : undefined;
+    const categoryAccuracy = categoryEntry && categoryEntry.attempts
+      ? categoryEntry.correct / categoryEntry.attempts
+      : 0.5;
+    const categoryWeakness = categoryEntry
+      ? Math.max(0, 1 - categoryAccuracy)
+      : 0.25;
+    const priority = priorityFor(question, questionStats, categoryWeakness, now);
 
     if (!questionStats) {
       fresh.push({ question, kind: "new", priority });
