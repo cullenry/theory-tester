@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -33,9 +34,30 @@ function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?:
 
 export function SiteHeader() {
   const supabase = useMemo(() => createClient(), []);
+  const pathname = usePathname();
   const [userName, setUserName] = useState<string | null>(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+
+  useEffect(() => {
+    if (!accountOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      const menu = document.querySelector(".account-menu");
+      if (menu && !menu.contains(target)) setAccountOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setAccountOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [accountOpen]);
 
   useEffect(() => {
     let mounted = true;
@@ -105,7 +127,7 @@ export function SiteHeader() {
               {accountOpen && (
                 <div className="account-popover" role="menu">
                   <div className="account-popover-label">Signed in</div>
-                  <Link className="account-progress-link" href="/progress">View my progress <span aria-hidden="true">↗</span></Link>
+                  <Link className="account-progress-link" href="/progress" role="menuitem">View my progress <span aria-hidden="true">↗</span></Link>
                   <button
                     className="account-signout"
                     type="button"
