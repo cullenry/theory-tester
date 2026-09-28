@@ -51,7 +51,7 @@ function LockedStreakWidget() {
   const previewDays = ["M", "T", "W", "T", "F", "S", "S"];
 
   return (
-    <section className="home-streak-section" aria-label="Your TheoryTester streak">
+    <section className="home-streak-section" aria-label="Your TheoryPrep streak">
       <div className="home-streak-inner home-streak-locked">
         <div className="home-streak-locked-blur" aria-hidden="true">
           <div className="home-streak-copy">
@@ -110,7 +110,7 @@ export function HomeStreakWidget() {
   const todayActive = week[week.length - 1].active;
 
   return (
-    <section className="home-streak-section" aria-label="Your TheoryTester streak">
+    <section className="home-streak-section" aria-label="Your TheoryPrep streak">
       <div className="home-streak-inner">
         <div className="home-streak-copy">
           <div className="home-streak-icon" aria-hidden="true">🔥</div>
