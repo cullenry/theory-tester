@@ -8,13 +8,11 @@ type AuthMode = "login" | "signup";
 
 type AuthFormProps = {
   mode: AuthMode;
-  redirectTo?: string;
 };
 
-export function AuthForm({ mode, redirectTo }: AuthFormProps) {
+export function AuthForm({ mode }: AuthFormProps) {
   const isSignup = mode === "signup";
   const supabase = createClient();
-  const safeRedirectTo = redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//") ? redirectTo : "/";
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,14 +45,14 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
         password,
         options: {
           data: { full_name: fullName.trim() },
-          emailRedirectTo: window.location.origin + "/auth/callback?next=" + encodeURIComponent(safeRedirectTo),
+          emailRedirectTo: window.location.origin + "/auth/callback",
         },
       });
 
       if (error) {
         setErrorMessage(error.message);
       } else if (data.session) {
-        window.location.href = safeRedirectTo;
+        window.location.href = "/";
         return;
       } else {
         setSuccessMessage("Account created. Check your email to confirm your address.");
@@ -65,7 +63,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
       if (error) {
         setErrorMessage(error.message);
       } else {
-        window.location.href = safeRedirectTo;
+        window.location.href = "/";
         return;
       }
     }
@@ -132,7 +130,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
 
       <div className="auth-switch">
         <span>{isSignup ? "Already have an account?" : "Don't have an account?"}</span>
-        <Link href={(isSignup ? "/login" : "/signup") + (safeRedirectTo !== "/" ? "?next=" + encodeURIComponent(safeRedirectTo) : "")}>
+        <Link href={isSignup ? "/login" : "/signup"}>
           {isSignup ? "Sign in" : "Create one"}
         </Link>
       </div>
