@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getProgressData } from "@/lib/progress";
 import { questions } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
@@ -65,12 +65,12 @@ export function TestReady() {
     .sort((a, b) => (a.accuracy as number) - (b.accuracy as number) || b.attempted - a.attempted)
     .slice(0, 3);
 
-  const checks = useMemo(() => [
+  const checks = [
     { done: answeredAttempts.length >= 50, title: "Build a question base", detail: answeredAttempts.length >= 50 ? `${answeredAttempts.length} questions answered` : `${answeredAttempts.length}/50 questions answered` },
     { done: coverage >= 70, title: "Cover the main topics", detail: `${coverage}% of your topic categories have practice history` },
     { done: accuracy >= 80, title: "Keep question accuracy high", detail: `${accuracy}% overall recorded accuracy` },
     { done: data.mockTests.length >= 2, title: "Use timed mock tests", detail: `${data.mockTests.length} mock test${data.mockTests.length === 1 ? "" : "s"} completed` },
-  ], [answeredAttempts.length, coverage, accuracy, data.mockTests.length]);
+  ];
 
   return (
     <main className="app-main">
