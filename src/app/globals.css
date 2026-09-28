@@ -1332,17 +1332,62 @@ html.dark .learn-complete-card {
   border-color: #e5dcbf;
   color: #77612b;
 }
+.explanation-card {
+  display: block;
+  margin: 17px 0 0;
+  padding: 18px 19px 19px;
+  border: 1px solid #d3e4d7;
+  border-radius: 11px;
+  background: linear-gradient(180deg, #f4faf5 0%, #f0f7f2 100%);
+}
 .explanation-heading {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
 }
 .explanation-heading .eyebrow {
   margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: .9px;
+}
+.explanation-heading h2 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.25;
+}
+.explanation-icon {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  place-items: center;
+  border: 1px solid #c5dec9;
+  border-radius: 9px;
+  background: #e2f1e5;
+  color: var(--green);
+  font-family: Georgia, serif;
+  font-size: 15px;
+  font-weight: 700;
 }
 .explanation-copy {
-  margin: 12px 0 0;
+  margin: 13px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid #dce9df;
+  color: #4e5e54;
+  font-size: 13px;
   line-height: 1.72;
+}
+html.dark .explanation-card {
+  border-color: #3e5143;
+  background: linear-gradient(180deg, #18231b 0%, #151d17 100%);
+}
+html.dark .explanation-icon {
+  border-color: #425f49;
+  background: #223128;
+}
+html.dark .explanation-copy {
+  border-top-color: #314237;
+  color: #c0c8c2;
 }
 .starred-actions {
   display: flex;
