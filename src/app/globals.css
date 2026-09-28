@@ -611,3 +611,122 @@ html.dark .home-streak-stats { border-left-color: #3a3a3a; }
   .home-streak-stats { grid-column: auto; grid-row: auto; }
   .home-streak-link { grid-column: auto; grid-row: auto; }
 }
+
+
+/* My Progress navigation + mobile header polish */
+.nav-progress-link {
+  border: 1px solid #cfe0d3;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-weight: 800;
+}
+.nav-progress-link:hover {
+  border-color: #a9c5b1;
+  background: #e2f0e5;
+  color: var(--green-dark);
+}
+html.dark .nav-progress-link {
+  border-color: #414141;
+  background: #232323;
+  color: #9fd3aa;
+}
+html.dark .nav-progress-link:hover {
+  border-color: #5a5a5a;
+  background: #2c2c2c;
+  color: #b5e4bf;
+}
+
+@media (max-width: 760px) {
+  .header-inner {
+    width: calc(100% - 32px);
+    min-height: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 7px 12px;
+    padding: 12px 0 6px;
+  }
+  .brand {
+    margin: 0;
+    min-height: 34px;
+  }
+  .header-actions {
+    position: static;
+    margin-left: auto;
+    gap: 5px;
+  }
+  .theme-toggle {
+    position: static;
+  }
+  .main-nav {
+    order: 3;
+    flex: 0 0 100%;
+    width: calc(100% + 0px);
+    justify-content: flex-start;
+    gap: 2px;
+    overflow-x: auto;
+    padding: 4px 0 2px;
+    border-top: 1px solid var(--line);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .main-nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-link {
+    flex: 0 0 auto;
+    padding: 9px 10px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .nav-progress-link {
+    padding-inline: 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .header-inner {
+    width: calc(100% - 24px);
+  }
+  .brand {
+    font-size: 17px;
+  }
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 19px;
+  }
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .hero-actions .button {
+    width: 100%;
+  }
+  .hero-proof {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .proof-separator {
+    display: none;
+  }
+  .progress-hero .button {
+    width: 100%;
+  }
+  .feature-card-heading {
+    flex-wrap: wrap;
+  }
+  .readiness-card {
+    grid-template-columns: 1fr;
+  }
+  .readiness-score {
+    justify-self: start;
+  }
+  .readiness-bar,
+  .readiness-facts {
+    grid-column: auto;
+  }
+  .progress-cta-row .button {
+    width: 100%;
+  }
+}
