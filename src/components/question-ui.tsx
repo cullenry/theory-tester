@@ -56,7 +56,7 @@ export function ExplanationCard({ explanation }: { explanation: string | null })
         <span className="explanation-icon" aria-hidden="true">i</span>
         <div><p className="eyebrow">Explanation</p><h2>Why this is the answer</h2></div>
       </div>
-      <p className="explanation-copy">{explanation}</p>
+      <div className="explanation-copy">{explanation}</div>
     </aside>
   );
 }
