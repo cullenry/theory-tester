@@ -1859,3 +1859,126 @@ html.dark .nav-link[aria-current="page"] {
     background: #d8e9dc;
   }
 }
+
+
+/* Optional easier-reading mode */
+.reading-mode-toggle {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid #d5dfd7;
+  border-radius: 8px;
+  background: #fff;
+  color: #536158;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+.reading-mode-toggle:hover {
+  border-color: #8fae98;
+  background: #edf5ef;
+  color: var(--green-dark);
+}
+.reading-mode-icon {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+}
+.reading-mode-toggle-active {
+  border-color: #7fac8a;
+  background: #e7f2ea;
+  color: var(--green-dark);
+}
+html.dark .reading-mode-toggle {
+  border-color: #404040;
+  background: #1d1d1d;
+  color: #dedede;
+}
+html.dark .reading-mode-toggle:hover,
+html.dark .reading-mode-toggle-active {
+  border-color: #6f9077;
+  background: #263428;
+  color: #c4ebcf;
+}
+
+/*
+ * Easier-reading mode is opt-in. It increases letter/word spacing and
+ * line height, uses a plain sans-serif stack, and reduces tight text
+ * presentation without changing the underlying question/explanation text.
+ */
+html.reading-mode body {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  letter-spacing: .025em;
+  word-spacing: .09em;
+}
+html.reading-mode p,
+html.reading-mode li,
+html.reading-mode label,
+html.reading-mode input,
+html.reading-mode button,
+html.reading-mode a {
+  line-height: 1.75;
+}
+html.reading-mode .hero-copy h1,
+html.reading-mode .page-heading h1,
+html.reading-mode .question-title,
+html.reading-mode .section-heading h2,
+html.reading-mode .review-section h2,
+html.reading-mode .feature-card-heading h2,
+html.reading-mode .readiness-card h2,
+html.reading-mode .learn-launch-card h2,
+html.reading-mode .learn-complete-card h1,
+html.reading-mode .completion-panel h2 {
+  font-family: Arial, "Helvetica Neue", sans-serif;
+  letter-spacing: .01em;
+  line-height: 1.3;
+}
+html.reading-mode .question-title {
+  line-height: 1.65;
+}
+html.reading-mode .hero-description,
+html.reading-mode .mode-copy p,
+html.reading-mode .question-title,
+html.reading-mode .answer-text,
+html.reading-mode .explanation-copy,
+html.reading-mode .feedback-line,
+html.reading-mode .explanation-card p {
+  letter-spacing: .025em;
+  word-spacing: .11em;
+}
+html.reading-mode .answer-option {
+  min-height: 64px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+html.reading-mode .button {
+  min-height: 52px;
+}
+html.reading-mode .answer-list,
+html.reading-mode .question-list,
+html.reading-mode .review-list {
+  gap: 12px;
+}
+html.reading-mode .answer-text,
+html.reading-mode .explanation-copy {
+  line-height: 1.85;
+}
+html.reading-mode .eyebrow {
+  letter-spacing: .12em;
+}
+html.dark.reading-mode .reading-mode-toggle-active {
+  background: #2a3a2e;
+}
+
+@media (max-width: 760px) {
+  .reading-mode-label {
+    display: none;
+  }
+  .reading-mode-toggle {
+    min-width: 36px;
+    justify-content: center;
+    padding-inline: 8px;
+  }
+}
