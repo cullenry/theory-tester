@@ -39,35 +39,49 @@ function firstMatch(html, patterns) {
 }
 
 function extractQuestion(html, id) {
-  const title = firstMatch(html, [
+  const question = firstMatch(html, [
+    /<h1[^>]*class=["'][^"']*pageHeading[^"']*["'][^>]*>([\s\S]*?)<\/h1>/i,
     /<h1[^>]*>([\s\S]*?)<\/h1>/i,
-    /<h2[^>]*>([\s\S]*?)<\/h2>/i,
+  ]);
+
+  const answers = [...html.matchAll(
+    /<li[^>]*class=["'][^"']*options-single[^"']*["'][^>]*>([\s\S]*?)<\/li>/gi
+  )].map((match) => {
+    const text = match[1]
+      .replace(/<input[^>]*>/gi, "")
+      .replace(/<[^>]+>/g, " ");
+    return stripTags(text);
+  });
+
+  const correctMatch = html.match(
+    /<li[^>]*class=["'][^"']*options-single[^"']*js-correct-answer[^"']*["'][^>]*>([\s\S]*?)<\/li>/i
+  );
+
+  const correctAnswer = correctMatch
+    ? stripTags(correctMatch[1].replace(/<input[^>]*>/gi, "").replace(/<[^>]+>/g, " "))
+    : null;
+
+  const explanation = firstMatch(html, [
+    /<div[^>]*class=["'][^"']*p-questionSingle-explanation[^"']*["'][^>]*>([\s\S]*?)<\/div>/i,
   ]);
 
   const category = firstMatch(html, [
-    /(?:Category|category)[^<]{0,100}<[^>]*>([\s\S]*?)<\/[^>]+>/i,
+    /<div[^>]*class=["'][^"']*p-questionSingle-heading[^"']*["'][^>]*>[\s\S]*?<h3[^>]*>([\s\S]*?)<\/h3>/i,
   ]);
 
-  const answerMatches = [...html.matchAll(
-    /<(?:li|label|p|div)[^>]*>([\s\S]*?(?:answer|option)[\s\S]*?)<\/(?:li|label|p|div)>/gi
-  )].map((match) => stripTags(match[1]));
+  const imageMatch = html.match(
+    /<div[^>]*class=["'][^"']*p-questionSingle-content[^"']*["'][^>]*>[\s\S]*?<img[^>]+(?:src|data-src)=["']([^"']+)["'][^>]*>/i
+  );
 
-  const uniqueAnswers = [...new Set(answerMatches.filter((answer) => answer.length > 1))];
-
-  const imageMatch = html.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["'][^>]*>/i);
   const image = imageMatch?.[1]
     ? new URL(imageMatch[1], BASE_URL).href
     : null;
 
-  const explanation = firstMatch(html, [
-    /(?:Explanation|explanation)[^<]*<[^>]*>([\s\S]*?)<\/[^>]+>/i,
-  ]);
-
   return {
     id,
-    question: title,
-    answers: uniqueAnswers.slice(0, 4),
-    correctAnswer: null,
+    question,
+    answers,
+    correctAnswer,
     explanation,
     category,
     image,
@@ -87,7 +101,14 @@ async function fetchPage(url) {
     throw new Error(`${response.status} ${response.statusText} for ${url}`);
   }
 
-  return response.text();
+  const buffer = await response.arrayBuffer();
+  const contentType = response.headers.get("content-type") || "";
+
+  const decoder = /charset=(?:["']?)(?:windows-1252|iso-8859-1)/i.test(contentType)
+    ? new TextDecoder("windows-1252")
+    : new TextDecoder("utf-8");
+
+  return decoder.decode(buffer);
 }
 
 async function main() {
@@ -108,8 +129,10 @@ async function main() {
       const html = await fetchPage(`${BASE_URL}/questions/${id}`);
       const question = extractQuestion(html, id);
 
-      if (!question.question) {
-        console.warn(`\nWarning: question ${id} did not produce a question title.`);
+      if (!question.question || question.answers.length !== 4) {
+        console.warn(
+          `\nWarning: question ${id} parsed unexpectedly (${question.answers.length} answers).`
+        );
       }
 
       questions.push(question);
