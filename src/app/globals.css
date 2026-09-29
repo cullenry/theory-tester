@@ -6017,3 +6017,26 @@ html.dark .home-streak-dot-today {
   font-weight: 700;
   line-height: 1.5 !important;
 }
+
+
+/* Keep mistake markers centred against the full content block */
+.dashboard-mistake-row {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  padding-left: 29px;
+}
+
+.dashboard-mistake-row > span {
+  position: absolute;
+  top: 50%;
+  left: 1px;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  place-items: center;
+}
+
+.dashboard-mistake-row small {
+  grid-column: auto;
+}
