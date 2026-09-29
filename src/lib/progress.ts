@@ -125,12 +125,44 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
 export async function recordMockTest(result: { formatId: string; questionCount: number; correctCount: number; answeredCount: number; percentage: number; timeExpired: boolean; }) {
   const supabase = createClient();
   const { data: user } = await supabase.auth.getUser();
-  if (!user.user) return;
-  const { error } = await supabase.from("mock_tests").insert({
-    user_id: user.user.id, format_id: result.formatId, question_count: result.questionCount, correct_count: result.correctCount, answered_count: result.answeredCount,
-    percentage: result.percentage, time_expired: result.timeExpired,
+
+  let sourceId: string | null = null;
+
+  if (user.user) {
+    const { data, error } = await supabase.from("mock_tests").insert({
+      user_id: user.user.id, format_id: result.formatId, question_count: result.questionCount, correct_count: result.correctCount, answered_count: result.answeredCount,
+      percentage: result.percentage, time_expired: result.timeExpired,
+    }).select("id").single();
+
+    if (error) {
+      console.warn("Could not save mock test:", error.message);
+    } else {
+      sourceId = data?.id ?? null;
+    }
+  }
+
+  const { error: completionError } = await supabase.from("test_completions").insert({
+    user_id: user.user?.id ?? null,
+    test_type: "mock",
+    source_id: sourceId,
   });
-  if (error) console.warn("Could not save mock test:", error.message);
+
+  if (completionError) {
+    console.warn("Could not record test completion:", completionError.message);
+  }
+}
+
+export async function getTestCompletionCount(): Promise<number | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("get_test_completion_count");
+
+  if (error) {
+    console.warn("Could not load test completion count:", error.message);
+    return null;
+  }
+
+  const count = Number(data);
+  return Number.isFinite(count) ? count : null;
 }
 
 export async function getProgressData(limit = 2000) {
