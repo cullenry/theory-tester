@@ -31,18 +31,34 @@ function getStreak(attempts: QuestionAttempt[]) {
   return { current, best, days };
 }
 
+function getLocalDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return year + "-" + month + "-" + day;
+}
+
 function getWeekActivity(days: Set<string>) {
+  const labels = ["M", "T", "W", "T", "F", "S", "S"];
   const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  start.setDate(start.getDate() - 6);
-  return Array.from({ length: 7 }, (_, index) => {
-    const date = new Date(start);
-    date.setDate(start.getDate() + index);
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const monday = new Date(today);
+  const dayOfWeek = monday.getDay();
+  const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  monday.setDate(monday.getDate() - daysFromMonday);
+
+  return labels.map((label, index) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + index);
+    const key = getLocalDateKey(date);
+    const isFuture = date.getTime() > today.getTime();
+
     return {
-      key: date.toISOString().slice(0, 10),
-      label: new Intl.DateTimeFormat("en-IE", { weekday: "narrow" }).format(date),
-      active: days.has(date.toISOString().slice(0, 10)),
-      today: index === 6,
+      key,
+      label,
+      active: !isFuture && days.has(key),
+      today: key === getLocalDateKey(today),
+      future: isFuture,
     };
   });
 }
@@ -127,7 +143,7 @@ export function HomeStreakWidget() {
         </div>
 
         <div className="home-streak-week" aria-label="Your activity over the last seven days">
-          {week.map((day) => <div className="home-streak-day" key={day.key}><span>{day.label}</span><i className={day.active ? "home-streak-dot home-streak-dot-active" : "home-streak-dot"} /></div>)}
+          {week.map((day) => <div className="home-streak-day" key={day.key}><span>{day.label}</span><i className={day.active ? "home-streak-dot home-streak-dot-active" : day.today ? "home-streak-dot home-streak-dot-today" : "home-streak-dot home-streak-dot-missed"} aria-label={day.active ? "Practised" : day.future ? "Upcoming" : "Missed"} /></div>)}
         </div>
 
         <div className="home-streak-stats"><span><strong>{streak.best}</strong> day best</span><span><strong>{answered}</strong> questions answered</span></div>
