@@ -8,7 +8,6 @@ import {
   getCourseChapters,
   getCourseLessonQuestions,
   getAdaptiveReviewQuestions,
-  getLessonProgress,
   type CourseChapter,
   type CourseLesson,
 } from "@/lib/course";
@@ -177,7 +176,14 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     setMissed(0);
 
     getProgressData(2000).then((data) => {
-      setQuestionsForLesson(getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts));
+      setUserId(data.user?.id ?? null);
+      const lessonQuestions = getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts);
+      setQuestionsForLesson(lessonQuestions);
+      setAdaptiveReviewQuestions(
+        data.user
+          ? getAdaptiveReviewQuestions(data.attempts, lessonQuestions.map((question) => question.id), 2)
+          : [],
+      );
       setLoading(false);
     });
   }
@@ -255,7 +261,13 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
         <ProgressBar
           current={currentStep}
           total={Math.max(1, totalSteps)}
-          label={isReview ? "Review progress" : "Lesson progress"}
+          label={
+            isReview
+              ? "Retry progress"
+              : phase === "adaptive"
+                ? "Adaptive review progress"
+                : "Lesson progress"
+          }
         />
 
         <div className="course-lesson-badge">
@@ -303,10 +315,16 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
             <ExplanationCard explanation={current.explanation} />
             <button className="button button-primary continue-button" type="button" onClick={next}>
               {phase === "questions" && position + 1 === questionsForLesson.length
-                ? reviewIds.length ? "Start review round" : "Finish lesson"
-                : phase === "review" && position + 1 === reviewIds.length
-                  ? "Finish lesson"
-                  : "Next question"}
+                ? adaptiveReviewQuestions.length
+                  ? "Start Smart Review"
+                  : reviewIds.length
+                    ? "Start retry round"
+                    : "Finish lesson"
+                : phase === "adaptive" && position + 1 === adaptiveReviewQuestions.length
+                  ? reviewIds.length ? "Start retry round" : "Finish lesson"
+                  : phase === "review" && position + 1 === reviewIds.length
+                    ? "Finish lesson"
+                    : "Next question"}
               <span aria-hidden="true">→</span>
             </button>
           </div>
