@@ -51,6 +51,46 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hero-proof { display: flex; align-items: center; gap: 10px; margin-top: 30px; color: #65736a; font-size: 13px; }
 .hero-proof strong { color: var(--ink); font-size: 17px; }
 .proof-separator { width: 1px; height: 16px; margin: 0 5px; background: #bdc9bf; }
+.home-proof-widget {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 17px auto 0;
+  padding: 10px 16px;
+  border: 1px solid #d2e2d6;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .78);
+  color: #647269;
+}
+.home-proof-widget strong {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+.home-proof-widget span {
+  font-size: 11px;
+  font-weight: 700;
+}
+html.dark .home-proof-widget {
+  border-color: #48584c;
+  background: rgba(29, 35, 30, .82);
+  color: #abb6ae;
+}
+@media (max-width: 520px) {
+  .home-proof-widget {
+    width: auto;
+    margin-inline: 12px;
+    padding-inline: 12px;
+  }
+  .home-proof-widget span {
+    font-size: 10px;
+  }
+}
+
 .hero-trust {
   margin: 10px 0 0;
   color: #7a877f;
