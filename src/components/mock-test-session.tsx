@@ -131,6 +131,8 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
       answeredCount,
       percentage,
       timeExpired,
+      questionIds: test.map((question) => question.id),
+      responses,
     });
 
     void Promise.all(
