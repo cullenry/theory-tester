@@ -5699,3 +5699,37 @@ html.dark .course-signin-lesson-points span {
     background: #26372c;
   }
 }
+
+
+/* Mobile question return position + course-map chevron */
+.mobile-question-anchor {
+  scroll-margin-top: 88px;
+}
+
+.course-map-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.course-map-chevron {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  margin-top: -3px;
+  border-right: 1.8px solid currentColor;
+  border-bottom: 1.8px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform .18s ease;
+}
+
+.course-map[open] .course-map-chevron {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+
+@media (max-width: 760px) and (pointer: coarse) {
+  .mobile-question-anchor {
+    scroll-margin-top: 92px;
+  }
+}
