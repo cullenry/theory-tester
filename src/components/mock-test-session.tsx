@@ -40,7 +40,7 @@ function TestFormatCard({ format, onStart, featured = false }: TestFormatCardPro
       <h3>{format.title}</h3>
       <p className="mock-format-stats">{format.questionCount} questions <span aria-hidden="true">·</span> {format.durationMinutes} minutes</p>
       <p className="mock-format-description">{format.description}</p>
-      <p className="mock-format-details">{format.id === "full" ? "Matches the official car and bike format: 40 questions, 45 minutes. Review every answer when you finish." : "Timed quick practice using random questions from the full library."}</p>
+      <p className="mock-format-details">{format.id === "full" ? "For Category A & B preparation: 40 questions, 45 minutes. Review every answer when you finish." : "Timed quick practice using random questions from the full library."}</p>
       <button className="button button-primary" type="button" onClick={() => onStart(format)}>Start {format.title}<span aria-hidden="true">→</span></button>
     </article>
   );
