@@ -81,7 +81,12 @@ function LockedStreakWidget() {
         </div>
 
         <div className="home-streak-locked-overlay">
-          <span className="home-streak-lock" aria-hidden="true">🔒</span>
+          <span className="home-streak-lock" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <rect x="5.5" y="10" width="13" height="10" rx="2.2" />
+              <path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10" />
+            </svg>
+          </span>
           <div>
             <p className="eyebrow">Make your practice count</p>
             <h2>Sign in to view your progress.</h2>
