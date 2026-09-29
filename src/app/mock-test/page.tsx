@@ -5,8 +5,8 @@ import { getRandomQuestions } from "@/lib/questions";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Category A & B Theory Test Mock Test",
-  description: "Take a 40-question Category A & B theory test mock with a 45-minute timer and review every answer with TheoryPrep.",
+  title: "Irish Car Theory Test Mock Test",
+  description: "Take a 40-question Category B (BW) car theory test mock with a 45-minute timer and review every answer with TheoryPrep.",
   alternates: { canonical: "/mock-test" },
 };
 
