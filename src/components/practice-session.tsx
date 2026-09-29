@@ -235,7 +235,7 @@ export function PracticeSession() {
                   <h2>Work through all 805 questions.</h2>
                   <p>Take the question bank as a course: short lessons, instant explanations and a second chance for anything that catches you out.</p>
                 </div>
-                <Link className="button button-primary" href="/practice">Learn <span aria-hidden="true">→</span></Link>
+                <Link className="button button-primary" href="/practice/learn">Learn <span aria-hidden="true">→</span></Link>
               </section>
             </div>
 
