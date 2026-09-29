@@ -4,7 +4,7 @@ import { questions } from "@/lib/questions";
 const siteUrl = "https://theoryprep.irish";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["/", "/practice", "/practice/learn", "/mock-test", "/questions", "/challenge", "/progress", "/test-ready", "/feedback", "/privacy", "/terms", "/support"];
+  const staticRoutes = ["/", "/practice", "/practice/learn", "/mock-test", "/questions", "/challenge", "/progress", "/test-ready", "/feedback", "/privacy", "/terms", "/support", "/theory-test-practice", "/irish-driving-theory-test", "/theory-test-questions", "/irish-theory-test-mock-test", "/irish-road-signs"];
   const questionRoutes = questions.map((question) => ({
     url: siteUrl + "/questions/" + question.id,
     lastModified: new Date(),

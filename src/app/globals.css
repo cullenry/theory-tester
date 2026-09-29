@@ -2717,3 +2717,218 @@ html.dark .site-footer-links .support-link {
   border-color: #4a6751;
   background: #233229;
 }
+
+
+/* SEO landing pages and internal search links */
+.seo-landing-shell {
+  max-width: 1000px;
+}
+.seo-landing-hero {
+  padding: 12px 0 42px;
+}
+.seo-landing-hero h1 {
+  max-width: 820px;
+  margin: 9px 0 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 6vw, 64px);
+  font-weight: 500;
+  letter-spacing: -.9px;
+  line-height: 1.05;
+}
+.seo-landing-lead {
+  max-width: 720px;
+  margin: 0;
+  color: #536158;
+  font-size: 17px;
+  line-height: 1.75;
+}
+.seo-landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 25px;
+}
+.seo-landing-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 760px;
+  margin-top: 28px;
+}
+.seo-landing-stats > div {
+  display: grid;
+  gap: 3px;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+}
+.seo-landing-stats strong {
+  font-size: 18px;
+  color: var(--green);
+}
+.seo-landing-stats span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.seo-content-section {
+  margin-top: 36px;
+  padding-top: 36px;
+  border-top: 1px solid var(--line);
+}
+.seo-section-heading {
+  margin-bottom: 22px;
+}
+.seo-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.seo-feature-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+}
+.seo-feature-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+.seo-feature-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.seo-question-list {
+  border-top: 1px solid var(--line);
+}
+.seo-question-row {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 8px;
+  border-bottom: 1px solid var(--line);
+  transition: background .18s ease, padding .18s ease;
+}
+.seo-question-row:hover {
+  padding-inline: 15px;
+  background: #e6f1e9;
+}
+.seo-section-action {
+  margin-top: 18px;
+}
+.seo-link-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.seo-link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 17px 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+.seo-link-card:hover {
+  border-color: #96b7a0;
+  background: #f1f7f2;
+  transform: translateY(-1px);
+}
+.seo-link-card strong {
+  font-size: 14px;
+}
+.seo-link-card p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.seo-link-card > span {
+  color: var(--green);
+  font-size: 15px;
+  flex: 0 0 auto;
+}
+.seo-links-section {
+  width: min(1000px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 0 0 76px;
+}
+.seo-home-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+.seo-home-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--green-dark);
+  font-size: 13px;
+  font-weight: 700;
+  transition: background .18s ease, padding .18s ease;
+}
+.seo-home-links a:nth-child(odd) {
+  margin-right: 10px;
+}
+.seo-home-links a:hover {
+  padding-inline: 14px;
+  background: #e6f1e9;
+}
+.seo-home-links a span {
+  color: var(--green);
+  flex: 0 0 auto;
+}
+html.dark .seo-landing-lead {
+  color: #c0c9c3;
+}
+html.dark .seo-landing-stats > div,
+html.dark .seo-feature-card,
+html.dark .seo-link-card {
+  background: #1d231e;
+  border-color: #3d4a40;
+}
+html.dark .seo-feature-card p,
+html.dark .seo-landing-stats span,
+html.dark .seo-link-card p {
+  color: #aeb8b1;
+}
+html.dark .seo-link-card:hover {
+  border-color: #6f9077;
+  background: #263329;
+}
+html.dark .seo-question-row:hover,
+html.dark .seo-home-links a:hover {
+  background: #263329;
+}
+@media (max-width: 760px) {
+  .seo-landing-stats,
+  .seo-feature-grid,
+  .seo-link-grid,
+  .seo-home-links {
+    grid-template-columns: 1fr;
+  }
+  .seo-home-links a:nth-child(odd) {
+    margin-right: 0;
+  }
+  .seo-question-row {
+    grid-template-columns: 48px 1fr auto;
+    gap: 12px;
+    padding-inline: 4px;
+  }
+  .seo-question-row:hover {
+    padding-inline: 9px;
+  }
+  .seo-links-section {
+    width: calc(100% - 24px);
+  }
+}

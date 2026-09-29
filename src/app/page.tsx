@@ -80,6 +80,20 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <section className="seo-links-section" aria-labelledby="seo-links-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">Popular searches</p><h2 id="seo-links-title">Find the right place to start.</h2></div>
+          <p>Jump straight to the TheoryPrep guide or practice page that matches what you are looking for.</p>
+        </div>
+        <div className="seo-home-links">
+          <Link href="/theory-test-practice">Irish theory test practice <span aria-hidden="true">↗</span></Link>
+          <Link href="/theory-test-questions">Irish theory test questions <span aria-hidden="true">↗</span></Link>
+          <Link href="/irish-theory-test-mock-test">Irish theory test mock test <span aria-hidden="true">↗</span></Link>
+          <Link href="/irish-road-signs">Irish road signs practice <span aria-hidden="true">↗</span></Link>
+          <Link href="/irish-driving-theory-test">Irish driving theory test guide <span aria-hidden="true">↗</span></Link>
+        </div>
+      </section>
       <footer className="site-footer">
         <Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">T</span><span>Theory<span className="brand-accent">Prep</span></span></Link>
         <span>Practice with purpose. Drive with confidence.</span>

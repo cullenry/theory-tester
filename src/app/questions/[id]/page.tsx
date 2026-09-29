@@ -10,8 +10,8 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
   const question = getQuestionById(Number(id));
   return question
     ? {
-        title: `Question ${question.id}: ${question.question.slice(0, 70)}`,
-        description: `${question.question} — answer and explanation for Irish driving theory practice.`,
+        title: `Irish Theory Test Question ${question.id}: ${question.question.slice(0, 62)}`,
+        description: `${question.question} — answer and explanation for Irish driving theory test practice on TheoryPrep.`,
         alternates: { canonical: `/questions/${question.id}` },
       }
     : { title: "Question not found", description: "Browse Irish driving theory questions." };
