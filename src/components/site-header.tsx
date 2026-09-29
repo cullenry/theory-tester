@@ -90,7 +90,7 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="site-header">
+    <header className="site-header site-header-responsive">
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="TheoryPrep home">
           <span className="brand-mark" aria-hidden="true">T</span>
