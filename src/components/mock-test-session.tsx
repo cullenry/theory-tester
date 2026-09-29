@@ -123,7 +123,9 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
   };
 
   const handleSubmitRequest = () => {
-    if (timeRemaining > 5 * 60) {
+    const earlySubmitThreshold = debugTimerEnabled ? 1 : 5 * 60;
+
+    if (timeRemaining > earlySubmitThreshold) {
       setShowSubmitConfirm(true);
       return;
     }
@@ -213,9 +215,11 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
     <main className="app-main"><div className="page-shell practice-shell">
       <div className="mock-exam-header"><div className="page-heading"><div><h1>Mock test</h1></div></div><div className={`exam-timer ${timerState}`} role="timer" aria-label={`${formatTime(timeRemaining)} remaining`}><span>Time remaining</span><strong>{formatTime(timeRemaining)}</strong></div></div>
       <div className="mock-progress"><ProgressBar current={position + 1} total={test.length} label="Test progress" /></div>
-      <QuestionCard question={current} eyebrow={`Question ${position + 1} of ${test.length}`}>
-        {current.answers.map((answer, index) => <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={responses[position] === answer} correct={false} incorrect={false} onSelect={() => setResponses((currentResponses) => currentResponses.map((item, responseIndex) => responseIndex === position ? answer : item))} />)}
-      </QuestionCard>
+      <div className="mock-question-wrap">
+        <QuestionCard question={current} eyebrow={`Question ${position + 1} of ${test.length}`}>
+          {current.answers.map((answer, index) => <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={responses[position] === answer} correct={false} incorrect={false} onSelect={() => setResponses((currentResponses) => currentResponses.map((item, responseIndex) => responseIndex === position ? answer : item))} />)}
+        </QuestionCard>
+      </div>
       <div className="exam-navigation"><button className="button button-secondary" type="button" disabled={position === 0} onClick={() => setPosition((step) => Math.max(0, step - 1))}>← Previous</button><span>Question {position + 1} of {test.length}</span><button className="button button-secondary" type="button" disabled={position === test.length - 1} onClick={() => setPosition((step) => Math.min(test.length - 1, step + 1))}>Next →</button></div>
       <div className="exam-submit-row"><span>{responses[position] ? "Answer selected" : "This question is unanswered"}</span><button className="button button-primary" type="button" onClick={handleSubmitRequest}>Submit Test</button></div>
 
