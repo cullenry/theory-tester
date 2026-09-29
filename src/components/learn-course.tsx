@@ -77,14 +77,45 @@ export function LearnCourse() {
           </div>
         </section>
 
-        {data.user === null && (
-          <section className="course-signin-strip">
+        {data.user === null ? (
+          <section className="course-next-card course-signin-lesson-card" aria-labelledby="first-lesson-title">
             <div>
-              <p className="eyebrow">Save your place</p>
-              <strong>Sign in to keep course progress across devices.</strong>
-              <span>You can still start learning right away.</span>
+              <p className="eyebrow">Your first lesson</p>
+              <h2 id="first-lesson-title">Start learning with TheoryPrep.</h2>
+              <p>Sign in to start your lessons and let your answers shape what you see next.</p>
             </div>
-            <Link className="button button-secondary" href="/login?next=/practice/learn">Sign in</Link>
+            <Link
+              className="button button-primary"
+              href="/login?next=/practice/learn"
+            >
+              Sign in to start <span aria-hidden="true">→</span>
+            </Link>
+          </section>
+        ) : (
+          <section className="course-next-card">
+            <div>
+              <p className="eyebrow">{complete ? "Course complete" : "Continue your journey"}</p>
+              <h2>
+                {complete
+                  ? "You’ve covered the whole question bank."
+                  : next
+                    ? next.chapter.name
+                    : "Ready to start?"}
+              </h2>
+              <p>
+                {complete
+                  ? "Every question has been brought into your learning journey. Use the course map to revisit any chapter."
+                  : next
+                    ? `Lesson ${next.lessonIndex + 1} of ${next.chapter.lessons.length} · ${next.lesson.questionIds.length} quick questions`
+                    : "Start with a short lesson and build from there."}
+              </p>
+            </div>
+            <Link
+              className="button button-primary"
+              href={next ? `/practice/learn/lesson?chapter=${next.chapterIndex}&lesson=${next.lessonIndex}` : "/practice/learn"}
+            >
+              {complete ? "Review the course" : "Continue learning"} <span aria-hidden="true">→</span>
+            </Link>
           </section>
         )}
 
@@ -104,32 +135,6 @@ export function LearnCourse() {
             <span><i aria-hidden="true">02</i><strong>Reinforce over time</strong><small>Bring questions back after time has passed.</small></span>
             <span><i aria-hidden="true">03</i><strong>Second chances</strong><small>Miss one and it returns before the lesson ends.</small></span>
           </div>
-        </section>
-
-        <section className="course-next-card">
-          <div>
-            <p className="eyebrow">{complete ? "Course complete" : hasStarted ? "Continue your journey" : "Your first lesson"}</p>
-            <h2>
-              {complete
-                ? "You’ve covered the whole question bank."
-                : next
-                  ? next.chapter.name
-                  : "Ready to start?"}
-            </h2>
-            <p>
-              {complete
-                ? "Every question has been brought into your learning journey. Use the course map to revisit any chapter."
-                : next
-                  ? `Lesson ${next.lessonIndex + 1} of ${next.chapter.lessons.length} · ${next.lesson.questionIds.length} quick questions`
-                  : "Start with a short lesson and build from there."}
-            </p>
-          </div>
-          <Link
-            className="button button-primary"
-            href={next ? `/practice/learn/lesson?chapter=${next.chapterIndex}&lesson=${next.lessonIndex}` : "/practice"}
-          >
-            {complete ? "Review the course" : hasStarted ? "Continue learning" : "Start the course"} <span aria-hidden="true">→</span>
-          </Link>
         </section>
 
         <section className="course-how-card" aria-labelledby="course-method-title">
