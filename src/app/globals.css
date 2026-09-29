@@ -4622,7 +4622,7 @@ html.dark .course-next-card { border-color: #3f5143; background: #151c17; }
 .course-method-steps strong { font-size: 12px; }
 .course-method-steps small { color: var(--muted); font-size: 10px; line-height: 1.5; }
 
-.course-map { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.course-map { margin-top: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
 .course-map summary { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 20px; cursor: pointer; list-style: none; }
 .course-map summary::-webkit-details-marker { display: none; }
 .course-map summary > span:first-child { display: grid; gap: 3px; }
@@ -4643,7 +4643,7 @@ html.dark .course-chapter:hover { background: #202020; }
 .course-chapter-active { background: #f5faf6; }
 html.dark .course-chapter-active { background: #1d261f; }
 html.dark .course-mini-bar { background: #292929; }
-.course-footer-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 15px; }
+.course-footer-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
 
 .course-lesson-shell { max-width: 800px; }
 .course-lesson-heading { align-items: end; }
@@ -4911,7 +4911,7 @@ html.dark .site-footer .footer-brand {
 }
 
 .course-adaptive-card {
-  margin: 14px 0;
+  margin: 12px 0;
   padding: 19px 20px;
   border: 1px solid var(--line);
   border-radius: 12px;
