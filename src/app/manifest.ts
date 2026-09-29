@@ -14,46 +14,14 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["education", "automotive"],
     lang: "en-IE",
     icons: [
-      {
-        src: "/icons/icon-192.svg",
-        sizes: "192x192",
-        type: "image/svg+xml",
-        purpose: "any",
-      },
-      {
-        src: "/icons/icon-512.svg",
-        sizes: "512x512",
-        type: "image/svg+xml",
-        purpose: "any",
-      },
-      {
-        src: "/icons/icon-maskable.svg",
-        sizes: "512x512",
-        type: "image/svg+xml",
-        purpose: "maskable",
-      },
+      { src: "/icons/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
+      { src: "/icons/icon-maskable.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" },
     ],
     shortcuts: [
-      {
-        name: "Start practice",
-        short_name: "Practice",
-        url: "/practice",
-      },
-      {
-        name: "Take a mock test",
-        short_name: "Mock test",
-        url: "/mock-test",
-      },
-      {
-        name: "View my progress",
-        short_name: "Progress",
-        url: "/progress",
-      },
-      {
-        name: "Study flashcards",
-        short_name: "Flashcards",
-        url: "/practice/flashcards",
-      },
+      { name: "Start practice", short_name: "Practice", url: "/practice" },
+      { name: "Learn the course", short_name: "Learn", url: "/practice/learn" },
+      { name: "Take a mock test", short_name: "Mock test", url: "/mock-test" },
+      { name: "View my progress", short_name: "Progress", url: "/progress" },
     ],
   };
 }
