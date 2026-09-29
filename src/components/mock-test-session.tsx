@@ -55,6 +55,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
   const [submitted, setSubmitted] = useState(false);
   const [timeExpired, setTimeExpired] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(initialDurationSeconds);
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const deadlineRef = useRef<number | null>(null);
   const submissionRef = useRef(false);
   const recordedResultRef = useRef(false);
@@ -99,6 +100,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
     setTimeRemaining(durationSeconds);
     setTimeExpired(false);
     setSubmitted(false);
+    setShowSubmitConfirm(false);
     setHasStarted(true);
   };
 
@@ -118,6 +120,14 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
 
   const retakeTest = () => {
     startTest(activeFormat);
+  };
+
+  const handleSubmitRequest = () => {
+    if (timeRemaining > 5 * 60) {
+      setShowSubmitConfirm(true);
+      return;
+    }
+    submitTest();
   };
 
   useEffect(() => {
@@ -207,7 +217,45 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
         {current.answers.map((answer, index) => <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={responses[position] === answer} correct={false} incorrect={false} onSelect={() => setResponses((currentResponses) => currentResponses.map((item, responseIndex) => responseIndex === position ? answer : item))} />)}
       </QuestionCard>
       <div className="exam-navigation"><button className="button button-secondary" type="button" disabled={position === 0} onClick={() => setPosition((step) => Math.max(0, step - 1))}>← Previous</button><span>Question {position + 1} of {test.length}</span><button className="button button-secondary" type="button" disabled={position === test.length - 1} onClick={() => setPosition((step) => Math.min(test.length - 1, step + 1))}>Next →</button></div>
-      <div className="exam-submit-row"><span>{responses[position] ? "Answer selected" : "This question is unanswered"}</span><button className="button button-primary" type="button" onClick={submitTest}>Submit Test</button></div>
+      <div className="exam-submit-row"><span>{responses[position] ? "Answer selected" : "This question is unanswered"}</span><button className="button button-primary" type="button" onClick={handleSubmitRequest}>Submit Test</button></div>
+
+      {showSubmitConfirm && (
+        <div className="mock-submit-confirm-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget) setShowSubmitConfirm(false);
+        }}>
+          <section
+            className="mock-submit-confirm"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mock-submit-confirm-title"
+            aria-describedby="mock-submit-confirm-copy"
+          >
+            <div className="mock-submit-confirm-icon" aria-hidden="true">?</div>
+            <p className="eyebrow">Finish mock test</p>
+            <h2 id="mock-submit-confirm-title">Are you sure you want to finish?</h2>
+            <p id="mock-submit-confirm-copy">
+              You still have <strong>{formatTime(timeRemaining)}</strong> left. Once you submit, you won't be able to change your answers.
+            </p>
+            {unansweredCount > 0 && (
+              <div className="mock-submit-confirm-warning">
+                <strong>{unansweredCount} unanswered {unansweredCount === 1 ? "question" : "questions"}</strong>
+                <span>These will be submitted as unanswered.</span>
+              </div>
+            )}
+            <div className="mock-submit-confirm-actions">
+              <button className="button button-secondary" type="button" onClick={() => setShowSubmitConfirm(false)}>
+                Keep testing
+              </button>
+              <button className="button button-primary" type="button" onClick={() => {
+                setShowSubmitConfirm(false);
+                submitTest();
+              }}>
+                Submit test <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div></main>
   );
 }
