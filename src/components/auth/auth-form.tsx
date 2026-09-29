@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type AuthMode = "login" | "signup";
@@ -13,6 +14,11 @@ type AuthFormProps = {
 export function AuthForm({ mode }: AuthFormProps) {
   const isSignup = mode === "signup";
   const supabase = createClient();
+  const searchParams = useSearchParams();
+  const nextPath = (() => {
+    const next = searchParams.get("next");
+    return next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  })();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,7 +58,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       if (error) {
         setErrorMessage(error.message);
       } else if (data.session) {
-        window.location.href = "/";
+        window.location.href = nextPath;
         return;
       } else {
         setSuccessMessage("Account created. Check your email to confirm your address.");
