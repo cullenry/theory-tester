@@ -5885,6 +5885,7 @@ html.dark .mock-submit-confirm-warning span {
 /* Mock test mobile sizing */
 .mock-question-wrap {
   min-width: 0;
+  scroll-margin-top: 88px;
 }
 
 @media (max-width: 760px) and (pointer: coarse) {
