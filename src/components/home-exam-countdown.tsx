@@ -138,7 +138,13 @@ export function HomeExamCountdown() {
                 onClick={openDatePicker}
               >
                 <span>{examDate ? formatExamDate(examDate) : "Choose a date"}</span>
-                <span className="home-exam-calendar-icon" aria-hidden="true">▦</span>
+                <span className="home-exam-calendar-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <rect x="4.5" y="5.5" width="15" height="14" rx="2.5" />
+                    <path d="M8 3.5v4M16 3.5v4M4.5 10h15" />
+                    <path d="M8 13.5h.01M12 13.5h.01M16 13.5h.01M8 16.5h.01M12 16.5h.01M16 16.5h.01" />
+                  </svg>
+                </span>
               </button>
 
               {calendarOpen && (
