@@ -208,14 +208,13 @@ export function PracticeSession() {
         {session === null ? (
           <>
             <div className="page-heading"><div><p className="eyebrow">Learn smarter. Practise better.</p><h1>Learn &amp; Practice</h1></div></div>
-            <section className="learn-launch-card">
+            <section className="learn-launch-card learn-signin-feature">
               <div className="learn-launch-copy">
-                <p className="eyebrow">Adaptive learning</p>
-                <h2>Learn, not just practise.</h2>
-                <p>Learn mode uses your own results to prioritise weak spots, space out reinforcement and bring missed questions back at the end.</p>
-                <div className="learn-launch-points"><span>Weak spots first</span><span>Spaced reinforcement</span><span>Retry missed questions</span></div>
+                <p className="eyebrow">Personalised learning</p>
+                <h2>Make practice personal.</h2>
+                <p>Sign in to unlock Learn and use your saved results to focus on weak spots, reinforce what you know and revisit missed questions.</p>
               </div>
-              <Link className="button button-primary" href="/practice/learn">Learn <span aria-hidden="true">→</span></Link>
+              <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to Learn <span aria-hidden="true">→</span></Link>
             </section>
 
             {starredMode ? (
