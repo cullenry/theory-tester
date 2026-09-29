@@ -295,9 +295,7 @@ export function ProgressDashboard() {
 
   const displayName = getDisplayName(data.user);
   const firstName = displayName.split(" ")[0];
-  const continueHref = nextLesson
-    ? `/practice/learn/lesson?chapter=${nextLesson.chapterIndex}&lesson=${nextLesson.lessonIndex}`
-    : "/practice/learn";
+  const continueHref = "/practice/learn";
 
   return (
     <main className="app-main">
