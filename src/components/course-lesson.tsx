@@ -198,6 +198,29 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     );
   }
 
+  if (!userId) {
+    return (
+      <main className="app-main">
+        <div className="page-shell course-shell">
+          <section className="course-signin-lesson-gate">
+            <p className="eyebrow">Your first lesson</p>
+            <h1>Sign in to start learning.</h1>
+            <p>Your Learn course uses your answers to adapt future lessons, reinforce tricky questions and keep your place across devices.</p>
+            <div className="course-signin-lesson-points">
+              <span>Personalised question order</span>
+              <span>Progress saved to your account</span>
+              <span>Smart review after each lesson</span>
+            </div>
+            <div className="course-complete-actions">
+              <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to continue <span aria-hidden="true">→</span></Link>
+              <Link className="button button-secondary" href="/practice/learn">Back to Learn</Link>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   if (!chapter || !lesson || !questionsForLesson.length) {
     return (
       <main className="app-main">
