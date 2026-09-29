@@ -98,7 +98,15 @@ export default function Home() {
         </div>
       </section>
       <footer className="site-footer">
-        <Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">T</span><span>Theory<span className="brand-accent">Prep</span></span></Link>
+        <Link className="brand footer-brand" href="/" aria-label="TheoryPrep home">
+          <Image
+            className="footer-brand-logo"
+            src="/images/theoryprep-logo.png"
+            alt="TheoryPrep"
+            width={102}
+            height={61}
+          />
+        </Link>
         <span>Practice with purpose. Drive with confidence.</span>
         <nav className="site-footer-links" aria-label="Footer">
           <Link href="/feedback">Feedback</Link>
