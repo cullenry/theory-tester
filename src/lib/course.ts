@@ -1,6 +1,7 @@
 import { questions, type Question } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
 import type { QuestionAttempt } from "@/lib/progress";
+import { buildLearningPlan } from "@/lib/learning";
 
 export const COURSE_LESSON_SIZE = 8;
 
@@ -155,17 +156,14 @@ export function getCourseLessonQuestions(
     .map((id) => chapter.questions.find((question) => question.id === id))
     .filter((question): question is Question => Boolean(question));
 
-  return [...lessonQuestions].sort((a, b) => {
-    const aAttempt = lastAttemptByQuestion.get(a.id);
-    const bAttempt = lastAttemptByQuestion.get(b.id);
+  // Keep the course map fixed so all 805 questions are covered, but let the
+  // existing learning algorithm decide the order inside each lesson.
+  // This uses past answers, weak spots and spacing to bring the most useful
+  // material forward without removing any questions from the course.
+  const adaptivePlan = buildLearningPlan(lessonQuestions, attempts, lessonQuestions.length);
 
-    if (!aAttempt && bAttempt) return -1;
-    if (aAttempt && !bAttempt) return 1;
+  return adaptivePlan.length === lessonQuestions.length
+    ? adaptivePlan.map((item) => item.question)
+    : lessonQuestions;
 
-    if (aAttempt && bAttempt && aAttempt.is_correct !== bAttempt.is_correct) {
-      return aAttempt.is_correct ? 1 : -1;
-    }
-
-    return lesson.questionIds.indexOf(a.id) - lesson.questionIds.indexOf(b.id);
-  });
 }
