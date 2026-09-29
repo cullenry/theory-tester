@@ -183,7 +183,6 @@ export function HomeExamCountdown() {
                           type="button"
                           className={[
                             "home-exam-calendar-day",
-                            !inMonth ? "home-exam-calendar-day-muted" : "",
                             selected ? "home-exam-calendar-day-selected" : "",
                             today ? "home-exam-calendar-day-today" : "",
                           ].join(" ")}
