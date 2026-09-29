@@ -120,6 +120,16 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     scrollQuestionToTop();
   }
 
+  useEffect(() => {
+    if (!current || phase === "complete") return;
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        scrollQuestionToTop();
+      });
+    });
+  }, [position, phase, current?.id]);
+
   function next() {
     setSelected(null);
 
