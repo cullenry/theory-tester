@@ -1,0 +1,54 @@
+import type { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    id: "/",
+    name: "TheoryPrep — Irish Car Theory Test Practice",
+    short_name: "TheoryPrep",
+    description: "Practise Irish car theory test questions, build your confidence and take timed mock tests.",
+    start_url: "/",
+    scope: "/",
+    display: "standalone",
+    background_color: "#f8faf8",
+    theme_color: "#16704c",
+    categories: ["education", "automotive"],
+    lang: "en-IE",
+    icons: [
+      {
+        src: "/icons/icon-192.svg",
+        sizes: "192x192",
+        type: "image/svg+xml",
+        purpose: "any",
+      },
+      {
+        src: "/icons/icon-512.svg",
+        sizes: "512x512",
+        type: "image/svg+xml",
+        purpose: "any",
+      },
+      {
+        src: "/icons/icon-maskable.svg",
+        sizes: "512x512",
+        type: "image/svg+xml",
+        purpose: "maskable",
+      },
+    ],
+    shortcuts: [
+      {
+        name: "Start practice",
+        short_name: "Practice",
+        url: "/practice",
+      },
+      {
+        name: "Take a mock test",
+        short_name: "Mock test",
+        url: "/mock-test",
+      },
+      {
+        name: "View my progress",
+        short_name: "Progress",
+        url: "/progress",
+      },
+    ],
+  };
+}
