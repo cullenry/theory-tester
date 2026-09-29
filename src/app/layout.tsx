@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SiteHeader } from "@/components/site-header";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,16 +9,24 @@ const siteUrl = "https://theoryprep.irish";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "Category A & B Theory Test Practice", template: "%s | TheoryPrep" },
-  description: "Practise 805 Category A & B theory test questions, learn from clear explanations and take timed mock tests. Free to start with TheoryPrep.",
+  title: { default: "Irish Car Theory Test Practice", template: "%s | TheoryPrep" },
+  description: "Practise 805 Irish car theory test questions, learn from clear explanations and take timed mock tests. Free to start with TheoryPrep.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "TheoryPrep | Irish Driving Theory Practice",
-    description: "Learn, practise and prepare for the Irish driving theory test.",
+    title: "TheoryPrep | Irish Car Theory Test Practice",
+    description: "Learn, practise and prepare for the Irish car theory test.",
     url: siteUrl,
     siteName: "TheoryPrep",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#16704c",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({
@@ -30,6 +40,8 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">Skip to main content</a>
         <SiteHeader />
         <div id="main-content" tabIndex={-1}>{children}</div>
+        <MobileBottomNav />
+        <PwaInstallPrompt />
         <Script
           id="theoryprep-theme"
           strategy="beforeInteractive"
