@@ -150,6 +150,7 @@ export function SiteHeader() {
                 <div className="account-popover" role="menu">
                   <div className="account-popover-label">Signed in</div>
                   <Link className="account-progress-link" href="/progress" role="menuitem">View my progress <span aria-hidden="true">↗</span></Link>
+                  <Link className="account-settings-link" href="/settings" role="menuitem">Settings <span aria-hidden="true">⚙</span></Link>
                   <button
                     className="account-signout"
                     type="button"
