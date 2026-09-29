@@ -190,6 +190,16 @@ export function PracticeSession() {
     });
   };
 
+  useEffect(() => {
+    if (!session || finished) return;
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        scrollQuestionToTop();
+      });
+    });
+  }, [position, session, finished]);
+
   const beginSession = (pool: Question[], length: number = sessionLength, review = false) => {
     const nextSession = getRandomQuestionsFromPool(pool, length);
     setActivePool(pool);
