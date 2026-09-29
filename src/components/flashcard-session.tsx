@@ -1,13 +1,104 @@
 "use client";
 
 import Link from "next/link";
-import { KeyboardEvent, useEffect, useMemo, useState } from "react";
+import { KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { getRandomQuestionsFromPool, questions, type Question } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
 
 const DECK_SIZES = [10, 20, 40] as const;
 type DeckSize = (typeof DECK_SIZES)[number] | "all";
 const MASTERED_KEY = "theoryprep-flashcards-mastered";
+
+function FlashcardSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ value: string; label: string; detail?: string }>;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const selected = options.find((option) => option.value === value) ?? options[0];
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: globalThis.KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div className="flashcard-select" ref={wrapperRef}>
+      <span className="flashcard-select-label">{label}</span>
+      <button
+        className={open ? "flashcard-select-trigger flashcard-select-trigger-open" : "flashcard-select-trigger"}
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="flashcard-select-copy">
+          <strong>{selected?.label ?? "Choose an option"}</strong>
+          {selected?.detail && <small>{selected.detail}</small>}
+        </span>
+        <span className={open ? "topic-picker-chevron topic-picker-chevron-open" : "topic-picker-chevron"} aria-hidden="true" />
+      </button>
+
+      {open && (
+        <div className="flashcard-select-menu" role="listbox" aria-label={label}>
+          <div className="flashcard-select-menu-heading">
+            <span>Choose {label.toLowerCase()}</span>
+            <span>{options.length} options</span>
+          </div>
+          <div className="flashcard-select-options">
+            {options.map((option) => {
+              const isSelected = option.value === value;
+              return (
+                <button
+                  key={option.value}
+                  className={isSelected ? "flashcard-select-option flashcard-select-option-selected" : "flashcard-select-option"}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    onChange(option.value);
+                    setOpen(false);
+                  }}
+                >
+                  <span className="flashcard-select-check" aria-hidden="true">{isSelected ? "✓" : ""}</span>
+                  <span className="flashcard-select-option-copy">
+                    <strong>{option.label}</strong>
+                    {option.detail && <small>{option.detail}</small>}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 function Flashcard({ question, flipped, onFlip }: { question: Question; flipped: boolean; onFlip: () => void }) {
   const answer = question.correctAnswer ?? "Answer not available for this question.";
@@ -167,26 +258,24 @@ export function FlashcardSession() {
             </div>
 
             <div className="flashcard-filters">
-              <label>
-                <span>Category</span>
-                <select value={category} onChange={(event) => setCategory(event.target.value)}>
-                  <option value="all">All questions</option>
-                  {taxonomyCategories.map((item) => <option value={item.name} key={item.name}>{item.name}</option>)}
-                </select>
-              </label>
-              <label>
-                <span>Deck size</span>
-                <select
-                  value={String(deckSize)}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    setDeckSize(value === "all" ? "all" : Number(value) as DeckSize);
-                  }}
-                >
-                  {DECK_SIZES.map((size) => <option value={size} key={size}>{size} cards</option>)}
-                  <option value="all">All {selectedPool.length} cards</option>
-                </select>
-              </label>
+              <FlashcardSelect
+                label="Category"
+                value={category}
+                onChange={setCategory}
+                options={[
+                  { value: "all", label: "All questions", detail: `${questions.length} cards` },
+                  ...taxonomyCategories.map((item) => ({ value: item.name, label: item.name, detail: `${item.count} cards` })),
+                ]}
+              />
+              <FlashcardSelect
+                label="Deck size"
+                value={String(deckSize)}
+                onChange={(value) => setDeckSize(value === "all" ? "all" : Number(value) as DeckSize)}
+                options={[
+                  ...DECK_SIZES.map((size) => ({ value: String(size), label: `${size} cards` })),
+                  { value: "all", label: `All ${selectedPool.length} cards` },
+                ]}
+              />
             </div>
 
             <div className="flashcard-setup-footer">
