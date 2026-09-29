@@ -155,6 +155,24 @@ export function LearnSession() {
     );
   }
 
+  if (!userSignedIn) {
+    return (
+      <main className="app-main">
+        <div className="page-shell practice-shell">
+          <section className="learn-signin-gate">
+            <p className="eyebrow">Personalised learning</p>
+            <h1>Sign in to unlock Learn.</h1>
+            <p>Learn uses your saved practice history to focus on weak spots, reinforce what you know and bring missed questions back for another look.</p>
+            <div className="learn-signin-gate-actions">
+              <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to Learn <span aria-hidden="true">→</span></Link>
+              <Link className="button button-secondary" href="/practice">Back to Learn &amp; Practice</Link>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   if (phase === "complete") {
     return (
       <main className="app-main">
@@ -197,23 +215,6 @@ export function LearnSession() {
             <Link className="button button-secondary" href="/practice">Exit</Link>
           </div>
         </div>
-
-        {!isRetry && (
-          <div className="learn-intro-strip">
-            <div>
-              <span className="learn-status-dot" aria-hidden="true" />
-              <div>
-                <strong>{userSignedIn ? "Built from your practice history." : "Personalisation starts when you sign in."}</strong>
-                <p>
-                  {userSignedIn
-                    ? "More weight goes to questions you struggle with, spaced reviews and a few questions you have already answered correctly."
-                    : "This session still uses a varied learning mix. Sign in so future Learn sessions can adapt to your own results."}
-                </p>
-              </div>
-            </div>
-            {!userSignedIn && <Link className="learn-signin-link" href="/login">Sign in →</Link>}
-          </div>
-        )}
 
         <ProgressBar
           current={progressCurrent}
