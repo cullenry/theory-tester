@@ -49,6 +49,11 @@ export default function manifest(): MetadataRoute.Manifest {
         short_name: "Progress",
         url: "/progress",
       },
+      {
+        name: "Study flashcards",
+        short_name: "Flashcards",
+        url: "/practice/flashcards",
+      },
     ],
   };
 }
