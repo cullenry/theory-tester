@@ -109,6 +109,11 @@ export function AuthForm({ mode }: AuthFormProps) {
             onChange={(event) => setPassword(event.target.value)}
             placeholder={isSignup ? "At least 6 characters" : "Your password"}
             minLength={isSignup ? 6 : undefined} required />
+          {!isSignup && (
+            <Link className="auth-forgot-link" href="/forgot-password">
+              Forgot password?
+            </Link>
+          )}
         </label>
 
         {isSignup && (
