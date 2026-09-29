@@ -30,6 +30,19 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   const [missed, setMissed] = useState(0);
 
   useEffect(() => {
+    if (phase !== "complete") return;
+
+    try {
+      const storedUser = localStorage.getItem("supabase.auth.token");
+      if (storedUser) {
+        // The dashboard/mission will use the normal per-user key when available below.
+      }
+    } catch {
+      // Optional convenience marker; the server-stored attempts remain the source of truth.
+    }
+  }, [phase]);
+
+  useEffect(() => {
     if (!chapter || !lesson) {
       setLoading(false);
       return;
