@@ -63,8 +63,7 @@ export function LearnCourse() {
             <p className="eyebrow">Learn from the ground up</p>
             <h1>{data.user ? `Hi, ${firstName}. Let’s learn the road.` : "Learn the Irish theory test."}</h1>
             <p>
-              Work through the full question bank in small lessons. Answer, see why, and revisit the ones that catch you out.
-              The goal is simple: turn 805 unfamiliar questions into things you can recognise on test day.
+              Work through the full question bank in short lessons, with explanations and focused review built around the questions you find hardest.
             </p>
           </div>
 
@@ -134,18 +133,6 @@ export function LearnCourse() {
             <span><i aria-hidden="true">01</i><strong>Weak spots first</strong><small>Prioritise topics and questions you struggle with.</small></span>
             <span><i aria-hidden="true">02</i><strong>Reinforce over time</strong><small>Bring questions back after time has passed.</small></span>
             <span><i aria-hidden="true">03</i><strong>Second chances</strong><small>Miss one and it returns before the lesson ends.</small></span>
-          </div>
-        </section>
-
-        <section className="course-how-card" aria-labelledby="course-method-title">
-          <div>
-            <p className="eyebrow">Small lessons, not a textbook</p>
-            <h2 id="course-method-title">Learn it. Check it. Lock it in.</h2>
-          </div>
-          <div className="course-method-steps">
-            <div><span>01</span><strong>Recall</strong><small>Try the answer before revealing anything.</small></div>
-            <div><span>02</span><strong>Understand</strong><small>Get instant feedback and an explanation.</small></div>
-            <div><span>03</span><strong>Revisit</strong><small>Miss one and it comes back before the lesson ends.</small></div>
           </div>
         </section>
 
