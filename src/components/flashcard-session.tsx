@@ -60,6 +60,7 @@ export function FlashcardSession() {
   const [started, setStarted] = useState(false);
   const [masteredIds, setMasteredIds] = useState<number[]>([]);
   const [sessionMasteredIds, setSessionMasteredIds] = useState<number[]>([]);
+  const [sessionCardCount, setSessionCardCount] = useState(0);
 
   useEffect(() => {
     try {
@@ -87,6 +88,7 @@ export function FlashcardSession() {
     setPosition(0);
     setFlipped(false);
     setSessionMasteredIds([]);
+    setSessionCardCount(count);
     setStarted(true);
   }
 
@@ -204,7 +206,7 @@ export function FlashcardSession() {
   }
 
   if (completed) {
-    const sessionTotal = deck.length;
+    const sessionTotal = sessionCardCount;
     const sessionMastered = sessionMasteredIds.length;
 
     return (
