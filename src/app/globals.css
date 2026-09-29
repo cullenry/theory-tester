@@ -6645,8 +6645,17 @@ html.dark .settings-delete-confirm input {
   height: 20px;
   place-items: center;
   color: var(--green);
-  font-size: 14px;
   transition: transform .18s ease;
+}
+
+.mistake-category-chevron::before {
+  width: 7px;
+  height: 7px;
+  border-right: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
+  content: "";
+  transform: rotate(45deg) translate(-1px, -1px);
+  transform-origin: center;
 }
 
 .mistake-category[open] .mistake-category-chevron {
