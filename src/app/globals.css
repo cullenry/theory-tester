@@ -3773,9 +3773,9 @@ html.dark .learn-signin-gate > p:not(.eyebrow) {
 
 .flashcard-launch-card {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 13px 14px;
+  gap: 13px 18px;
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: 13px;
@@ -3823,8 +3823,10 @@ html.dark .learn-signin-gate > p:not(.eyebrow) {
 }
 
 .flashcard-launch-card > .button {
-  grid-column: 1 / -1;
-  justify-self: start;
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  justify-self: end;
+  min-width: 150px;
 }
 
 .flashcard-intro-card,
@@ -5731,5 +5733,19 @@ html.dark .course-signin-lesson-points span {
 @media (max-width: 760px) and (pointer: coarse) {
   .mobile-question-anchor {
     scroll-margin-top: 92px;
+  }
+}
+
+
+@media (max-width: 760px) {
+  .flashcard-launch-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .flashcard-launch-card > .button {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: start;
+    min-width: 0;
   }
 }
