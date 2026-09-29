@@ -215,7 +215,7 @@ export function PracticeSession() {
                 <p>Learn mode uses your own results to prioritise weak spots, space out reinforcement and bring missed questions back at the end.</p>
                 <div className="learn-launch-points"><span>Weak spots first</span><span>Spaced reinforcement</span><span>Retry missed questions</span></div>
               </div>
-              <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>
+              <Link className="button button-primary" href="/practice/learn">Learn <span aria-hidden="true">→</span></Link>
             </section>
 
             {starredMode ? (
