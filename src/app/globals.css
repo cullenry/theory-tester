@@ -5153,3 +5153,430 @@ html.dark .course-signin-lesson-points span {
     text-align: left;
   }
 }
+
+/* Mobile app experience: deliberately isolated from desktop */
+.mobile-app-tools,
+.mobile-offline-only,
+.ios-install-sheet,
+.app-launch-splash {
+  display: none;
+}
+
+@media (max-width: 1024px) and (pointer: coarse) {
+  .pwa-install-prompt {
+    bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+
+  .ios-install-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    align-items: end;
+    padding: 16px 12px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(10, 18, 13, .42);
+    backdrop-filter: blur(5px);
+  }
+
+  .ios-install-sheet-panel {
+    position: relative;
+    width: min(520px, 100%);
+    margin: 0 auto;
+    padding: 23px 18px 18px;
+    border: 1px solid #d6e4d9;
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: 0 22px 70px rgba(12, 37, 23, .2);
+  }
+
+  .ios-install-sheet-panel h2 {
+    margin: 7px 0 18px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -.4px;
+    line-height: 1.1;
+  }
+
+  .ios-install-sheet-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .ios-install-steps {
+    display: grid;
+    gap: 7px;
+  }
+
+  .ios-install-steps > div {
+    display: grid;
+    grid-template-columns: 29px 1fr;
+    gap: 2px 8px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fafcfb;
+  }
+
+  .ios-install-steps span {
+    grid-row: 1 / span 2;
+    display: grid;
+    width: 29px;
+    height: 29px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 8px;
+    font-weight: 850;
+  }
+
+  .ios-install-steps strong {
+    font-size: 11px;
+  }
+
+  .ios-install-steps small {
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.45;
+  }
+
+  .ios-install-sheet-panel > .button {
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .app-launch-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 11px;
+    padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
+    background: #f8faf8;
+    color: #17231d;
+    animation: app-splash-in .18s ease-out;
+  }
+
+  .app-launch-splash img {
+    width: 86px;
+    height: 86px;
+  }
+
+  .app-launch-splash span {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -.2px;
+  }
+
+  html.dark .app-launch-splash {
+    background: #0b0b0b;
+    color: #f2f2f2;
+  }
+
+  @keyframes app-splash-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .mobile-offline-only {
+    display: block;
+  }
+
+  .mobile-app-tools {
+    display: block;
+    margin-top: 10px;
+    padding: 17px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+
+  .mobile-app-tools-heading {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mobile-app-tools-heading h2 {
+    margin: 7px 0 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -.25px;
+  }
+
+  .mobile-app-tools-badge {
+    padding: 6px 8px;
+    border: 1px solid #cfe0d4;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: var(--green-dark);
+    font-size: 8px;
+    font-weight: 850;
+    letter-spacing: .8px;
+  }
+
+  .mobile-app-nudge {
+    display: grid;
+    grid-template-columns: 24px minmax(0,1fr) auto;
+    align-items: center;
+    gap: 9px;
+    margin: 14px 0 8px;
+    padding: 10px;
+    border: 1px solid #d9e7dc;
+    border-radius: 9px;
+    background: #f4f9f5;
+  }
+
+  .mobile-app-nudge > span {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    border: 1px solid #c8decf;
+    border-radius: 50%;
+    color: var(--green);
+    font-size: 13px;
+  }
+
+  .mobile-app-nudge div {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .mobile-app-nudge strong {
+    font-size: 10px;
+  }
+
+  .mobile-app-nudge small {
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  .mobile-app-nudge a {
+    color: var(--green);
+    font-size: 9px;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
+  .mobile-app-tool-list {
+    display: grid;
+    margin-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+
+  .mobile-app-tool-row {
+    display: grid;
+    grid-template-columns: 32px minmax(0,1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-app-tool-icon {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid #d5e3d9;
+    border-radius: 9px;
+    background: #f1f7f3;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .mobile-app-tool-row > div:nth-child(2) {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .mobile-app-tool-row strong {
+    font-size: 10px;
+  }
+
+  .mobile-app-tool-row small {
+    color: var(--muted);
+    font-size: 8px;
+    line-height: 1.45;
+  }
+
+  .mobile-app-tool-action,
+  .mobile-app-test-action {
+    min-height: 34px;
+    padding: 0 9px;
+    border: 1px solid #cfddd3;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--green-dark);
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
+  .mobile-app-tool-action:hover:not(:disabled),
+  .mobile-app-test-action:hover:not(:disabled) {
+    border-color: #99bca5;
+    background: #f2f8f4;
+  }
+
+  .mobile-app-tool-action-active {
+    border-color: #a6c8b0;
+    background: #e9f4ec;
+  }
+
+  .mobile-app-tool-action:disabled,
+  .mobile-app-test-action:disabled {
+    cursor: default;
+    opacity: .5;
+  }
+
+  .mobile-app-action-pair {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mobile-app-test-action {
+    min-width: 36px;
+    padding-inline: 7px;
+  }
+
+  .mobile-app-goal-row select {
+    min-height: 34px;
+    padding: 0 22px 0 8px;
+    border: 1px solid #cfddd3;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--green-dark);
+    font-size: 9px;
+    font-weight: 850;
+  }
+
+  .mobile-app-smart-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 13px;
+    padding: 12px;
+    border: 1px solid #d7e5da;
+    border-radius: 10px;
+    background: #f4f9f5;
+  }
+
+  .mobile-app-smart-row > div {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .mobile-app-smart-row strong {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .mobile-app-smart-row small {
+    color: var(--muted);
+    font-size: 8px;
+    line-height: 1.45;
+  }
+
+  .mobile-app-smart-row .button {
+    min-height: 36px;
+    padding-inline: 10px;
+    font-size: 9px;
+  }
+
+  .mobile-app-tools-message {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  html.dark .ios-install-sheet-panel {
+    border-color: #3e4a41;
+    background: #171717;
+  }
+
+  html.dark .ios-install-steps > div,
+  html.dark .mobile-app-nudge,
+  html.dark .mobile-app-smart-row {
+    border-color: #39473d;
+    background: #151d17;
+  }
+
+  html.dark .mobile-app-tool-icon {
+    border-color: #3d4a40;
+    background: #1b2a20;
+  }
+
+  html.dark .mobile-app-tool-action,
+  html.dark .mobile-app-test-action,
+  html.dark .mobile-app-goal-row select {
+    border-color: #454c47;
+    background: #1b1b1b;
+    color: #b9e2c2;
+  }
+
+  html.dark .mobile-app-tool-action-active {
+    border-color: #587361;
+    background: #26352a;
+  }
+}
+
+@media (max-width: 520px) {
+  .mobile-app-tools-heading h2 {
+    font-size: 20px;
+  }
+
+  .mobile-app-tool-row {
+    grid-template-columns: 31px minmax(0,1fr) auto;
+    gap: 8px;
+  }
+
+  .mobile-app-tool-row small {
+    max-width: 195px;
+  }
+
+  .mobile-app-smart-row {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .mobile-app-smart-row .button {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1025px), (pointer: fine) {
+  .pwa-install-prompt,
+  .ios-install-sheet,
+  .app-launch-splash,
+  .mobile-app-tools,
+  .mobile-offline-only {
+    display: none !important;
+  }
+}
