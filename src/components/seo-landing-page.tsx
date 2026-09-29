@@ -30,6 +30,7 @@ const popularLinks: SeoLink[] = [
   { href: "/irish-theory-test-mock-test", label: "Mock test", description: "Put your knowledge under timed test conditions." },
   { href: "/irish-road-signs", label: "Irish road signs", description: "Practise signs, signals and road markings." },
   { href: "/irish-driving-theory-test", label: "Irish driving theory test", description: "See how TheoryPrep can fit into your preparation." },
+  { href: "/theory-test-topics", label: "Theory test topics", description: "Jump into focused practice by topic." },
 ];
 
 export function SeoLandingPage({
