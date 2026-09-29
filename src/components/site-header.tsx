@@ -39,6 +39,7 @@ export function SiteHeader() {
   const [userName, setUserName] = useState<string | null>(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
     if (!accountOpen) return;
@@ -59,6 +60,19 @@ export function SiteHeader() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [accountOpen]);
+
+  useEffect(() => {
+    const updateTheme = () => {
+      setIsDarkTheme(document.documentElement.classList.contains("dark"));
+    };
+
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -95,16 +109,8 @@ export function SiteHeader() {
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="TheoryPrep home">
           <Image
-            className="brand-logo brand-logo-light"
-            src="/images/theoryprep-logo.png"
-            alt="TheoryPrep"
-            width={108}
-            height={65}
-            priority
-          />
-          <Image
-            className="brand-logo brand-logo-dark"
-            src="/images/theoryprep-logo-dark.png"
+            className="brand-logo"
+            src={isDarkTheme ? "/images/theoryprep-logo-dark.png" : "/images/theoryprep-logo.png"}
             alt="TheoryPrep"
             width={108}
             height={65}
