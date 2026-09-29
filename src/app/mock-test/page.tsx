@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Irish Theory Test Mock Test",
-  description: "Take a timed 40-question Irish theory test mock and review your answers with TheoryPrep.",
+  description: "Take a 40-question Irish theory test mock with a 45-minute timer and review every answer with TheoryPrep.",
   alternates: { canonical: "/mock-test" },
 };
 
@@ -17,5 +17,5 @@ type MockTestPageProps = {
 export default async function MockTestPage({ searchParams }: MockTestPageProps) {
   const { debugTimer } = await searchParams;
   const debugTimerEnabled = process.env.NODE_ENV !== "production" && debugTimer === "1";
-  return <MockTestSession initialQuestions={getRandomQuestions(40)} initialDurationSeconds={debugTimerEnabled ? 5 : 40 * 60} debugTimerEnabled={debugTimerEnabled} />;
+  return <MockTestSession initialQuestions={getRandomQuestions(40)} initialDurationSeconds={debugTimerEnabled ? 5 : 45 * 60} debugTimerEnabled={debugTimerEnabled} />;
 }
