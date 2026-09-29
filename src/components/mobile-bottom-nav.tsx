@@ -107,7 +107,7 @@ export function MobileBottomNav() {
           const active = isActive(pathname, item.href);
           return (
             <Link
-              key={item.href}
+              key={item.label}
               href={item.href}
               className={active ? "mobile-nav-item mobile-nav-item-active" : "mobile-nav-item"}
               aria-current={active ? "page" : undefined}
