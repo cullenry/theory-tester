@@ -4820,3 +4820,66 @@ html.dark .browser-signin-panel { background: var(--surface); }
   .question-list-personal-status { grid-column: 2; grid-row: 3; text-align: left; }
   .question-list-row > .row-arrow { grid-column: 3; grid-row: 1 / span 3; align-self: center; }
 }
+
+
+/* TheoryPrep wordmark */
+.site-header .brand {
+  width: 118px;
+  height: 68px;
+  flex: 0 0 118px;
+  gap: 0;
+}
+.brand-logo {
+  display: block;
+  width: 118px;
+  height: 68px;
+  object-fit: contain;
+}
+.site-footer .footer-brand {
+  width: 102px;
+  height: 61px;
+  flex: 0 0 102px;
+}
+.footer-brand-logo {
+  display: block;
+  width: 102px;
+  height: 61px;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .site-header .brand {
+    width: 104px;
+    height: 60px;
+    flex-basis: 104px;
+  }
+  .brand-logo {
+    width: 104px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 760px) {
+  .site-header .brand {
+    width: 94px;
+    height: 57px;
+    flex-basis: 94px;
+  }
+  .brand-logo {
+    width: 94px;
+    height: 57px;
+  }
+  .site-footer {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .site-footer .footer-brand {
+    width: 94px;
+    height: 57px;
+    flex-basis: 94px;
+  }
+  .footer-brand-logo {
+    width: 94px;
+    height: 57px;
+  }
+}
