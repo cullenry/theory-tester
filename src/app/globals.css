@@ -5980,3 +5980,31 @@ html.dark .mock-submit-confirm-warning span {
     margin-inline: auto;
   }
 }
+
+
+/* Fixed Monday-to-Sunday streak display */
+.home-streak-dot-missed {
+  opacity: .42;
+  filter: blur(1.2px);
+}
+
+.home-streak-dot-today {
+  border-color: var(--green);
+  background: transparent;
+  box-shadow: inset 0 0 0 3px #f2f8f3;
+}
+
+html.dark .home-streak-dot-today {
+  box-shadow: inset 0 0 0 3px #151d17;
+}
+
+@media (max-width: 600px) {
+  .home-streak-week {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .home-streak-day {
+    min-width: 22px;
+  }
+}
