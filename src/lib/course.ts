@@ -145,13 +145,6 @@ export function getCourseLessonQuestions(
 
   if (!lesson) return [];
 
-  const lastAttemptByQuestion = new Map<number, QuestionAttempt>();
-
-  for (const attempt of [...attempts].reverse()) {
-    if (attempt.selected_answer === null) continue;
-    lastAttemptByQuestion.set(attempt.question_id, attempt);
-  }
-
   const lessonQuestions = lesson.questionIds
     .map((id) => chapter.questions.find((question) => question.id === id))
     .filter((question): question is Question => Boolean(question));
