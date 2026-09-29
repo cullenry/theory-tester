@@ -4855,6 +4855,7 @@ html.dark .brand-logo-light {
 
 html.dark .brand-logo-dark {
   display: block !important;
+  mix-blend-mode: multiply;
 }
 .site-footer .footer-brand {
   width: 102px;
