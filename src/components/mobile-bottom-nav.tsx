@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/", label: "Home", icon: "home" },
-  { href: "/practice/learn", label: "Learn", icon: "learn" },
+  { href: "/practice", label: "Learn", icon: "learn" },
   { href: "/practice", label: "Practice", icon: "practice" },
   { href: "/mock-test", label: "Mock", icon: "mock" },
   { href: "/progress", label: "Progress", icon: "progress" },
@@ -13,10 +13,6 @@ const items = [
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
-
-  if (href === "/practice/learn") {
-    return pathname === "/practice/learn" || pathname.startsWith("/practice/learn/");
-  }
 
   if (href === "/practice") {
     return (

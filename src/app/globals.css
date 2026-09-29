@@ -3792,8 +3792,15 @@ html.dark .learn-signin-gate > p:not(.eyebrow) {
   border-radius: 11px;
   background: #eff7f1;
   color: var(--green);
-  font-family: Georgia, serif;
-  font-size: 22px;
+}
+.flashcard-launch-icon svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 
 .flashcard-launch-copy {
