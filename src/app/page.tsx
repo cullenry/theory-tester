@@ -8,7 +8,7 @@ import { HomeProofWidget } from "@/components/home-proof-widget";
 
 const modes = [
   { number: "01", title: "Learn & Practice", description: "Build weak spots, reinforce what you know and practise questions at your own pace.", href: "/practice", action: "Start free practice" },
-  { number: "02", title: "Mock test", description: "Take a timed 40-question test, then review every answer when you finish.", href: "/mock-test", action: "Take the mock test" },
+  { number: "02", title: "Mock test", description: "Take a timed 40-question car theory test, then review every answer when you finish.", href: "/mock-test", action: "Take the mock test" },
   { number: "03", title: "Question library", description: "Browse all 805 questions, search by phrase and filter by category.", href: "/questions", action: "Browse 805 questions" },
   { number: "04", title: "Daily challenge", description: "Take ten fresh questions each day and keep your practice streak moving.", href: "/challenge", action: "Take today’s challenge" },
 ];
@@ -19,9 +19,9 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Category A & B theory test practice</p>
-            <h1>Get ready for your<br /><span>Category A & B theory test.</span></h1>
-            <p className="hero-description">Practise 805 Category A & B theory questions, learn from clear explanations and take timed mock tests — all in your browser.</p>
+            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish car theory test practice</p>
+            <h1>Get ready for your<br /><span>Irish car theory test.</span></h1>
+            <p className="hero-description">Practise 805 Irish car theory questions, learn from clear explanations and take timed mock tests — all in your browser. Category B (BW) is the car theory test.</p>
             <div className="hero-actions">
               <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
               <Link className="button button-secondary" href="/mock-test">Take a mock test</Link>
