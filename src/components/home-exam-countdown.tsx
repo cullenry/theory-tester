@@ -38,21 +38,17 @@ function getCalendarDays(monthDate: Date) {
   const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
   const startOffset = (first.getDay() + 6) % 7;
   const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
-  const previousMonthDays = new Date(monthDate.getFullYear(), monthDate.getMonth(), 0).getDate();
+  const days = Array.from({ length: daysInMonth }, (_, index) => ({
+    date: new Date(monthDate.getFullYear(), monthDate.getMonth(), index + 1),
+    inMonth: true,
+  }));
 
-  return Array.from({ length: 42 }, (_, index) => {
-    const dayOffset = index - startOffset + 1;
-    const date = dayOffset <= 0
-      ? new Date(monthDate.getFullYear(), monthDate.getMonth() - 1, previousMonthDays + dayOffset)
-      : dayOffset > daysInMonth
-        ? new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, dayOffset - daysInMonth)
-        : new Date(monthDate.getFullYear(), monthDate.getMonth(), dayOffset);
-
-    return {
-      date,
-      inMonth: date.getMonth() === monthDate.getMonth(),
-    };
-  });
+  // Keep the first day aligned with the weekday header without showing
+  // dates from the previous or next month.
+  return [
+    ...Array.from({ length: startOffset }, () => ({ date: null, inMonth: false })),
+    ...days,
+  ];
 }
 
 export function HomeExamCountdown() {
@@ -171,7 +167,11 @@ export function HomeExamCountdown() {
                   </div>
 
                   <div className="home-exam-calendar-grid">
-                    {calendarDays.map(({ date, inMonth }) => {
+                    {calendarDays.map(({ date, inMonth }, index) => {
+                      if (!date) {
+                        return <span className="home-exam-calendar-day-spacer" aria-hidden="true" key={`spacer-${index}`} />;
+                      }
+
                       const value = toDateValue(date);
                       const selected = value === examDate;
                       const today = value === todayValue;
