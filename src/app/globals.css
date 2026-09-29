@@ -3012,3 +3012,624 @@ html.dark .seo-home-links a:hover {
     width: calc(100% - 24px);
   }
 }
+
+
+/* Mobile app shell
+ * The website stays the source of truth for SEO and shareability. On smaller screens,
+ * primary navigation moves to a fixed bottom bar so the header stays calm and useful.
+ */
+.mobile-bottom-nav {
+  display: none;
+}
+
+.pwa-install-prompt {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  width: min(390px, calc(100vw - 40px));
+  padding: 11px;
+  border: 1px solid #c9ddd0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 18px 45px rgba(20, 45, 30, .16);
+  backdrop-filter: blur(10px);
+  animation: pwa-prompt-in .22s ease-out;
+}
+
+.pwa-install-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--green);
+  color: #fff;
+  font-family: Georgia, serif;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.pwa-install-icon span {
+  transform: translateY(-1px);
+}
+
+.pwa-install-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.pwa-install-copy strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pwa-install-copy span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.pwa-install-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pwa-install-button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  background: var(--green);
+  color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.pwa-install-button:hover {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+.pwa-install-dismiss {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.pwa-install-dismiss:hover {
+  border-color: var(--line);
+  background: var(--green-soft);
+  color: var(--ink);
+}
+
+@keyframes pwa-prompt-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.dark .pwa-install-prompt {
+  border-color: #3e5344;
+  background: rgba(24, 30, 25, .97);
+  box-shadow: 0 18px 45px rgba(0,0,0,.38);
+}
+
+html.dark .pwa-install-copy strong {
+  color: #f1f3f1;
+}
+
+html.dark .pwa-install-dismiss:hover {
+  border-color: #3b4a40;
+  background: #243128;
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  /* Keep the top header compact; the bottom bar owns primary navigation on mobile. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 70;
+    border-bottom-color: rgba(21, 63, 42, .14);
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(14px);
+  }
+
+  html.dark .site-header {
+    border-bottom-color: #292929;
+    background: rgba(11, 11, 11, .91);
+  }
+
+  .header-inner {
+    width: calc(100% - 24px);
+    min-height: 58px;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  .header-inner .brand {
+    min-height: 38px;
+  }
+
+  .header-actions {
+    position: static;
+    margin-left: auto;
+    gap: 5px;
+  }
+
+  .theme-toggle {
+    position: static;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0 8px;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 80;
+    display: block;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .mobile-bottom-nav-inner {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: min(520px, 100%);
+    min-height: 62px;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #d4e1d7;
+    border-radius: 17px;
+    background: rgba(255, 255, 255, .97);
+    box-shadow: 0 12px 35px rgba(18, 42, 28, .15);
+    backdrop-filter: blur(16px);
+    pointer-events: auto;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    min-width: 0;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px 3px;
+    border-radius: 12px;
+    color: #77827b;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+    transition: background .18s ease, color .18s ease, transform .18s ease;
+  }
+
+  .mobile-nav-item:active {
+    transform: scale(.97);
+  }
+
+  .mobile-nav-icon {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 9px;
+  }
+
+  .mobile-nav-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+  }
+
+  .mobile-nav-item-active {
+    color: var(--green-dark);
+    background: #eaf4ed;
+  }
+
+  .mobile-nav-item-active .mobile-nav-icon {
+    background: #dcefe2;
+  }
+
+  html.dark .mobile-bottom-nav-inner {
+    border-color: #38473d;
+    background: rgba(22, 27, 23, .97);
+    box-shadow: 0 14px 38px rgba(0,0,0,.38);
+  }
+
+  html.dark .mobile-nav-item {
+    color: #9aa59d;
+  }
+
+  html.dark .mobile-nav-item-active {
+    color: #c5e9cf;
+    background: #26372c;
+  }
+
+  html.dark .mobile-nav-item-active .mobile-nav-icon {
+    background: #2f4936;
+  }
+
+  /* Give fixed navigation and the install card enough breathing room. */
+  .app-main {
+    padding-bottom: calc(88px + 82px + env(safe-area-inset-bottom));
+  }
+
+  .auth-main {
+    padding-bottom: calc(55px + 82px + env(safe-area-inset-bottom));
+  }
+
+  .site-footer {
+    padding-bottom: calc(20px + 82px + env(safe-area-inset-bottom));
+  }
+
+  .pwa-install-prompt {
+    right: 12px;
+    bottom: calc(76px + env(safe-area-inset-bottom));
+    width: calc(100vw - 24px);
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    gap: 9px;
+    padding: 9px;
+    border-radius: 13px;
+  }
+
+  .pwa-install-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .pwa-install-copy span {
+    max-width: 230px;
+  }
+
+  .pwa-install-button {
+    min-height: 34px;
+    padding-inline: 10px;
+    font-size: 10px;
+  }
+
+  .pwa-install-dismiss {
+    width: 31px;
+    height: 31px;
+  }
+
+  /* Touch targets and card density on smaller screens. */
+  .button {
+    min-height: 50px;
+  }
+
+  .app-main {
+    padding-inline: 12px;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .page-heading h1 {
+    font-size: 30px;
+    line-height: 1.08;
+  }
+
+  .question-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .question-title {
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .answer-option {
+    min-height: 60px;
+    padding: 10px 12px;
+  }
+
+  .answer-text {
+    font-size: 14px;
+  }
+
+  .question-image {
+    max-height: min(52vh, 330px);
+  }
+
+  .practice-meta {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .score-display {
+    justify-content: space-between;
+  }
+
+  .browser-controls,
+  .mock-format-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .browser-controls {
+    padding: 13px;
+  }
+
+  .mock-exam-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .exam-timer {
+    min-width: 105px;
+    padding-inline: 10px;
+  }
+
+  .exam-timer strong {
+    font-size: 22px;
+  }
+
+  .exam-navigation {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .exam-navigation > span {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
+  }
+
+  .exam-navigation > button:first-of-type {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+  }
+
+  .exam-navigation > button:last-child {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .exam-submit-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .exam-submit-row .button {
+    width: 100%;
+  }
+
+  .results-summary,
+  .results-summary-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .results-summary > div {
+    padding: 15px 10px;
+  }
+
+  .results-summary > div:nth-child(odd) + div {
+    border-left: 1px solid var(--line);
+  }
+
+  .results-summary > div:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .results-summary > div:nth-child(4) {
+    border-top: 1px solid var(--line);
+  }
+
+  .mode-row {
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    padding: 19px 4px;
+  }
+
+  .mode-action {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 3px;
+  }
+
+  .mode-copy p {
+    font-size: 13px;
+  }
+
+  .hero-section {
+    padding: 42px 12px 18px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    min-height: 0;
+  }
+
+  .hero-copy {
+    max-width: none;
+    padding-bottom: 0;
+  }
+
+  .hero-copy h1 {
+    margin-top: 17px;
+    font-size: clamp(42px, 12vw, 60px);
+    letter-spacing: -1.3px;
+  }
+
+  .hero-description {
+    max-width: none;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .hero-proof {
+    margin-top: 22px;
+    gap: 8px;
+    line-height: 1.4;
+  }
+
+  .hero-art {
+    order: 2;
+    width: 100%;
+  }
+
+  .hero-bottom-line {
+    gap: 9px;
+    margin-top: 16px;
+    padding-inline: 4px;
+    font-size: 8px;
+    letter-spacing: .8px;
+  }
+
+  .home-proof-widget {
+    margin-top: 13px;
+  }
+
+  .home-learning-widgets {
+    width: calc(100% - 24px);
+  }
+
+  .modes-section {
+    width: calc(100% - 24px);
+    padding-top: 54px;
+    padding-bottom: 60px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 21px;
+  }
+
+  .section-heading h2 {
+    font-size: 31px;
+  }
+
+  .section-heading > p {
+    max-width: none;
+  }
+
+  .seo-landing-hero {
+    padding-top: 0;
+  }
+
+  .seo-landing-hero h1 {
+    font-size: 39px;
+  }
+
+  .seo-landing-lead {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+}
+
+@media (max-width: 420px) {
+  .header-inner {
+    width: calc(100% - 20px);
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .brand-mark {
+    width: 29px;
+    height: 29px;
+  }
+
+  .account-trigger {
+    min-width: 34px;
+    padding-inline: 5px;
+  }
+
+  .mobile-bottom-nav {
+    padding-inline: 6px;
+  }
+
+  .mobile-bottom-nav-inner {
+    min-height: 60px;
+    border-radius: 16px;
+  }
+
+  .mobile-nav-item {
+    min-height: 50px;
+    font-size: 8px;
+  }
+
+  .mobile-nav-icon {
+    width: 27px;
+    height: 27px;
+  }
+
+  .mobile-nav-icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .pwa-install-prompt {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+  }
+
+  .pwa-install-copy span {
+    display: none;
+  }
+
+  .pwa-install-button {
+    padding-inline: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwa-install-prompt {
+    animation: none;
+  }
+}
