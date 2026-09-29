@@ -1,10 +1,33 @@
 const CACHE_NAME = "theoryprep-mobile-v1";
 const APP_SHELL = ["/", "/practice", "/practice/learn", "/practice/flashcards", "/questions", "/mock-test", "/progress", "/offline-practice"];
 
+async function cacheDocumentAndAssets(url, cache) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Could not cache " + url);
+  const body = await response.text();
+  await cache.put(url, new Response(body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+  }));
+
+  const assets = [...body.matchAll(/(?:src|href)="(\\/_next\\/static\\/[^"]+)"/g)]
+    .map((match) => match[1])
+    .filter(Boolean);
+
+  await Promise.allSettled(assets.map(async (asset) => {
+    const request = new Request(new URL(asset, self.location.origin).href);
+    const assetResponse = await fetch(request);
+    if (assetResponse.ok) await cache.put(request, assetResponse);
+  }));
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(APP_SHELL))
+      .then(async (cache) => {
+        await Promise.allSettled(APP_SHELL.map((url) => cacheDocumentAndAssets(url, cache)));
+      })
       .then(() => self.skipWaiting()),
   );
 });
@@ -87,7 +110,9 @@ self.addEventListener("message", (event) => {
   if (event.data?.type === "PRECACHE_APP") {
     event.waitUntil(
       caches.open(CACHE_NAME)
-        .then((cache) => cache.addAll(APP_SHELL)),
+        .then(async (cache) => {
+          await Promise.allSettled(APP_SHELL.map((url) => cacheDocumentAndAssets(url, cache)));
+        }),
     );
   }
 
