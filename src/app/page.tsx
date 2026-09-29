@@ -7,10 +7,10 @@ import { HomeExamCountdown } from "@/components/home-exam-countdown";
 import { HomeProofWidget } from "@/components/home-proof-widget";
 
 const modes = [
-  { number: "01", title: "Learn & Practice", description: "Build weak spots, reinforce what you know and practise questions at your own pace.", href: "/practice", action: "Start free practice" },
+  { number: "01", title: "Learn & Practice", description: "Learn from the ground up, target weak spots and practise questions at your own pace.", href: "/practice", action: "Open Learn & Practice" },
   { number: "02", title: "Mock test", description: "Take a timed 40-question car theory test, then review every answer when you finish.", href: "/mock-test", action: "Take the mock test" },
-  { number: "03", title: "Question library", description: "Browse all 805 questions, search by phrase and filter by category.", href: "/questions", action: "Browse 805 questions" },
-  { number: "04", title: "Daily challenge", description: "Take ten fresh questions each day and keep your practice streak moving.", href: "/challenge", action: "Take today’s challenge" },
+  { number: "03", title: "Question library", description: "Browse all 805 questions, search by phrase, filter by topic and save questions for later.", href: "/questions", action: "Browse 805 questions" },
+  { number: "04", title: "Flashcards", description: "Flip through questions, reveal the answer and reinforce the ones worth remembering.", href: "/practice/flashcards", action: "Study with flashcards" },
 ];
 
 export default function Home() {
