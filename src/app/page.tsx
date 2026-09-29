@@ -20,7 +20,7 @@ export default function Home() {
         <div className="hero-inner">
           <div className="hero-copy">
             <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish car theory test practice</p>
-            <h1>Get ready for your<br /><span>Irish car theory test.</span></h1>
+            <h1>Get ready for your<br /><span className="hero-irish-text" data-text="Irish car theory test.">Irish car theory test.</span></h1>
             <p className="hero-description">Practise 805 Irish car theory questions, learn from clear explanations and take timed mock tests — all in your browser. Category B (BW) is the car theory test.</p>
             <div className="hero-actions">
               <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
@@ -39,7 +39,6 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="hero-bottom-line"><span>805 QUESTIONS</span><i /><span>40-QUESTION MOCK</span><i /><span>FREE TO START</span></div>
         <HomeProofWidget />
       </section>
 

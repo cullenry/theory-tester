@@ -5011,3 +5011,145 @@ html.dark .course-adaptive-pills > span {
     margin-top: 10px;
   }
 }
+
+
+/* Refined hero + Learn gating */
+.hero-irish-text {
+  position: relative;
+  display: inline-block;
+  color: var(--green);
+  isolation: isolate;
+}
+.hero-irish-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: transparent;
+  background: linear-gradient(
+    90deg,
+    #16704c 0%,
+    #16704c 22%,
+    #f7f8f6 43%,
+    #f7f8f6 56%,
+    #e88b3d 78%,
+    #e88b3d 100%
+  );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: .28;
+  filter: blur(.2px);
+  animation: hero-irish-breathe 8s ease-in-out infinite;
+}
+@keyframes hero-irish-breathe {
+  0%, 100% { opacity: .03; background-position: 0% 50%; }
+  32% { opacity: .16; background-position: 44% 50%; }
+  58% { opacity: .28; background-position: 72% 50%; }
+  82% { opacity: .11; background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-irish-text::after { animation: none; opacity: .1; }
+}
+
+.home-streak-lock {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  place-items: center;
+  border: 1px solid #cfe1d4;
+  border-radius: 11px;
+  background: #eaf4ed;
+  color: var(--green);
+}
+.home-streak-lock svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+html.dark .home-streak-lock {
+  border-color: #3f5545;
+  background: #1f2b22;
+  color: var(--green);
+}
+
+.course-signin-lesson-card {
+  margin-top: 14px;
+}
+.course-signin-lesson-card h2 {
+  max-width: 620px;
+}
+.course-signin-lesson-gate {
+  padding: 46px 26px;
+  border: 1px solid #cfe1d3;
+  border-radius: 13px;
+  background: #f3f8f4;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(26, 54, 36, .045);
+}
+.course-signin-lesson-gate h1 {
+  margin: 8px 0 11px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -.5px;
+}
+.course-signin-lesson-gate > p:not(.eyebrow) {
+  max-width: 580px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.course-signin-lesson-points {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 20px;
+}
+.course-signin-lesson-points span {
+  padding: 7px 10px;
+  border: 1px solid #d5e3d9;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #536158;
+  font-size: 10px;
+  font-weight: 750;
+}
+html.dark .course-signin-lesson-gate {
+  border-color: #3f5143;
+  background: #151d17;
+}
+html.dark .course-signin-lesson-points span {
+  border-color: #404a43;
+  background: #1a1a1a;
+  color: #bfc8c2;
+}
+
+@media (max-width: 620px) {
+  .home-streak-lock {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+  .course-signin-lesson-gate {
+    padding: 36px 18px;
+  }
+  .course-signin-lesson-gate h1 {
+    font-size: 29px;
+  }
+  .course-signin-lesson-points {
+    justify-content: stretch;
+    display: grid;
+  }
+  .course-signin-lesson-points span {
+    text-align: left;
+  }
+}
