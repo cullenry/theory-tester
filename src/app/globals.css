@@ -4715,7 +4715,7 @@ html.dark .dashboard-topic-bar { background: #292929; }
 
 .dashboard-mistake-list { display: grid; gap: 0; margin-top: 12px; }
 .dashboard-mistake-row { display: grid; grid-template-columns: 23px minmax(0,1fr); gap: 4px 8px; padding: 10px 1px; border-bottom: 1px solid var(--line); }
-.dashboard-mistake-row > span { display: grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: #f9e9e6; color: #9c4137; font-weight: 800; }
+.dashboard-mistake-row > span { display: grid; width: 20px; height: 20px; align-self: center; grid-row: 1 / span 2; place-items: center; border-radius: 50%; background: #f9e9e6; color: #9c4137; font-weight: 800; }
 .dashboard-mistake-row strong { overflow: hidden; font-size: 10px; line-height: 1.45; text-overflow: ellipsis; }
 .dashboard-mistake-row small { grid-column: 2; color: var(--muted); font-size: 9px; }
 html.dark .dashboard-mistake-row > span { background: #35201d; color: #eea39a; }
