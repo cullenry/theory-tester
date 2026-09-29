@@ -7,7 +7,7 @@ const siteUrl = "https://theoryprep.irish";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "TheoryPrep | Irish Driving Theory Practice", template: "%s | TheoryPrep" },
+  title: { default: "Irish Theory Test Practice", template: "%s | TheoryPrep" },
   description: "Practise 805 Irish driving theory questions, learn from clear explanations and take timed mock tests. Free to start with TheoryPrep.",
   alternates: { canonical: "/" },
   openGraph: {
