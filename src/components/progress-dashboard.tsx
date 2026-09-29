@@ -295,7 +295,7 @@ export function ProgressDashboard() {
   const answered = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
   const correct = answered.filter((attempt) => attempt.is_correct).length;
   const accuracy = answered.length ? Math.round((correct / answered.length) * 100) : 0;
-  const mockAverage = data.mockTests.length
+  const mockAverage = data?.mockTests.length
     ? Math.round(data.mockTests.reduce((total, test) => total + test.percentage, 0) / data.mockTests.length)
     : 0;
   const topicCoverage = topics.length
