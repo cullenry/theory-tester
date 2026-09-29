@@ -9,7 +9,7 @@ import { recordMockTest, recordQuestionAttempt } from "@/lib/progress";
 import { ShareResultButton } from "@/components/share-result-button";
 
 const TEST_FORMATS = [
-  { id: "full", title: "Full Mock Exam", questionCount: 40, durationMinutes: 40, description: "Full timed exam experience" },
+  { id: "full", title: "Full Mock Exam", questionCount: 40, durationMinutes: 45, description: "Full timed exam experience" },
   { id: "blitz-20", title: "20 Question Blitz", questionCount: 20, durationMinutes: 20, description: "A shorter timed challenge" },
   { id: "blitz-10", title: "10 Question Blitz", questionCount: 10, durationMinutes: 10, description: "Quick timed practice" },
 ] as const;
@@ -40,13 +40,13 @@ function TestFormatCard({ format, onStart, featured = false }: TestFormatCardPro
       <h3>{format.title}</h3>
       <p className="mock-format-stats">{format.questionCount} questions <span aria-hidden="true">·</span> {format.durationMinutes} minutes</p>
       <p className="mock-format-description">{format.description}</p>
-      <p className="mock-format-details">Random questions from the full question bank. No feedback during the test.</p>
+      <p className="mock-format-details">40 questions with a 45-minute timer. Review every answer when you finish.</p>
       <button className="button button-primary" type="button" onClick={() => onStart(format)}>Start {format.title}<span aria-hidden="true">→</span></button>
     </article>
   );
 }
 
-export function MockTestSession({ initialQuestions, initialDurationSeconds = 40 * 60, debugTimerEnabled = false }: MockTestSessionProps) {
+export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 * 60, debugTimerEnabled = false }: MockTestSessionProps) {
   const [test, setTest] = useState(initialQuestions);
   const [activeFormat, setActiveFormat] = useState<MockTestFormat>(TEST_FORMATS[0]);
   const [position, setPosition] = useState(0);
