@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react";
 import { getAppPreferences, saveAppPreferences, type AppPreferences } from "@/lib/app-preferences";
 import { createClient } from "@/lib/supabase/client";
 
-const EXAM_DATE_KEY = "theorytester-exam-date";
 const THEME_KEY = "theorytester-theme";
 
 function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
@@ -25,7 +24,6 @@ export function SettingsPageClient() {
   const supabase = useMemo(() => createClient(), []);
   const [preferences, setPreferences] = useState<AppPreferences | null>(null);
   const [user, setUser] = useState<{ email?: string | null; user_metadata?: Record<string, unknown> } | null>(null);
-  const [examDate, setExamDate] = useState("");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [saving, setSaving] = useState<string | null>(null);
   const [message, setMessage] = useState("");
@@ -49,7 +47,6 @@ export function SettingsPageClient() {
     });
 
     try {
-      setExamDate(localStorage.getItem(EXAM_DATE_KEY) ?? "");
       setTheme(localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light");
     } catch {
       // Local settings are optional.
@@ -75,20 +72,6 @@ export function SettingsPageClient() {
       setMessage(label + " updated.");
     } else {
       setMessage("Couldn't update " + label.toLowerCase() + " right now.");
-    }
-  }
-
-  function updateExamDate(value: string) {
-    setExamDate(value);
-
-    try {
-      if (value) localStorage.setItem(EXAM_DATE_KEY, value);
-      else localStorage.removeItem(EXAM_DATE_KEY);
-
-      window.dispatchEvent(new CustomEvent("theoryprep-exam-date-change", { detail: value }));
-      setMessage("Test date saved.");
-    } catch {
-      setMessage("Couldn't save the test date on this device.");
     }
   }
 
@@ -257,20 +240,6 @@ export function SettingsPageClient() {
 
           <div className="settings-row">
             <div>
-              <strong>Test day</strong>
-              <span>This date powers the countdown shown on the home page.</span>
-            </div>
-            <input
-              className="settings-date-input"
-              type="date"
-              value={examDate}
-              onChange={(event) => updateExamDate(event.target.value)}
-              aria-label="Theory test date"
-            />
-          </div>
-
-          <div className="settings-row">
-            <div>
               <strong>Appearance</strong>
               <span>Choose light or dark mode for this device.</span>
             </div>
@@ -302,7 +271,6 @@ export function SettingsPageClient() {
         <section className="settings-card settings-danger-card" aria-labelledby="danger-title">
           <div className="settings-card-heading">
             <div>
-              <p className="eyebrow settings-danger-eyebrow">Danger zone</p>
               <h2 id="danger-title">Delete your account</h2>
             </div>
           </div>
