@@ -152,7 +152,7 @@ export function LearnCourse() {
         <details className="course-map">
           <summary>
             <span><span className="eyebrow">Course map</span><strong>{chapters.length} chapters · {progress.total} questions</strong></span>
-            <span>View chapters <span aria-hidden="true">⌄</span></span>
+            <span className="course-map-toggle">View chapters <span className="course-map-chevron" aria-hidden="true" /></span>
           </summary>
           <div className="course-chapter-list">
             {chapters.map((chapter) => {
