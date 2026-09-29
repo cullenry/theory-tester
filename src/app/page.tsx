@@ -18,9 +18,9 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish driver theory test practice</p>
-            <h1>Get ready to pass your<br /><span>Irish theory test.</span></h1>
-            <p className="hero-description">Practise 805 Irish driving theory questions, learn from clear explanations and take timed mock tests — all in your browser.</p>
+            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Category A & B theory test practice</p>
+            <h1>Get ready for your<br /><span>Category A & B theory test.</span></h1>
+            <p className="hero-description">Practise 805 Category A & B theory questions, learn from clear explanations and take timed mock tests — all in your browser.</p>
             <div className="hero-actions">
               <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
               <Link className="button button-secondary" href="/mock-test">Take a mock test</Link>
