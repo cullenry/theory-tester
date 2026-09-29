@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
 import { getDailyChallengeDate, getDailyChallengeQuestions } from "@/lib/daily-challenge";
 import { recordQuestionAttempt } from "@/lib/progress";
+import { buildFriendChallengeUrl, shareText } from "@/lib/challenge-share";
 
 export function DailyChallenge() {
   const challengeDate = getDailyChallengeDate();
@@ -12,12 +13,30 @@ export function DailyChallenge() {
   const [position, setPosition] = useState(0);
   const [responses, setResponses] = useState<(string | null)[]>(() => Array.from({ length: 10 }, () => null));
   const [submitted, setSubmitted] = useState(false);
+  const [creatorName, setCreatorName] = useState("");
+  const [shareStatus, setShareStatus] = useState<"idle" | "shared" | "copied" | "failed">("idle");
   const current = challenge[position];
   const selected = responses[position];
   const answered = selected !== null;
   const correctCount = challenge.reduce((total, question, index) => total + (responses[index] === question.correctAnswer ? 1 : 0), 0);
 
-  if (!current || submitted) return <main className="app-main"><div className="page-shell results-shell"><section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">Daily Challenge complete</p><h2>{correctCount} / 10</h2><p>You finished today’s challenge. Come back tomorrow for a new set of ten.</p><div className="practice-completion-actions">{correctCount < challenge.length && <Link className="button button-primary" href="/mistakes">Review mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/practice">Keep practising <span aria-hidden="true">→</span></Link><Link className="button button-secondary" href="/progress">See my progress</Link></div></section></div></main>;
+  if (!current || submitted) return <main className="app-main"><div className="page-shell results-shell"><section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">Daily Challenge complete</p><h2>{correctCount} / 10</h2><p>You finished today’s challenge. Come back tomorrow for a new set of ten.</p><div className="challenge-share-box">
+            <p className="eyebrow">Challenge a friend</p>
+            <h3>Can they beat your score?</h3>
+            <p>Send the same ten questions to a mate and see who scores higher.</p>
+            <div className="challenge-share-fields">
+              <label htmlFor="challenge-name">Your name</label>
+              <input id="challenge-name" value={creatorName} onChange={(event) => setCreatorName(event.target.value)} placeholder="e.g. Ryan" maxLength={40} />
+              <button className="button button-primary" type="button" onClick={async () => {
+                const name = creatorName.trim() || "My";
+                const url = buildFriendChallengeUrl({ version: 1, name, score: correctCount, total: challenge.length, questionIds: challenge.map((question) => question.id) });
+                const result = await shareText({ title: "TheoryPrep challenge", text: `Can you beat ${name}'s ${correctCount}/${challenge.length} TheoryPrep challenge? 🚗`, url });
+                setShareStatus(result);
+                if (result !== "failed") window.setTimeout(() => setShareStatus("idle"), 2200);
+              }}>{shareStatus === "copied" ? "Copied — send it!" : shareStatus === "shared" ? "Shared!" : "Challenge a friend"} <span aria-hidden="true">↗</span></button>
+            </div>
+          </div>
+          <div className="practice-completion-actions">{correctCount < challenge.length && <Link className="button button-primary" href="/mistakes">Review mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/practice">Keep practising <span aria-hidden="true">→</span></Link><Link className="button button-secondary" href="/progress">See my progress</Link></div></section></div></main>;
 
   return <main className="app-main"><div className="page-shell practice-shell">
     <div className="page-heading"><div><p className="eyebrow">Daily Challenge · {challengeDate}</p><h1>10 for today.</h1></div><Link className="button button-secondary" href="/progress">My progress</Link></div>
