@@ -269,9 +269,13 @@ export function MobileAppTools() {
             <strong>Offline practice</strong>
             <small>{offlineReady ? "Ready for a no-signal quick set." : "Prepare the app for practice without a connection."}</small>
           </div>
-          <button className="mobile-app-tool-action" type="button" onClick={makeOfflineReady} disabled={busy === "offline"}>
-            {offlineReady ? "Ready" : busy === "offline" ? "Saving…" : "Prepare"}
-          </button>
+          {offlineReady ? (
+            <Link className="mobile-app-tool-action mobile-app-tool-link" href="/offline-practice">Open</Link>
+          ) : (
+            <button className="mobile-app-tool-action" type="button" onClick={makeOfflineReady} disabled={busy === "offline"}>
+              {busy === "offline" ? "Saving…" : "Prepare"}
+            </button>
+          )}
         </div>
 
         <div className="mobile-app-tool-row">
