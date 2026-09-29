@@ -25,7 +25,7 @@ export default function Home() {
               <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
               <Link className="button button-secondary" href="/mock-test">Take a mock test</Link>
             </div>
-            <div className="hero-proof"><strong>{questions.length}</strong><span>practice questions</span><span className="proof-separator" /><strong>40</strong><span>questions in a mock</span><span className="proof-separator" /><span>Free to start</span></div>
+            <div className="hero-proof"><strong>{questions.length}</strong><span>practice questions</span><span className="proof-separator" /><strong>40</strong><span>questions in a mock</span><span className="proof-separator" /><span>Free to start</span></div><p className="hero-trust">Independent study resource based on official RSA material.</p>
           </div>
           <div className="hero-art">
             <Image
