@@ -311,7 +311,7 @@ export async function getProgressData(limit = 2000) {
   };
 }
 
-export async function getMistakeQuestionIds(limit = 80) {
+export async function getMistakeQuestionIds(limit = 2000) {
   const data = await getProgressData(2000);
   const ids = new Set<number>();
   for (const attempt of data.attempts) {
