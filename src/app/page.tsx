@@ -92,6 +92,7 @@ export default function Home() {
           <Link href="/irish-theory-test-mock-test">Irish theory test mock test <span aria-hidden="true">↗</span></Link>
           <Link href="/irish-road-signs">Irish road signs practice <span aria-hidden="true">↗</span></Link>
           <Link href="/irish-driving-theory-test">Irish driving theory test guide <span aria-hidden="true">↗</span></Link>
+          <Link href="/theory-test-topics">Irish theory test topics <span aria-hidden="true">↗</span></Link>
         </div>
       </section>
       <footer className="site-footer">
