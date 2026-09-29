@@ -123,8 +123,8 @@ html.dark .hero-trust { color: #aab4ad; }
 .mode-number { align-self: start; padding-top: 5px; color: #8a9a8e; font-family: Georgia, serif; font-size: 18px; }
 .mode-copy h3 { margin: 0; font-size: 17px; }.mode-copy p { max-width: 550px; margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .mode-action { color: var(--green); font-size: 13px; font-weight: 750; white-space: nowrap; }
-.site-footer { display: flex; align-items: center; justify-content: space-between; gap: 22px; min-height: 92px; padding: 20px max(24px, calc((100vw - 1160px) / 2)); border-top: 1px solid var(--line); background: white; color: var(--muted); font-size: 12px; }
-.site-footer .brand { color: var(--ink); font-size: 16px; }.site-footer .brand-mark { width: 28px; height: 28px; font-size: 18px; }.site-footer > a:last-child { color: var(--green); font-weight: 700; }
+.site-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 22px; min-height: 92px; padding: 20px max(24px, calc((100vw - 1160px) / 2)); border-top: 1px solid var(--line); background: white; color: var(--muted); font-size: 12px; }
+.site-footer .brand { color: var(--ink); font-size: 16px; }.site-footer .brand-mark { width: 28px; height: 28px; font-size: 18px; }.site-footer > span { justify-self: center; line-height: 1.2; text-align: center; }.site-footer-links { justify-self: end; }
 
 .app-main { min-height: calc(100vh - 76px); padding: 45px 24px 88px; background: var(--paper); }
 .page-shell { width: min(820px, 100%); margin: 0 auto; }
@@ -2754,11 +2754,16 @@ a.feedback-card:hover {
 }
 @media (max-width: 760px) {
   .site-footer {
+    grid-template-columns: 1fr;
     align-items: flex-start;
-    flex-direction: column;
+  }
+  .site-footer > span {
+    justify-self: start;
+    text-align: left;
   }
   .site-footer-links {
     justify-content: flex-start;
+    justify-self: start;
   }
   .report-actions,
   .support-actions {
