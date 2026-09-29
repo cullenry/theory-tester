@@ -17,6 +17,7 @@ function isActive(pathname: string, href: string) {
   if (href === "/practice") {
     return (
       pathname === "/practice" ||
+      pathname.startsWith("/practice/flashcards") ||
       pathname.startsWith("/challenge") ||
       pathname.startsWith("/theory-test-topics") ||
       pathname.startsWith("/theory-test-practice")
