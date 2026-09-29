@@ -230,6 +230,14 @@ A few parts of the app are intentionally server-backed:
 
 The mobile/offline experience is an enhancement to the web app, so the core question bank and practice flows remain usable without installing anything.
 
+## Licence
+
+TheoryPrep's original source code, design, branding and original assets are proprietary and all rights are reserved. They may not be copied, modified, redistributed or used commercially without written permission.
+
+See the [LICENSE](LICENSE) file for the full terms.
+
+Third-party dependencies and external content may have separate licences or rights.
+
 ## Status
 
 The main study, practice and mock-test experience is in place, along with account-based progress, adaptive learning, offline mobile practice and the infrastructure needed for push reminders.
