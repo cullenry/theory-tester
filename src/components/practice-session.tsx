@@ -208,6 +208,7 @@ export function PracticeSession() {
         {session === null ? (
           <>
             <div className="page-heading"><div><p className="eyebrow">Learn smarter. Practise better.</p><h1>Learn &amp; Practice</h1></div></div>
+            <div className="practice-tools-grid">
             <section className="learn-launch-card learn-signin-feature">
               <div className="learn-launch-copy">
                 <p className="eyebrow">Personalised learning</p>
@@ -216,6 +217,16 @@ export function PracticeSession() {
               </div>
               <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to Learn <span aria-hidden="true">→</span></Link>
             </section>
+              <section className="flashcard-launch-card">
+                <div className="flashcard-launch-icon" aria-hidden="true"><span>↻</span></div>
+                <div className="flashcard-launch-copy">
+                  <p className="eyebrow">Active recall</p>
+                  <h2>Study with flashcards.</h2>
+                  <p>Flip through questions, reveal the answer, and mark each card as learned or still worth reviewing.</p>
+                </div>
+                <Link className="button button-secondary" href="/practice/flashcards">Start flashcards <span aria-hidden="true">→</span></Link>
+              </section>
+            </div>
 
             {starredMode ? (
               <section className="learn-launch-card starred-practice-banner">
