@@ -95,6 +95,47 @@ function Stat({ label, value, detail }: { label: string; value: string; detail: 
   );
 }
 
+function TestReadiness({ accuracy, mockAverage, topicCoverage }: { accuracy: number; mockAverage: number; topicCoverage: number }) {
+  const score = Math.round(accuracy * 0.45 + mockAverage * 0.35 + topicCoverage * 0.2);
+
+  const meaning =
+    score >= 90
+      ? "Your practice data shows strong preparation. Keep testing yourself to stay sharp."
+      : score >= 80
+        ? "You're building a solid base. Target weaker topics and keep taking mocks."
+        : score >= 70
+          ? "You're making good progress. More focused revision should strengthen your weaker areas."
+          : score >= 50
+            ? "You're on your way. Use Learn and targeted practice to build consistency."
+            : "You're still building your base. Regular practice will give this score more meaning.";
+
+  return (
+    <section className="progress-feature-card readiness-card" aria-labelledby="test-readiness-title">
+      <div>
+        <p className="eyebrow">Practice benchmark</p>
+        <h2 id="test-readiness-title">Test readiness</h2>
+        <p>
+          A simple score based on your question accuracy, mock-test performance and topic coverage.
+          It reflects your current practice data, not a prediction of your exam result.
+        </p>
+        <p className="readiness-comment">{meaning}</p>
+      </div>
+      <div className="readiness-score" aria-label={score + " out of 100"}>
+        <strong>{score}</strong>
+        <span>/100</span>
+      </div>
+      <div className="readiness-bar" aria-hidden="true">
+        <span style={{ width: score + "%" }} />
+      </div>
+      <div className="readiness-facts">
+        <span>{accuracy}% question accuracy</span>
+        <span>{mockAverage}% mock average</span>
+        <span>{topicCoverage}% topic coverage</span>
+      </div>
+    </section>
+  );
+}
+
 function TopicProgress({ topics }: { topics: TopicRow[] }) {
   return (
     <section className="dashboard-card dashboard-topics-card">
@@ -254,6 +295,13 @@ export function ProgressDashboard() {
   const answered = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
   const correct = answered.filter((attempt) => attempt.is_correct).length;
   const accuracy = answered.length ? Math.round((correct / answered.length) * 100) : 0;
+  const mockAverage = data.mockTests.length
+    ? Math.round(data.mockTests.reduce((total, test) => total + test.percentage, 0) / data.mockTests.length)
+    : 0;
+  const topicCoverage = topics.length
+    ? Math.round((topics.filter((topic) => topic.seen > 0).length / topics.length) * 100)
+    : 0;
+
 
   const latestMistakes = useMemo(() => {
     const seen = new Set<number>();
@@ -339,6 +387,8 @@ export function ProgressDashboard() {
           <Stat label="Current streak" value={streak.current + " day" + (streak.current === 1 ? "" : "s")} detail={streak.best + "-day best"} />
           <Stat label="Mock tests" value={String(data.mockTests.length)} detail={data.mockTests.length ? "Completed on this account" : "Take your first mock"} />
         </div>
+
+        <TestReadiness accuracy={accuracy} mockAverage={mockAverage} topicCoverage={topicCoverage} />
 
         <div className="dashboard-grid">
           <TopicProgress topics={topics} />
