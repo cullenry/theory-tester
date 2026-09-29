@@ -11,7 +11,7 @@ async function cacheDocumentAndAssets(url, cache) {
     headers: response.headers,
   }));
 
-  const assets = [...body.matchAll(/(?:src|href)="(\\/_next\\/static\\/[^"]+)"/g)]
+  const assets = [...body.matchAll(/(?:src|href)="(\/_next\/static\/[^"]+)"/g)]
     .map((match) => match[1])
     .filter(Boolean);
 
@@ -92,7 +92,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   const accept = request.headers.get("accept") || "";
-  if (accept.includes("text/x-component") || url.pathname.startsWith("/api/")) return;
+  if (accept.includes("text/x-component") || url.pathname.startsWith("/api/") || url.pathname.startsWith("/auth/")) return;
 
   if (
     url.pathname.startsWith("/_next/static/") ||
