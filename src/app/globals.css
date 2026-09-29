@@ -4844,6 +4844,18 @@ html.dark .browser-signin-panel { background: var(--surface); }
   height: 68px;
   object-fit: contain;
 }
+
+.brand-logo-dark {
+  display: none !important;
+}
+
+html.dark .brand-logo-light {
+  display: none !important;
+}
+
+html.dark .brand-logo-dark {
+  display: block !important;
+}
 .site-footer .footer-brand {
   width: 102px;
   height: 61px;
