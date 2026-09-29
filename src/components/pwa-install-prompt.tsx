@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -8,9 +9,23 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 const DISMISS_KEY = "theoryprep-pwa-install-dismissed-until";
-const DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
+const DISMISS_MS = 5 * 60 * 1000;
+
+// Only show the install prompt while the user is browsing, not while they are actively testing.
+const BLOCKED_PATHS = [
+  "/mock-test",
+  "/challenge/",
+  "/practice/learn",
+  "/practice/flashcards",
+];
+
+function isTestingPath(pathname: string) {
+  return BLOCKED_PATHS.some((path) => pathname === path || pathname.startsWith(path));
+}
 
 export function PwaInstallPrompt() {
+  const pathname = usePathname();
+  const isTesting = isTestingPath(pathname);
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [hidden, setHidden] = useState(false);
 
@@ -47,7 +62,7 @@ export function PwaInstallPrompt() {
     };
   }, []);
 
-  if (!installEvent || hidden) return null;
+  if (!installEvent || hidden || isTesting) return null;
 
   async function handleInstall() {
     const event = installEvent;
