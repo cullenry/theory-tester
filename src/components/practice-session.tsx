@@ -208,27 +208,7 @@ export function PracticeSession() {
         {session === null ? (
           <>
             <div className="page-heading"><div><p className="eyebrow">Learn smarter. Practise better.</p><h1>Learn &amp; Practice</h1></div></div>
-            <div className="practice-tools-grid">
-            <section className="learn-launch-card learn-signin-feature">
-              <div className="learn-launch-copy">
-                <p className="eyebrow">Personalised learning</p>
-                <h2>Make practice personal.</h2>
-                <p>Sign in to unlock Learn and use your saved results to focus on weak spots, reinforce what you know and revisit missed questions.</p>
-              </div>
-              <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to Learn <span aria-hidden="true">→</span></Link>
-            </section>
-              <section className="flashcard-launch-card">
-                <div className="flashcard-launch-icon" aria-hidden="true"><span>↻</span></div>
-                <div className="flashcard-launch-copy">
-                  <p className="eyebrow">Active recall</p>
-                  <h2>Study with flashcards.</h2>
-                  <p>Flip through questions, reveal the answer, and mark each card as learned or still worth reviewing.</p>
-                </div>
-                <Link className="button button-secondary" href="/practice/flashcards">Start flashcards <span aria-hidden="true">→</span></Link>
-              </section>
-            </div>
-
-            {starredMode ? (
+                        {starredMode ? (
               <section className="learn-launch-card starred-practice-banner">
                 <div className="learn-launch-copy">
                   <p className="eyebrow">Saved for later</p>
@@ -293,7 +273,29 @@ export function PracticeSession() {
                 </div>
               </div>
               <div className="practice-start-row"><p>{Math.min(sessionLength, selectedPool.length)} questions in this session</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0 || loadingSpecialMode} onClick={() => beginSession(selectedPool)}>{starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span></button></div>
+
             </section>
+
+            <div className="practice-feature-stack">
+              <section className="learn-launch-card learn-signin-feature">
+                <div className="learn-launch-copy">
+                  <p className="eyebrow">Personalised learning</p>
+                  <h2>Make practice personal.</h2>
+                  <p>Sign in to unlock Learn and use your saved results to focus on weak spots, reinforce what you know and revisit missed questions.</p>
+                </div>
+                <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to Learn <span aria-hidden="true">→</span></Link>
+              </section>
+
+              <section className="flashcard-launch-card">
+                <div className="flashcard-launch-icon" aria-hidden="true"><span>↻</span></div>
+                <div className="flashcard-launch-copy">
+                  <p className="eyebrow">Active recall</p>
+                  <h2>Study with flashcards.</h2>
+                  <p>Flip through questions, reveal the answer, and mark each card as learned or still worth reviewing.</p>
+                </div>
+                <Link className="button button-secondary" href="/practice/flashcards">Start flashcards <span aria-hidden="true">→</span></Link>
+              </section>
+            </div>
           </>
         ) : finished || !current ? (
           <section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">{isReviewSession ? "Review complete" : "Session complete"}</p><h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2><p>You answered {session.length} questions and got {correctCount} correct.</p><div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{session.length - correctCount}</strong><span>Incorrect</span></div><div><strong>{Math.round((correctCount / Math.max(1, session.length)) * 100)}%</strong><span>Accuracy</span></div><div><strong>{sessionMissedIds.length}</strong><span>To review</span></div></div><div className="practice-completion-actions">{sessionMissedIds.length > 0 && !isReviewSession && <button className="button button-primary" type="button" onClick={() => { const retryPool = sessionMissedIds.map((id) => questions.find((question) => question.id === id)).filter((question): question is Question => Boolean(question)); beginSession(retryPool, retryPool.length, true); }}>Retry {sessionMissedIds.length} mistake{sessionMissedIds.length === 1 ? "" : "s"} <span aria-hidden="true">→</span></button>}{sessionMissedIds.length > 0 && <Link className="button button-secondary" href="/mistakes">Review my mistakes</Link>}<button className="button button-secondary" type="button" onClick={() => beginSession(activePool)}>Practise another set <span aria-hidden="true">↻</span></button><button className="button button-quiet" type="button" onClick={returnToSetup}>Choose another topic</button></div></section>
