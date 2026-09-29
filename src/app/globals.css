@@ -4890,3 +4890,124 @@ html.dark .site-footer .footer-brand {
   border-radius: 11px;
   background: #ffffff;
 }
+
+
+/* Typography + adaptive learning polish */
+.mock-quick-heading {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -.3px;
+  line-height: 1.15;
+}
+
+.course-adaptive-card {
+  margin: 14px 0;
+  padding: 19px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.course-adaptive-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.course-adaptive-heading h2 {
+  margin: 7px 0 6px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -.35px;
+}
+.course-adaptive-heading p:not(.eyebrow) {
+  max-width: 690px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.65;
+}
+.course-adaptive-badge {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 0 8px;
+  border: 1px solid #cfe0d3;
+  border-radius: 999px;
+  background: #f2f8f3;
+  color: var(--green);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+html.dark .course-adaptive-badge {
+  border-color: #3d5143;
+  background: #1a251d;
+}
+.course-adaptive-pills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin-top: 15px;
+}
+.course-adaptive-pills > span {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 2px 8px;
+  align-items: start;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fafcfb;
+}
+.course-adaptive-pills i {
+  grid-row: 1 / span 2;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 850;
+}
+.course-adaptive-pills strong {
+  font-size: 10px;
+  line-height: 1.35;
+}
+.course-adaptive-pills small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+html.dark .course-adaptive-pills > span {
+  background: #151515;
+}
+
+@media (max-width: 700px) {
+  .course-adaptive-heading {
+    gap: 12px;
+  }
+  .course-adaptive-pills {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .mock-quick-heading {
+    font-size: 23px;
+  }
+  .course-adaptive-card {
+    padding: 17px;
+  }
+  .course-adaptive-heading {
+    display: block;
+  }
+  .course-adaptive-badge {
+    margin-top: 10px;
+  }
+}
