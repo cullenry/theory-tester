@@ -5,10 +5,15 @@ async function cacheDocumentAndAssets(url, cache) {
   const response = await fetch(url);
   if (!response.ok) throw new Error("Could not cache " + url);
   const body = await response.text();
+  const headers = new Headers(response.headers);
+  headers.delete("content-encoding");
+  headers.delete("content-length");
+  headers.delete("transfer-encoding");
+
   await cache.put(url, new Response(body, {
     status: response.status,
     statusText: response.statusText,
-    headers: response.headers,
+    headers,
   }));
 
   const assets = [...body.matchAll(/(?:src|href)="(\/_next\/static\/[^"]+)"/g)]
