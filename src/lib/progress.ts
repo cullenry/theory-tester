@@ -157,18 +157,19 @@ export async function toggleQuestionBookmark(questionId: number) {
 }
 
 export async function flushOfflineAttempts() {
-  if (typeof window === "undefined") return 0;
-
-  const queue = readOfflineQueue(user.session.user.id);
-  if (!queue.length || !navigator.onLine) return 0;
+  if (typeof window === "undefined" || !navigator.onLine) return 0;
 
   const supabase = createClient();
-  const { data: user } = await supabase.auth.getSession();
-  if (!user.session?.user) return 0;
+  const { data: sessionData } = await supabase.auth.getSession();
+  const user = sessionData.session?.user;
+  if (!user) return 0;
+
+  const queue = readOfflineQueue(user.id);
+  if (!queue.length) return 0;
 
   const { error } = await supabase.from("question_attempts").insert(
     queue.map((attempt) => ({
-      user_id: user.session!.user.id,
+      user_id: user.id,
       question_id: attempt.question_id,
       is_correct: attempt.is_correct,
       selected_answer: attempt.selected_answer,
@@ -182,7 +183,7 @@ export async function flushOfflineAttempts() {
     return 0;
   }
 
-  writeOfflineQueue(user.session.user.id, []);
+  writeOfflineQueue(user.id, []);
   return queue.length;
 }
 
@@ -204,7 +205,7 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
   };
 
   if (typeof window !== "undefined" && !navigator.onLine) {
-    queueOfflineAttempt(attempt);
+    queueOfflineAttempt(user.id, {\n      question_id: question.id,\n      is_correct: isCorrect,\n      selected_answer: selectedAnswer,\n      mode,\n      created_at: createdAt,\n    });
     return;
   }
 
