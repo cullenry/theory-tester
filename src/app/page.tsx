@@ -6,9 +6,9 @@ import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
 
 const modes = [
-  { number: "01", title: "Learn & Practice", description: "Build weak spots, reinforce what you know and practise questions at your own pace.", href: "/practice", action: "Start learning" },
-  { number: "02", title: "Mock test", description: "Take a focused 40-question test, then review every answer when you finish.", href: "/mock-test", action: "Take a mock test" },
-  { number: "03", title: "Question library", description: "Browse the full question bank, search by phrase and filter by category.", href: "/questions", action: "Browse questions" },
+  { number: "01", title: "Learn & Practice", description: "Build weak spots, reinforce what you know and practise questions at your own pace.", href: "/practice", action: "Start free practice" },
+  { number: "02", title: "Mock test", description: "Take a timed 40-question test, then review every answer when you finish.", href: "/mock-test", action: "Take the mock test" },
+  { number: "03", title: "Question library", description: "Browse all 805 questions, search by phrase and filter by category.", href: "/questions", action: "Browse 805 questions" },
   { number: "04", title: "Daily challenge", description: "Take ten fresh questions each day and keep your practice streak moving.", href: "/challenge", action: "Take today’s challenge" },
 ];
 
@@ -18,14 +18,14 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Irish driver theory practice</p>
-            <h1>Know the road.<br /><span>Own the test.</span></h1>
-            <p className="hero-description">Build real confidence with Irish driving theory questions, useful explanations and practice that fits your day.</p>
+            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish driver theory test practice</p>
+            <h1>Get ready to pass your<br /><span>Irish theory test.</span></h1>
+            <p className="hero-description">Practise 805 Irish driving theory questions, learn from clear explanations and take timed mock tests — all in your browser.</p>
             <div className="hero-actions">
-              <Link className="button button-primary" href="/practice">Start Practising <span aria-hidden="true">→</span></Link>
-              <Link className="button button-secondary" href="/mock-test">Take a Mock Test</Link>
+              <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
+              <Link className="button button-secondary" href="/mock-test">Take a mock test</Link>
             </div>
-            <div className="hero-proof"><strong>{questions.length}</strong><span>questions in the library</span><span className="proof-separator" /><span>Based on official RSA material</span></div>
+            <div className="hero-proof"><strong>{questions.length}</strong><span>practice questions</span><span className="proof-separator" /><strong>40</strong><span>questions in a mock</span><span className="proof-separator" /><span>Free to start</span></div>
           </div>
           <div className="hero-art">
             <Image
@@ -38,7 +38,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <div className="hero-bottom-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>DRIVE WITH CONFIDENCE</span></div>
+        <div className="hero-bottom-line"><span>805 QUESTIONS</span><i /><span>40-QUESTION MOCK</span><i /><span>FREE TO START</span></div>
       </section>
 
       <div className="home-learning-widgets">
@@ -50,8 +50,8 @@ export default function Home() {
       <section className="pathway-section" aria-labelledby="pathway-title">
         <div className="pathway-copy">
           <p className="eyebrow">A simple route to test day</p>
-          <h2 id="pathway-title">Learn. Practise. Pass.</h2>
-          <p>Start by getting familiar with the rules, build confidence with focused practice, then put yourself under time pressure with a mock test.</p>
+          <h2 id="pathway-title">Learn. Practise. Get test-ready.</h2>
+          <p>Start with the rules, strengthen weak areas with focused practice, then put yourself under time pressure with a timed mock test.</p>
           <Link className="button button-secondary" href="/practice">Start practising <span aria-hidden="true">→</span></Link>
         </div>
         <div className="pathway-art">
