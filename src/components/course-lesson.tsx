@@ -30,6 +30,15 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   const [selected, setSelected] = useState<string | null>(null);
   const [correct, setCorrect] = useState(0);
   const [missed, setMissed] = useState(0);
+  const questionAnchorRef = useRef<HTMLDivElement>(null);
+
+  const scrollQuestionToTop = () => {
+    if (typeof window === "undefined" || window.innerWidth > 760 || !window.matchMedia("(pointer: coarse)").matches) return;
+
+    window.requestAnimationFrame(() => {
+      questionAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   useEffect(() => {
     if (!chapter || !lesson) {
@@ -108,6 +117,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     }
 
     void recordQuestionAttempt(current, answer, isCorrect, "smart");
+    scrollQuestionToTop();
   }
 
   function next() {
@@ -307,7 +317,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
         </div>
 
         {current && (
-          <QuestionCard question={current} eyebrow={`${chapter.name} · Question ${currentStep}`}>
+          <div ref={questionAnchorRef} className="mobile-question-anchor"><QuestionCard question={current} eyebrow={`${chapter.name} · Question ${currentStep}`}>
             {current.answers.map((answer, index) => (
               <AnswerOption
                 key={current.id + "-" + index}
