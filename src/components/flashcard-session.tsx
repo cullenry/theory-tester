@@ -112,6 +112,11 @@ export function FlashcardSession() {
     }
 
     setFlipped(false);
+
+    if (rating === "learning") {
+      setDeck((currentDeck) => [...currentDeck, current]);
+    }
+
     setPosition((index) => index + 1);
   }
 
@@ -225,6 +230,8 @@ export function FlashcardSession() {
     );
   }
 
+  if (!current) return null;
+
   return (
     <main className="app-main">
       <div className="page-shell practice-shell">
@@ -254,7 +261,7 @@ export function FlashcardSession() {
         <div className="flashcard-rate-actions">
           <button className="flashcard-rate flashcard-rate-learning" type="button" onClick={() => rateCard("learning")}>
             <span aria-hidden="true">↻</span>
-            <span><strong>Still learning</strong><small>Bring it back later</small></span>
+            <span><strong>Still learning</strong><small>Come back to it later</small></span>
           </button>
           <button className="flashcard-rate flashcard-rate-mastered" type="button" onClick={() => rateCard("mastered")}>
             <span aria-hidden="true">✓</span>
