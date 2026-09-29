@@ -17,7 +17,10 @@ export function MobilePwaManager() {
     const register = async () => {
       try {
         await navigator.serviceWorker.register("/sw.js", { scope: "/" });
-        if (active) await flushOfflineAttempts();
+        if (active) {
+          await flushOfflineAttempts();
+          void fetch("/offline-practice", { cache: "reload" }).catch(() => undefined);
+        }
       } catch (error) {
         console.warn("Could not register the TheoryPrep mobile service worker:", error);
       }
