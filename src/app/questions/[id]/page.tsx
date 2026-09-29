@@ -8,13 +8,31 @@ type DetailPageProps = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const { id } = await params;
   const question = getQuestionById(Number(id));
-  return question
-    ? {
-        title: `Irish Theory Test Question ${question.id}: ${question.question.slice(0, 62)}`,
-        description: `${question.question} — answer and explanation for Irish driving theory test practice on TheoryPrep.`,
-        alternates: { canonical: `/questions/${question.id}` },
-      }
-    : { title: "Question not found", description: "Browse Irish driving theory questions." };
+
+  if (!question) {
+    return {
+      title: "Question not found",
+      description: "Browse Irish driving theory test questions on TheoryPrep.",
+    };
+  }
+
+  const category = question.taxonomy.category;
+  const categoryPhrase = category ? ` from ${category.toLowerCase()}` : "";
+  const questionTitle = question.question.trim();
+  const description = `Practise Irish driving theory test question #${question.id}${categoryPhrase}. See the answer and explanation: ${questionTitle}`.slice(0, 158);
+
+  return {
+    title: `Irish Theory Test Question ${question.id}: ${questionTitle.slice(0, 62)}`,
+    description,
+    alternates: { canonical: `/questions/${question.id}` },
+    openGraph: {
+      title: `Irish Theory Test Question ${question.id}: ${questionTitle.slice(0, 62)}`,
+      description,
+      url: `/questions/${question.id}`,
+      siteName: "TheoryPrep",
+      type: "website",
+    },
+  };
 }
 
 export default async function QuestionDetailPage({ params }: DetailPageProps) {
