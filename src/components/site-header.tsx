@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -93,8 +94,14 @@ export function SiteHeader() {
     <header className="site-header site-header-responsive">
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="TheoryPrep home">
-          <span className="brand-mark" aria-hidden="true">T</span>
-          <span>Theory<span className="brand-accent">Prep</span></span>
+          <Image
+            className="brand-logo"
+            src="/images/theoryprep-logo.png"
+            alt="TheoryPrep"
+            width={108}
+            height={65}
+            priority
+          />
         </Link>
 
         <nav className="main-nav" aria-label="Main navigation">
