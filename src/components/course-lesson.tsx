@@ -330,7 +330,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
                 onSelect={() => answerQuestion(answer)}
               />
             ))}
-          </QuestionCard>
+          </QuestionCard></div>
         )}
 
         {current && selected !== null && (
