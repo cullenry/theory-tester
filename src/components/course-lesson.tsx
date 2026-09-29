@@ -21,6 +21,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   const lesson = chapter?.lessons[lessonIndex] as CourseLesson | undefined;
 
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
   const [questionsForLesson, setQuestionsForLesson] = useState<Question[]>([]);
   const [phase, setPhase] = useState<Phase>("questions");
   const [position, setPosition] = useState(0);
@@ -39,6 +40,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
 
     getProgressData(2000).then((data) => {
       if (!active) return;
+      setUserId(data.user?.id ?? null);
       setQuestionsForLesson(getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts));
       setLoading(false);
     });
@@ -54,6 +56,22 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
       : phase === "review"
         ? questionsForLesson.find((question) => question.id === reviewIds[position]) ?? null
         : null;
+
+  useEffect(() => {
+    if (phase !== "complete" || !userId) return;
+
+    try {
+      const now = new Date();
+      const today = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("-");
+      localStorage.setItem("theorytester-learn-completed-" + userId, today);
+    } catch {
+      // Daily mission progress is optional if local storage is unavailable.
+    }
+  }, [phase, userId]);
 
   const totalSteps = phase === "review" ? questionsForLesson.length + reviewIds.length : questionsForLesson.length;
   const currentStep = phase === "review" ? questionsForLesson.length + position + 1 : position + 1;
