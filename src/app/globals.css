@@ -4894,7 +4894,12 @@ html.dark .browser-signin-panel { background: var(--surface); }
   }
 }
 
-html.dark .site-header .brand,
+html.dark .site-header .brand {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
 html.dark .site-footer .footer-brand {
   padding: 2px;
   border-radius: 11px;
