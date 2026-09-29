@@ -7,13 +7,13 @@ import { getProgressData, recordQuestionAttempt } from "@/lib/progress";
 import {
   getCourseChapters,
   getCourseLessonQuestions,
-  getLessonProgress,
+  getAdaptiveReviewQuestions,
   type CourseChapter,
   type CourseLesson,
 } from "@/lib/course";
 import { type Question } from "@/lib/questions";
 
-type Phase = "questions" | "review" | "complete";
+type Phase = "questions" | "adaptive" | "review" | "complete";
 
 export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: number; lessonIndex: number }) {
   const chapters = useMemo(() => getCourseChapters(), []);
@@ -23,6 +23,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [questionsForLesson, setQuestionsForLesson] = useState<Question[]>([]);
+  const [adaptiveReviewQuestions, setAdaptiveReviewQuestions] = useState<Question[]>([]);
   const [phase, setPhase] = useState<Phase>("questions");
   const [position, setPosition] = useState(0);
   const [reviewIds, setReviewIds] = useState<number[]>([]);
@@ -41,7 +42,13 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     getProgressData(2000).then((data) => {
       if (!active) return;
       setUserId(data.user?.id ?? null);
-      setQuestionsForLesson(getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts));
+      const lessonQuestions = getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts);
+      setQuestionsForLesson(lessonQuestions);
+      setAdaptiveReviewQuestions(
+        data.user
+          ? getAdaptiveReviewQuestions(data.attempts, lessonQuestions.map((question) => question.id), 2)
+          : [],
+      );
       setLoading(false);
     });
 
@@ -53,9 +60,11 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   const current =
     phase === "questions"
       ? questionsForLesson[position] ?? null
-      : phase === "review"
-        ? questionsForLesson.find((question) => question.id === reviewIds[position]) ?? null
-        : null;
+      : phase === "adaptive"
+        ? adaptiveReviewQuestions[position] ?? null
+        : phase === "review"
+          ? questionsForLesson.find((question) => question.id === reviewIds[position]) ?? null
+          : null;
 
   useEffect(() => {
     if (phase !== "complete" || !userId) return;
@@ -73,8 +82,16 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     }
   }, [phase, userId]);
 
-  const totalSteps = phase === "review" ? questionsForLesson.length + reviewIds.length : questionsForLesson.length;
-  const currentStep = phase === "review" ? questionsForLesson.length + position + 1 : position + 1;
+  const totalSteps =
+    questionsForLesson.length +
+    adaptiveReviewQuestions.length +
+    reviewIds.length;
+  const currentStep =
+    phase === "adaptive"
+      ? questionsForLesson.length + position + 1
+      : phase === "review"
+        ? questionsForLesson.length + adaptiveReviewQuestions.length + position + 1
+        : position + 1;
 
   function answerQuestion(answer: string) {
     if (!current || selected !== null) return;
@@ -98,6 +115,29 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
 
     if (phase === "questions") {
       if (position + 1 < questionsForLesson.length) {
+        setPosition((value) => value + 1);
+        return;
+      }
+
+      if (adaptiveReviewQuestions.length) {
+        setPhase("adaptive");
+        setPosition(0);
+        return;
+      }
+
+      if (reviewIds.length) {
+        setPhase("review");
+        setPosition(0);
+        return;
+      }
+
+      setPhase("complete");
+      setPosition(0);
+      return;
+    }
+
+    if (phase === "adaptive") {
+      if (position + 1 < adaptiveReviewQuestions.length) {
         setPosition((value) => value + 1);
         return;
       }
@@ -136,7 +176,14 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     setMissed(0);
 
     getProgressData(2000).then((data) => {
-      setQuestionsForLesson(getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts));
+      setUserId(data.user?.id ?? null);
+      const lessonQuestions = getCourseLessonQuestions(chapterIndex, lessonIndex, data.attempts);
+      setQuestionsForLesson(lessonQuestions);
+      setAdaptiveReviewQuestions(
+        data.user
+          ? getAdaptiveReviewQuestions(data.attempts, lessonQuestions.map((question) => question.id), 2)
+          : [],
+      );
       setLoading(false);
     });
   }
@@ -175,12 +222,16 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
             <h1>{missed ? "Nice. The tricky ones came back around." : "Clean run. Keep moving."}</h1>
             <p>
               You worked through {questionsForLesson.length} questions in <strong>{chapter.name}</strong>
-              {missed ? `, then revisited ${reviewIds.length} you missed` : ""}.
+              {adaptiveReviewQuestions.length
+                ? `, then completed ${adaptiveReviewQuestions.length} smart review question${adaptiveReviewQuestions.length === 1 ? "" : "s"}`
+                : ""}
+              {missed ? `, plus a retry of ${reviewIds.length} you missed` : ""}.
             </p>
-            <div className="results-summary results-summary-three">
-              <div><strong>{questionsForLesson.length}</strong><span>New questions</span></div>
+            <div className="results-summary results-summary-four">
+              <div><strong>{questionsForLesson.length}</strong><span>Lesson questions</span></div>
               <div><strong>{correct}/{questionsForLesson.length}</strong><span>First-pass score</span></div>
-              <div><strong>{reviewIds.length}</strong><span>Revisited</span></div>
+              <div><strong>{adaptiveReviewQuestions.length}</strong><span>Smart review</span></div>
+              <div><strong>{reviewIds.length}</strong><span>Missed &amp; retried</span></div>
             </div>
             <div className="course-complete-actions">
               <Link className="button button-primary" href="/practice/learn">Continue the course <span aria-hidden="true">→</span></Link>
@@ -210,12 +261,26 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
         <ProgressBar
           current={currentStep}
           total={Math.max(1, totalSteps)}
-          label={isReview ? "Review progress" : "Lesson progress"}
+          label={
+            isReview
+              ? "Retry progress"
+              : phase === "adaptive"
+                ? "Adaptive review progress"
+                : "Lesson progress"
+          }
         />
 
         <div className="course-lesson-badge">
-          <span>{isReview ? "↻ Review round" : "● Learn"}</span>
-          <small>{isReview ? "Missed questions return before you finish." : "Answer first. The explanation comes next."}</small>
+          <span>{isReview ? "↻ Retry round" : phase === "adaptive" ? "✦ Smart Review" : userId ? "● Adaptive Learn" : "● Learn"}</span>
+          <small>
+            {isReview
+              ? "Missed questions return before you finish."
+              : phase === "adaptive"
+                ? "A couple of earlier questions were selected from your practice history."
+                : userId
+                  ? "Your answer history helps shape the lesson and its review questions."
+                  : "Sign in to let your answer history personalise the lesson."}
+          </small>
         </div>
 
         {current && (
@@ -250,10 +315,16 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
             <ExplanationCard explanation={current.explanation} />
             <button className="button button-primary continue-button" type="button" onClick={next}>
               {phase === "questions" && position + 1 === questionsForLesson.length
-                ? reviewIds.length ? "Start review round" : "Finish lesson"
-                : phase === "review" && position + 1 === reviewIds.length
-                  ? "Finish lesson"
-                  : "Next question"}
+                ? adaptiveReviewQuestions.length
+                  ? "Start Smart Review"
+                  : reviewIds.length
+                    ? "Start retry round"
+                    : "Finish lesson"
+                : phase === "adaptive" && position + 1 === adaptiveReviewQuestions.length
+                  ? reviewIds.length ? "Start retry round" : "Finish lesson"
+                  : phase === "review" && position + 1 === reviewIds.length
+                    ? "Finish lesson"
+                    : "Next question"}
               <span aria-hidden="true">→</span>
             </button>
           </div>

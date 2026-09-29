@@ -1,6 +1,7 @@
 import { questions, type Question } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
 import type { QuestionAttempt } from "@/lib/progress";
+import { buildLearningPlan } from "@/lib/learning";
 
 export const COURSE_LESSON_SIZE = 8;
 
@@ -102,6 +103,26 @@ export function getLessonProgress(lesson: CourseLesson, seen: Set<number>) {
   };
 }
 
+export function getAdaptiveReviewQuestions(
+  attempts: QuestionAttempt[],
+  excludeIds: number[] = [],
+  count = 2,
+): Question[] {
+  if (!attempts.some((attempt) => attempt.selected_answer !== null)) return [];
+
+  const seenIds = new Set(
+    attempts
+      .filter((attempt) => attempt.selected_answer !== null)
+      .map((attempt) => attempt.question_id),
+  );
+
+  const excluded = new Set(excludeIds);
+  const reviewPool = questions.filter((question) => seenIds.has(question.id) && !excluded.has(question.id));
+
+  return buildLearningPlan(reviewPool, attempts, Math.min(count, reviewPool.length))
+    .map((item) => item.question);
+}
+
 export function getNextCourseLesson(attempts: QuestionAttempt[]) {
   const chapters = getCourseChapters();
   const { seen } = getCourseProgress(attempts);
@@ -144,28 +165,18 @@ export function getCourseLessonQuestions(
 
   if (!lesson) return [];
 
-  const lastAttemptByQuestion = new Map<number, QuestionAttempt>();
-
-  for (const attempt of [...attempts].reverse()) {
-    if (attempt.selected_answer === null) continue;
-    lastAttemptByQuestion.set(attempt.question_id, attempt);
-  }
-
   const lessonQuestions = lesson.questionIds
     .map((id) => chapter.questions.find((question) => question.id === id))
     .filter((question): question is Question => Boolean(question));
 
-  return [...lessonQuestions].sort((a, b) => {
-    const aAttempt = lastAttemptByQuestion.get(a.id);
-    const bAttempt = lastAttemptByQuestion.get(b.id);
+  // Keep the course map fixed so all 805 questions are covered, but let the
+  // existing learning algorithm decide the order inside each lesson.
+  // This uses past answers, weak spots and spacing to bring the most useful
+  // material forward without removing any questions from the course.
+  const adaptivePlan = buildLearningPlan(lessonQuestions, attempts, lessonQuestions.length);
 
-    if (!aAttempt && bAttempt) return -1;
-    if (aAttempt && !bAttempt) return 1;
+  return adaptivePlan.length === lessonQuestions.length
+    ? adaptivePlan.map((item) => item.question)
+    : lessonQuestions;
 
-    if (aAttempt && bAttempt && aAttempt.is_correct !== bAttempt.is_correct) {
-      return aAttempt.is_correct ? 1 : -1;
-    }
-
-    return lesson.questionIds.indexOf(a.id) - lesson.questionIds.indexOf(b.id);
-  });
 }

@@ -88,6 +88,24 @@ export function LearnCourse() {
           </section>
         )}
 
+        <section className="course-adaptive-card" aria-labelledby="adaptive-learning-title">
+          <div className="course-adaptive-heading">
+            <div>
+              <p className="eyebrow">Adaptive Learn</p>
+              <h2 id="adaptive-learning-title">Your lessons adjust as you practise.</h2>
+              <p>
+                TheoryPrep uses your previous answers to shape the order of questions, so difficult material gets more attention while stronger answers are spaced out for later recall.
+              </p>
+            </div>
+            <span className="course-adaptive-badge" aria-hidden="true">SMART</span>
+          </div>
+          <div className="course-adaptive-pills">
+            <span><i aria-hidden="true">01</i><strong>Weak spots first</strong><small>Prioritise topics and questions you struggle with.</small></span>
+            <span><i aria-hidden="true">02</i><strong>Reinforce over time</strong><small>Bring questions back after time has passed.</small></span>
+            <span><i aria-hidden="true">03</i><strong>Second chances</strong><small>Miss one and it returns before the lesson ends.</small></span>
+          </div>
+        </section>
+
         <section className="course-next-card">
           <div>
             <p className="eyebrow">{complete ? "Course complete" : hasStarted ? "Continue your journey" : "Your first lesson"}</p>
