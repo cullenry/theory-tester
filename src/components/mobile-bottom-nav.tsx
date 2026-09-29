@@ -13,6 +13,28 @@ const items = [
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+
+  if (href === "/practice") {
+    return (
+      pathname === "/practice" ||
+      pathname.startsWith("/challenge") ||
+      pathname.startsWith("/theory-test-topics") ||
+      pathname.startsWith("/theory-test-practice")
+    );
+  }
+
+  if (href === "/mock-test") {
+    return pathname === "/mock-test" || pathname.startsWith("/irish-theory-test-mock-test");
+  }
+
+  if (href === "/questions") {
+    return (
+      pathname === "/questions" ||
+      pathname.startsWith("/theory-test-questions") ||
+      pathname.startsWith("/irish-road-signs")
+    );
+  }
+
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
