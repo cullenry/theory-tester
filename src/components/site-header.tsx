@@ -91,27 +91,20 @@ export function SiteHeader() {
   }
 
   return (
-    <>
-      <svg className="logo-filter-defs" aria-hidden="true" width="0" height="0" focusable="false">
-      <defs>
-        <filter id="theoryprep-dark-logo-alpha" colorInterpolationFilters="sRGB">
-          <feColorMatrix
-            type="matrix"
-            values="1 0 0 0 0
-                    0 1 0 0 0
-                    0 0 1 0 0
-                    -1 -1 -1 0 3"
-          />
-        </filter>
-      </defs>
-      </svg>
-
-      <header className="site-header site-header-responsive">
+    <header className="site-header site-header-responsive">
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="TheoryPrep home">
           <Image
-            className="brand-logo"
+            className="brand-logo brand-logo-light"
             src="/images/theoryprep-logo.png"
+            alt="TheoryPrep"
+            width={108}
+            height={65}
+            priority
+          />
+          <Image
+            className="brand-logo brand-logo-dark"
+            src="/images/theoryprep-logo-dark.png"
             alt="TheoryPrep"
             width={108}
             height={65}
@@ -170,7 +163,6 @@ export function SiteHeader() {
           <ThemeToggle />
         </div>
       </div>
-      </header>
-    </>
+    </header>
   );
 }
