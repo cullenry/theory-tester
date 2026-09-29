@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigation = [
   { href: "/", label: "Home" },
-  { href: "/practice/learn", label: "Learn" },
+  { href: "/practice", label: "Learn & Practice" },
   { href: "/mock-test", label: "Mock test" },
   { href: "/questions", label: "Questions" },
   { href: "/progress", label: "My Progress" },
