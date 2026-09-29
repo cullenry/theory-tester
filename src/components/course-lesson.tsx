@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
 import { getProgressData, recordQuestionAttempt } from "@/lib/progress";
 import {
