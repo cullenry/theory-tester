@@ -5580,3 +5580,115 @@ html.dark .course-signin-lesson-points span {
     display: none !important;
   }
 }
+
+
+/* Extend the mobile app navigation to touch tablets without changing desktop. */
+@media (min-width: 761px) and (max-width: 1024px) and (pointer: coarse) {
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 70;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(14px);
+  }
+
+  .main-nav { display: none; }
+
+  .header-inner {
+    width: calc(100% - 32px);
+    min-height: 68px;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 80;
+    display: block;
+    padding: 8px 18px calc(8px + env(safe-area-inset-bottom));
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .mobile-bottom-nav-inner {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0,1fr));
+    width: min(620px, 100%);
+    min-height: 62px;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #d4e1d7;
+    border-radius: 17px;
+    background: rgba(255,255,255,.97);
+    box-shadow: 0 12px 35px rgba(18,42,28,.15);
+    backdrop-filter: blur(16px);
+    pointer-events: auto;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
+    border-radius: 12px;
+    color: #77827b;
+    font-size: 9px;
+    font-weight: 800;
+  }
+
+  .mobile-nav-icon {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border-radius: 9px;
+  }
+
+  .mobile-nav-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+  }
+
+  .mobile-nav-item-active {
+    color: var(--green-dark);
+    background: #eaf4ed;
+  }
+
+  .mobile-nav-item-active .mobile-nav-icon {
+    background: #dcefe2;
+  }
+
+  .app-main {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .site-footer {
+    padding-bottom: calc(30px + 82px + env(safe-area-inset-bottom));
+  }
+
+  html.dark .site-header {
+    background: rgba(11,11,11,.91);
+  }
+
+  html.dark .mobile-bottom-nav-inner {
+    border-color: #38473d;
+    background: rgba(22,27,23,.97);
+  }
+
+  html.dark .mobile-nav-item {
+    color: #9aa59d;
+  }
+
+  html.dark .mobile-nav-item-active {
+    color: #c5e9cf;
+    background: #26372c;
+  }
+}
