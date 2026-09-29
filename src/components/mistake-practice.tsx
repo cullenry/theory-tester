@@ -202,7 +202,7 @@ export function MistakePractice() {
                     <span className="mistake-category-count">
                       {items.length} mistake{items.length === 1 ? "" : "s"}
                     </span>
-                    <span className="mistake-category-chevron" aria-hidden="true">⌄</span>
+                    <span className="mistake-category-chevron" aria-hidden="true" />
                   </summary>
                   <div className="mistake-category-questions">
                     {items.slice(0, 6).map((question) => (
