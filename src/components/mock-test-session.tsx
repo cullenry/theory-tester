@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { AnswerOption, ProgressBar, QuestionCard } from "@/components/question-ui";
+import { AnswerOption, ProgressBar, QuestionCard, QuestionImage } from "@/components/question-ui";
 import { getRandomQuestions, type Question } from "@/lib/questions";
 import { recordMockTest, recordQuestionAttempt } from "@/lib/progress";
 import { ShareResultButton } from "@/components/share-result-button";
@@ -201,7 +201,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
           const status = unanswered ? "Unanswered" : isCorrect ? "Correct" : "Incorrect";
           const statusClass = unanswered ? "status-unanswered" : isCorrect ? "status-correct" : "status-incorrect";
           const mark = unanswered ? "–" : isCorrect ? "✓" : "×";
-          return <li className="review-item" key={question.id}><div className="review-status"><span className={`status-mark ${statusClass}`} aria-hidden="true">{mark}</span><span>{status} · Question {index + 1}</span></div><h3>{question.question}</h3><p>Your answer: <strong>{response ?? "No answer"}</strong></p><p>Correct answer: <strong>{question.correctAnswer ?? "Not provided"}</strong></p></li>;
+          return <li className="review-item" key={question.id}><div className="review-status"><span className={`status-mark ${statusClass}`} aria-hidden="true">{mark}</span><span>{status} · Question {index + 1}</span></div><h3>{question.question}</h3>{question.image ? <QuestionImage question={question} /> : null}<p>Your answer: <strong>{response ?? "No answer"}</strong></p><p>Correct answer: <strong>{question.correctAnswer ?? "Not provided"}</strong></p></li>;
         })}</ol></section>
       </div></main>
     );
