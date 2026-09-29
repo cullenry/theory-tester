@@ -199,7 +199,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
 
   return (
     <main className="app-main"><div className="page-shell practice-shell">
-      <div className="mock-exam-header"><div className="page-heading"><div><p className="eyebrow">No hints until the end</p><h1>Mock test</h1></div></div><div className={`exam-timer ${timerState}`} role="timer" aria-label={`${formatTime(timeRemaining)} remaining`}><span>Time remaining</span><strong>{formatTime(timeRemaining)}</strong></div></div>
+      <div className="mock-exam-header"><div className="page-heading"><div><h1>Mock test</h1></div></div><div className={`exam-timer ${timerState}`} role="timer" aria-label={`${formatTime(timeRemaining)} remaining`}><span>Time remaining</span><strong>{formatTime(timeRemaining)}</strong></div></div>
       <div className="mock-progress"><ProgressBar current={position + 1} total={test.length} label="Test progress" /></div>
       <QuestionCard question={current} eyebrow={`Question ${position + 1} of ${test.length}`}>
         {current.answers.map((answer, index) => <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={responses[position] === answer} correct={false} incorrect={false} onSelect={() => setResponses((currentResponses) => currentResponses.map((item, responseIndex) => responseIndex === position ? answer : item))} />)}
