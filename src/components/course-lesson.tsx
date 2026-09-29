@@ -214,8 +214,14 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
         />
 
         <div className="course-lesson-badge">
-          <span>{isReview ? "↻ Review round" : "● Learn"}</span>
-          <small>{isReview ? "Missed questions return before you finish." : "Answer first. The explanation comes next."}</small>
+          <span>{isReview ? "↻ Review round" : userId ? "● Adaptive Learn" : "● Learn"}</span>
+          <small>
+            {isReview
+              ? "Missed questions return before you finish."
+              : userId
+                ? "Your answer history helps shape the order of this lesson."
+                : "Sign in to let your answer history personalise the lesson."}
+          </small>
         </div>
 
         {current && (
