@@ -291,7 +291,13 @@ export function PracticeSession() {
             
             <div className="practice-feature-stack practice-feature-stack-flashcards">
               <section className="flashcard-launch-card">
-                <div className="flashcard-launch-icon" aria-hidden="true"><span>↻</span></div>
+                <div className="flashcard-launch-icon" aria-hidden="true">
+  <svg viewBox="0 0 32 32" focusable="false">
+    <path d="M7.5 11.2v10.1c0 2.2 1.8 4 4 4h13" />
+    <rect x="6" y="6" width="20" height="15" rx="3.2" />
+    <path d="M11 11.2h7.2M11 15.3h5.2" />
+  </svg>
+</div>
                 <div className="flashcard-launch-copy">
                   <p className="eyebrow">Active recall</p>
                   <h2>Study with flashcards.</h2>
