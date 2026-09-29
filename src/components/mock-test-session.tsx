@@ -56,6 +56,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
   const [timeExpired, setTimeExpired] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(initialDurationSeconds);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  const mockQuestionRef = useRef<HTMLDivElement>(null);
   const deadlineRef = useRef<number | null>(null);
   const submissionRef = useRef(false);
   const recordedResultRef = useRef(false);
@@ -86,6 +87,14 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
 
     return () => window.clearInterval(intervalId);
   }, [hasStarted, submitted]);
+
+  useEffect(() => {
+    if (!hasStarted || submitted) return;
+
+    window.requestAnimationFrame(() => {
+      mockQuestionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [position, hasStarted, submitted]);
 
   const startTest = (format: MockTestFormat, nextTest = getRandomQuestions(format.questionCount)) => {
     const durationSeconds = debugTimerEnabled ? initialDurationSeconds : format.durationMinutes * 60;
@@ -215,7 +224,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
     <main className="app-main"><div className="page-shell practice-shell">
       <div className="mock-exam-header"><div className="page-heading"><div><h1>Mock test</h1></div></div><div className={`exam-timer ${timerState}`} role="timer" aria-label={`${formatTime(timeRemaining)} remaining`}><span>Time remaining</span><strong>{formatTime(timeRemaining)}</strong></div></div>
       <div className="mock-progress"><ProgressBar current={position + 1} total={test.length} label="Test progress" /></div>
-      <div className="mock-question-wrap">
+      <div ref={mockQuestionRef} className="mock-question-wrap">
         <QuestionCard question={current} eyebrow={`Question ${position + 1} of ${test.length}`}>
           {current.answers.map((answer, index) => <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={responses[position] === answer} correct={false} incorrect={false} onSelect={() => setResponses((currentResponses) => currentResponses.map((item, responseIndex) => responseIndex === position ? answer : item))} />)}
         </QuestionCard>
