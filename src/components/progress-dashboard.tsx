@@ -232,9 +232,11 @@ function RecentMistakes({ questionIds }: { questionIds: number[] }) {
           <div className="dashboard-mistake-list">
             {mistakeQuestions.slice(0, 4).map((question) => (
               <Link className="dashboard-mistake-row" href={"/questions/" + question.id} key={question.id}>
-                <span aria-hidden="true">×</span>
-                <strong>{question.question}</strong>
-                <small>{question.taxonomy.category ?? "General"} · Question {question.id}</small>
+                <span className="dashboard-mistake-marker" aria-hidden="true">×</span>
+                <div className="dashboard-mistake-copy">
+                  <strong>{question.question}</strong>
+                  <small>{question.taxonomy.category ?? "General"} · Question {question.id}</small>
+                </div>
               </Link>
             ))}
           </div>
