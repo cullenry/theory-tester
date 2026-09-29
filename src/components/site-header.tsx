@@ -91,6 +91,20 @@ export function SiteHeader() {
   }
 
   return (
+    <svg className="logo-filter-defs" aria-hidden="true" width="0" height="0" focusable="false">
+      <defs>
+        <filter id="theoryprep-dark-logo-alpha" colorInterpolationFilters="sRGB">
+          <feColorMatrix
+            type="matrix"
+            values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    -1 -1 -1 0 3"
+          />
+        </filter>
+      </defs>
+    </svg>
+
     <header className="site-header site-header-responsive">
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="TheoryPrep home">
