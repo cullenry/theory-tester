@@ -5956,3 +5956,22 @@ html.dark .mock-submit-confirm-warning span {
   overflow: hidden;
   pointer-events: none;
 }
+
+
+/* Final four-tab mobile navigation alignment */
+@media (max-width: 760px) {
+  .mobile-bottom-nav-inner {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .mobile-nav-item {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .mobile-nav-icon {
+    margin-inline: auto;
+  }
+}
