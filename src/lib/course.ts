@@ -103,6 +103,26 @@ export function getLessonProgress(lesson: CourseLesson, seen: Set<number>) {
   };
 }
 
+export function getAdaptiveReviewQuestions(
+  attempts: QuestionAttempt[],
+  excludeIds: number[] = [],
+  count = 2,
+): Question[] {
+  if (!attempts.some((attempt) => attempt.selected_answer !== null)) return [];
+
+  const seenIds = new Set(
+    attempts
+      .filter((attempt) => attempt.selected_answer !== null)
+      .map((attempt) => attempt.question_id),
+  );
+
+  const excluded = new Set(excludeIds);
+  const reviewPool = questions.filter((question) => seenIds.has(question.id) && !excluded.has(question.id));
+
+  return buildLearningPlan(reviewPool, attempts, Math.min(count, reviewPool.length))
+    .map((item) => item.question);
+}
+
 export function getNextCourseLesson(attempts: QuestionAttempt[]) {
   const chapters = getCourseChapters();
   const { seen } = getCourseProgress(attempts);
