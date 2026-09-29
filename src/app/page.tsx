@@ -4,6 +4,7 @@ import { questions } from "@/lib/questions";
 import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
+import { HomeProofWidget } from "@/components/home-proof-widget";
 
 const modes = [
   { number: "01", title: "Learn & Practice", description: "Build weak spots, reinforce what you know and practise questions at your own pace.", href: "/practice", action: "Start free practice" },
@@ -39,6 +40,7 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-bottom-line"><span>805 QUESTIONS</span><i /><span>40-QUESTION MOCK</span><i /><span>FREE TO START</span></div>
+        <HomeProofWidget />
       </section>
 
       <div className="home-learning-widgets">
