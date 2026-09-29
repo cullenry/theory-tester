@@ -3750,3 +3750,10 @@ html.dark .learn-signin-gate > p:not(.eyebrow) {
     width: 100%;
   }
 }
+
+
+/* Keep Test Ready's card rhythm identical to the My Progress layout. */
+.test-ready-stack {
+  display: grid;
+  gap: 14px;
+}
