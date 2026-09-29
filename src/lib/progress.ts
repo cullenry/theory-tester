@@ -205,7 +205,13 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
   };
 
   if (typeof window !== "undefined" && !navigator.onLine) {
-    queueOfflineAttempt(user.id, {\n      question_id: question.id,\n      is_correct: isCorrect,\n      selected_answer: selectedAnswer,\n      mode,\n      created_at: createdAt,\n    });
+    queueOfflineAttempt(user.id, {
+      question_id: question.id,
+      is_correct: isCorrect,
+      selected_answer: selectedAnswer,
+      mode,
+      created_at: createdAt,
+    });
     return;
   }
 
