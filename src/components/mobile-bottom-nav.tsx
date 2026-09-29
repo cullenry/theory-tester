@@ -7,6 +7,7 @@ const items = [
   { href: "/", label: "Home", icon: "home" },
   { href: "/practice", label: "Learn & Practice", icon: "learn" },
   { href: "/mock-test", label: "Mock", icon: "mock" },
+  { href: "/questions", label: "Questions", icon: "questions" },
   { href: "/progress", label: "Progress", icon: "progress" },
 ] as const;
 
