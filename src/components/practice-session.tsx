@@ -138,6 +138,7 @@ export function PracticeSession() {
   const [selected, setSelected] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [openPicker, setOpenPicker] = useState<"category" | "subcategory" | null>(null);
+  const questionAnchorRef = useRef<HTMLDivElement>(null);
   const selectedCategorySummaries = taxonomyCategories.filter((item) => selectedCategories.includes(item.name));
   const availableSubcategoryOptions = selectedCategorySummaries.flatMap((category) =>
     category.subcategories.map((item) => ({
@@ -180,6 +181,14 @@ export function PracticeSession() {
   const current = session?.[position];
   const finished = session !== null && position >= session.length;
   const answered = selected !== null;
+
+  const scrollQuestionToTop = () => {
+    if (typeof window === "undefined" || window.innerWidth > 760 || !window.matchMedia("(pointer: coarse)").matches) return;
+
+    window.requestAnimationFrame(() => {
+      questionAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   const beginSession = (pool: Question[], length: number = sessionLength, review = false) => {
     const nextSession = getRandomQuestionsFromPool(pool, length);
@@ -226,7 +235,7 @@ export function PracticeSession() {
                   <h2>Work through all 805 questions.</h2>
                   <p>Take the question bank as a course: short lessons, instant explanations and a second chance for anything that catches you out.</p>
                 </div>
-                <Link className="button button-primary" href="/practice">Open Learn &amp; Practice <span aria-hidden="true">→</span></Link>
+                <Link className="button button-primary" href="/practice">Learn <span aria-hidden="true">→</span></Link>
               </section>
             </div>
 
@@ -313,11 +322,11 @@ export function PracticeSession() {
           <>
             <div className="page-heading"><div><h1>Practice session</h1></div><div className="practice-heading-actions"><button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Change topic</button></div></div>
             <div className="practice-meta"><ProgressBar current={position + 1} total={session.length} label="Session progress" /><ScoreDisplay correct={correctCount} attempted={position + (answered ? 1 : 0)} /></div>
-            <QuestionCard question={current} eyebrow={`Question ${position + 1}`}>
+            <div ref={questionAnchorRef} className="mobile-question-anchor"><QuestionCard question={current} eyebrow={`Question ${position + 1}`}>
               {current.answers.map((answer, index) => (
-                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); else setSessionMissedIds((ids) => ids.includes(current.id) ? ids : [...ids, current.id]); void recordQuestionAttempt(current, answer, answer === current.correctAnswer, "practice"); }} />
+                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); else setSessionMissedIds((ids) => ids.includes(current.id) ? ids : [...ids, current.id]); void recordQuestionAttempt(current, answer, answer === current.correctAnswer, "practice"); scrollQuestionToTop(); }} />
               ))}
-            </QuestionCard>
+            </QuestionCard></div>
             {answered && <div className="feedback-block"><p className={`feedback-line ${selected === current.correctAnswer ? "feedback-good" : "feedback-bad"}`} role="status"><strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong> {selected === current.correctAnswer ? "That’s the right answer." : "The correct answer is highlighted above."}</p><ExplanationCard explanation={current.explanation} /><button className="button button-primary continue-button" type="button" onClick={() => { setPosition((step) => step + 1); setSelected(null); }}>{position + 1 === session.length ? "Finish session" : "Next question"}<span aria-hidden="true">→</span></button></div>}
           </>
         )}
