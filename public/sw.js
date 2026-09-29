@@ -1,4 +1,4 @@
-const CACHE_NAME = "theoryprep-mobile-v1";
+const CACHE_NAME = "theoryprep-mobile-v2";
 const APP_SHELL = ["/", "/practice", "/practice/learn", "/practice/flashcards", "/questions", "/mock-test", "/offline-practice"];
 
 async function cacheDocumentAndAssets(url, cache) {
