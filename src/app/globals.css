@@ -6008,3 +6008,12 @@ html.dark .home-streak-dot-today {
     min-width: 22px;
   }
 }
+
+
+.readiness-comment {
+  margin-top: 9px !important;
+  color: var(--green-dark) !important;
+  font-size: 11px !important;
+  font-weight: 700;
+  line-height: 1.5 !important;
+}
