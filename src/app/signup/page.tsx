@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AuthForm } from "@/components/auth/auth-form";
 
 export const metadata = {
@@ -14,7 +15,9 @@ export default function SignupPage() {
           <p>Create your account now, then build on it as we add saved progress, mock-test history and more.</p>
           <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>PASS</span></div>
         </div>
-        <AuthForm mode="signup" />
+        <Suspense fallback={null}>
+          <AuthForm mode="signup" />
+        </Suspense>
       </div>
     </main>
   );
