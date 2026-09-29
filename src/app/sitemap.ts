@@ -5,7 +5,7 @@ import { seoTopicPages } from "@/lib/seo-topics";
 const siteUrl = "https://theoryprep.irish";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["/", "/practice", "/practice/learn", "/mock-test", "/questions", "/challenge", "/progress", "/test-ready", "/feedback", "/privacy", "/terms", "/support", "/theory-test-practice", "/irish-driving-theory-test", "/theory-test-questions", "/irish-theory-test-mock-test", "/irish-road-signs", "/theory-test-topics"];
+  const staticRoutes = ["/", "/practice", "/practice/learn", "/mock-test", "/practice/flashcards", "/questions", "/challenge", "/progress", "/test-ready", "/feedback", "/privacy", "/terms", "/support", "/theory-test-practice", "/irish-driving-theory-test", "/theory-test-questions", "/irish-theory-test-mock-test", "/irish-road-signs", "/theory-test-topics"];
 
   const topicRoutes = seoTopicPages.map((topic) => ({
     url: siteUrl + "/theory-test-topics/" + topic.slug,
