@@ -51,6 +51,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hero-proof { display: flex; align-items: center; gap: 10px; margin-top: 30px; color: #65736a; font-size: 13px; }
 .hero-proof strong { color: var(--ink); font-size: 17px; }
 .proof-separator { width: 1px; height: 16px; margin: 0 5px; background: #bdc9bf; }
+.hero-trust {
+  margin: 10px 0 0;
+  color: #7a877f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+html.dark .hero-trust { color: #aab4ad; }
+
 .road-illustration { position: relative; height: 390px; overflow: hidden; border-radius: 48% 48% 12px 12px; background: #deebdf; }
 .road-sun { position: absolute; top: 34px; right: 68px; width: 92px; height: 92px; border-radius: 50%; background: #f0cb82; }
 .road-hill { position: absolute; width: 125%; height: 200px; border-radius: 50% 50% 0 0; }
