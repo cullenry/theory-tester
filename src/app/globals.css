@@ -3760,18 +3760,10 @@ html.dark .learn-signin-gate > p:not(.eyebrow) {
 
 
 /* Flashcards */
-.practice-tools-grid {
+.practice-feature-stack {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
-  margin-bottom: 15px;
-}
-
-.practice-tools-grid .learn-launch-card,
-.practice-tools-grid .flashcard-launch-card {
-  min-width: 0;
-  min-height: 100%;
-  margin-bottom: 0;
+  margin-top: 14px;
 }
 
 .flashcard-launch-card {
@@ -4268,10 +4260,6 @@ html.dark .flashcard-rate-mastered:hover {
 }
 
 @media (max-width: 760px) {
-  .practice-tools-grid {
-    grid-template-columns: 1fr;
-  }
-
   .flashcard-launch-card {
     grid-template-columns: auto minmax(0, 1fr);
   }
