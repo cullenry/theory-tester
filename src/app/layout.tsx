@@ -3,6 +3,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/site-header";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
+import { MobilePwaManager } from "@/components/mobile-pwa-manager";
+import { AppLaunchSplash } from "@/components/app-launch-splash";
 import Script from "next/script";
 import "./globals.css";
 
@@ -24,6 +26,9 @@ export const metadata: Metadata = {
     capable: true,
     title: "TheoryPrep",
     statusBarStyle: "default",
+  },
+  icons: {
+    icon: [{ url: "/icons/icon.svg", type: "image/svg+xml" }],
   },
 };
 
@@ -47,6 +52,8 @@ export default function RootLayout({
         <div id="main-content" tabIndex={-1}>{children}</div>
         <MobileBottomNav />
         <PwaInstallPrompt />
+        <MobilePwaManager />
+        <AppLaunchSplash />
         <Analytics />
         <Script
           id="theoryprep-theme"
