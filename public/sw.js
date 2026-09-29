@@ -1,5 +1,5 @@
 const CACHE_NAME = "theoryprep-mobile-v1";
-const APP_SHELL = ["/", "/practice", "/practice/learn", "/practice/flashcards", "/questions", "/mock-test", "/progress", "/offline-practice"];
+const APP_SHELL = ["/", "/practice", "/practice/learn", "/practice/flashcards", "/questions", "/mock-test", "/offline-practice"];
 
 async function cacheDocumentAndAssets(url, cache) {
   const response = await fetch(url);
