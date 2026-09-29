@@ -190,7 +190,6 @@ export function LearnSession() {
       <div className="page-shell practice-shell">
         <div className="page-heading">
           <div>
-            <p className="eyebrow">{isRetry ? "Review round" : "Personalised learning"}</p>
             <h1>Learn</h1>
           </div>
           <div className="learn-heading-actions">
