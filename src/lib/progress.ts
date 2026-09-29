@@ -23,6 +23,50 @@ export type MockTestResult = {
   created_at: string;
 };
 
+type OfflineAttempt = {
+  question_id: number;
+  is_correct: boolean;
+  selected_answer: string | null;
+  mode: AttemptMode;
+  created_at: string;
+};
+
+const OFFLINE_QUEUE_KEY_PREFIX = "theoryprep-offline-attempts-";
+
+function offlineQueueKey(userId: string) {
+  return OFFLINE_QUEUE_KEY_PREFIX + userId;
+}
+
+function readOfflineQueue(userId: string) {
+  try {
+    const raw = localStorage.getItem(offlineQueueKey(userId));
+    if (!raw) return [] as OfflineAttempt[];
+    const parsed = JSON.parse(raw) as unknown;
+    return Array.isArray(parsed) ? parsed.filter((item): item is OfflineAttempt =>
+      Boolean(item && typeof item === "object" &&
+        typeof (item as OfflineAttempt).question_id === "number" &&
+        typeof (item as OfflineAttempt).is_correct === "boolean" &&
+        typeof (item as OfflineAttempt).mode === "string" &&
+        typeof (item as OfflineAttempt).created_at === "string")
+    ) : [];
+  } catch {
+    return [] as OfflineAttempt[];
+  }
+}
+
+function writeOfflineQueue(userId: string, queue: OfflineAttempt[]) {
+  try {
+    if (!queue.length) localStorage.removeItem(offlineQueueKey(userId));
+    else localStorage.setItem(offlineQueueKey(userId), JSON.stringify(queue.slice(-200)));
+  } catch {
+    // Offline persistence is an enhancement.
+  }
+}
+
+function queueOfflineAttempt(userId: string, attempt: OfflineAttempt) {
+  writeOfflineQueue(userId, [...readOfflineQueue(userId), attempt]);
+}
+
 let bookmarkCache: Set<number> | null = null;
 let bookmarkCacheUserId: string | null = null;
 let bookmarkCachePromise: Promise<Set<number>> | null = null;
@@ -112,14 +156,73 @@ export async function toggleQuestionBookmark(questionId: number) {
   return { signedIn: true, starred: true, available: true };
 }
 
-export async function recordQuestionAttempt(question: Question, selectedAnswer: string | null, isCorrect: boolean, mode: AttemptMode) {
+export async function flushOfflineAttempts() {
+  if (typeof window === "undefined" || !navigator.onLine) return 0;
+
   const supabase = createClient();
-  const { data: user } = await supabase.auth.getUser();
-  if (!user.user) return;
-  const { error } = await supabase.from("question_attempts").insert({
-    user_id: user.user.id, question_id: question.id, is_correct: isCorrect, selected_answer: selectedAnswer, mode,
-  });
-  if (error) console.warn("Could not save question attempt:", error.message);
+  const { data: sessionData } = await supabase.auth.getSession();
+  const user = sessionData.session?.user;
+  if (!user) return 0;
+
+  const queue = readOfflineQueue(user.id);
+  if (!queue.length) return 0;
+
+  const { error } = await supabase.from("question_attempts").insert(
+    queue.map((attempt) => ({
+      user_id: user.id,
+      question_id: attempt.question_id,
+      is_correct: attempt.is_correct,
+      selected_answer: attempt.selected_answer,
+      mode: attempt.mode,
+      created_at: attempt.created_at,
+    })),
+  );
+
+  if (error) {
+    console.warn("Could not sync offline attempts:", error.message);
+    return 0;
+  }
+
+  writeOfflineQueue(user.id, []);
+  return queue.length;
+}
+
+export async function recordQuestionAttempt(question: Question, selectedAnswer: string | null, isCorrect: boolean, mode: AttemptMode) {
+  const createdAt = new Date().toISOString();
+  const supabase = createClient();
+  const { data: sessionData } = await supabase.auth.getSession();
+  const user = sessionData.session?.user;
+
+  if (!user) return;
+
+  const attempt = {
+    user_id: user.id,
+    question_id: question.id,
+    is_correct: isCorrect,
+    selected_answer: selectedAnswer,
+    mode,
+    created_at: createdAt,
+  };
+
+  if (typeof window !== "undefined" && !navigator.onLine) {
+    queueOfflineAttempt(user.id, {\n      question_id: question.id,\n      is_correct: isCorrect,\n      selected_answer: selectedAnswer,\n      mode,\n      created_at: createdAt,\n    });
+    return;
+  }
+
+  const { error } = await supabase.from("question_attempts").insert(attempt);
+  if (error) {
+    console.warn("Could not save question attempt:", error.message);
+    queueOfflineAttempt(user.id, {
+      question_id: question.id,
+      is_correct: isCorrect,
+      selected_answer: selectedAnswer,
+      mode,
+      created_at: createdAt,
+    });
+    return;
+  }
+
+  void flushOfflineAttempts();
 }
 
 export async function recordMockTest(result: {

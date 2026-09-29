@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getProgressData } from "@/lib/progress";
+import { getAppPreferences } from "@/lib/app-preferences";
 
 const GOALS = [
   { id: "answered", title: "Answer 20 questions", target: 20 },
@@ -22,9 +23,11 @@ function localDateKey(value: string | Date) {
 export function DailyMission() {
   const [progress, setProgress] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
   const [learnDone, setLearnDone] = useState(false);
+  const [dailyGoal, setDailyGoal] = useState(20);
 
   useEffect(() => {
     getProgressData(2000).then(setProgress);
+    getAppPreferences().then((preferences) => setDailyGoal(preferences.daily_goal));
   }, []);
 
   useEffect(() => {
@@ -56,22 +59,28 @@ export function DailyMission() {
     );
   }
 
+  const goals = [
+    { id: "answered", title: "Answer " + dailyGoal + " questions", target: dailyGoal },
+    { id: "correct", title: "Get " + Math.round(dailyGoal * 0.8) + " correct", target: Math.round(dailyGoal * 0.8) },
+    GOALS[2],
+  ] as const;
+
   const status = {
-    answered: Math.min(GOALS[0].target, todayStats.answered),
-    correct: Math.min(GOALS[1].target, todayStats.correct),
+    answered: Math.min(goals[0].target, todayStats.answered),
+    correct: Math.min(goals[1].target, todayStats.correct),
     learn: learnDone ? 1 : 0,
   };
-  const completed = GOALS.filter((goal) => status[goal.id] >= goal.target).length;
+  const completed = goals.filter((goal) => status[goal.id] >= goal.target).length;
 
   return (
     <section className="daily-mission-section" aria-label="Daily mission">
       <div className="daily-mission-card">
         <div className="daily-mission-header">
           <div><p className="eyebrow">Today’s mission</p><h2>Three small wins.</h2></div>
-          <span className="daily-mission-count">{completed}/{GOALS.length} complete</span>
+          <span className="daily-mission-count">{completed}/{goals.length} complete</span>
         </div>
         <div className="daily-mission-grid">
-          {GOALS.map((goal) => {
+          {goals.map((goal) => {
             const value = status[goal.id];
             const done = value >= goal.target;
             return <div className={done ? "daily-mission-goal daily-mission-goal-done" : "daily-mission-goal"} key={goal.id}>
@@ -83,8 +92,8 @@ export function DailyMission() {
         <div className="daily-mission-progress"><span style={{ width: `${(completed / GOALS.length) * 100}%` }} /></div>
         <div className="daily-mission-actions">
           {status.learn === 0 && <Link className="button button-primary" href="/practice/learn">Learn <span aria-hidden="true">→</span></Link>}
-          {status.learn === 1 && status.answered < GOALS[0].target && <Link className="button button-primary" href="/practice">Answer more questions <span aria-hidden="true">→</span></Link>}
-          {completed === GOALS.length && <Link className="button button-secondary" href="/progress">View your progress <span aria-hidden="true">→</span></Link>}
+          {status.learn === 1 && status.answered < goals[0].target && <Link className="button button-primary" href="/practice">Answer more questions <span aria-hidden="true">→</span></Link>}
+          {completed === goals.length && <Link className="button button-secondary" href="/progress">View your progress <span aria-hidden="true">→</span></Link>}
         </div>
       </div>
     </section>

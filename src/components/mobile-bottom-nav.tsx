@@ -5,14 +5,18 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/", label: "Home", icon: "home" },
+  { href: "/practice/learn", label: "Learn", icon: "learn" },
   { href: "/practice", label: "Practice", icon: "practice" },
   { href: "/mock-test", label: "Mock", icon: "mock" },
-  { href: "/questions", label: "Questions", icon: "questions" },
   { href: "/progress", label: "Progress", icon: "progress" },
 ] as const;
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+
+  if (href === "/practice/learn") {
+    return pathname === "/practice/learn" || pathname.startsWith("/practice/learn/");
+  }
 
   if (href === "/practice") {
     return (
@@ -46,6 +50,16 @@ function Icon({ name }: { name: (typeof items)[number]["icon"] }) {
         <path d="M3.5 10.5 12 3.8l8.5 6.7" />
         <path d="M5.5 9.7v10.1h13V9.7" />
         <path d="M9.4 19.8v-5.6h5.2v5.6" />
+      </svg>
+    );
+  }
+
+  if (name === "learn") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4.5 6.2c2.5-1.3 5-.9 7.5.7v12.1c-2.5-1.6-5-2-7.5-.7z" />
+        <path d="M19.5 6.2c-2.5-1.3-5-.9-7.5.7v12.1c2.5-1.6 5-2 7.5-.7z" />
+        <path d="M12 8.1v9.8M9.2 11.5h.01M14.8 11.5h.01M9.2 14.8h.01M14.8 14.8h.01" />
       </svg>
     );
   }

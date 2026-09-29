@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { questions } from "@/lib/questions";
 import { getProgressData, type QuestionAttempt } from "@/lib/progress";
+import { MobileAppTools } from "@/components/mobile-app-tools";
 import {
   getChapterProgress,
   getCourseChapters,
@@ -361,6 +362,7 @@ export function ProgressDashboard() {
             <Link href="/questions"><strong>Question bank</strong><span>Search and personalise the library →</span></Link>
           </div>
         </section>
+        <MobileAppTools />
       </div>
     </main>
   );
