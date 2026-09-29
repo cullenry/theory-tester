@@ -80,6 +80,7 @@ export function TestReady() {
           <div className="test-ready-score"><strong>{score}</strong><span>/100</span><small>practice metric</small></div>
         </div>
 
+        <div className="test-ready-stack">
         <section className="progress-feature-card test-ready-note">
           <div><p className="eyebrow">How to read this</p><h2>Built from your practice history.</h2><p>{getComment(score)} This is a personalised practice metric, not a prediction of your result on the real test.</p></div>
           <Link className="button button-primary" href="/practice/learn">Work on weak spots <span aria-hidden="true">→</span></Link>
@@ -105,6 +106,8 @@ export function TestReady() {
             </div>
           )}
         </section>
+
+        </div>
 
         <div className="progress-cta-row">
           <Link className="button button-secondary" href="/progress">Back to My Progress</Link>
