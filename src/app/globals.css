@@ -3672,3 +3672,81 @@ html.dark .pwa-install-dismiss:hover {
 html.dark .auth-forgot-link {
   color: var(--green);
 }
+
+
+/* Focused Learn sign-in entry point */
+.learn-signin-feature {
+  min-height: 0;
+}
+
+.learn-signin-feature .learn-launch-copy p:not(.eyebrow) {
+  max-width: 700px;
+}
+
+.learn-signin-feature > .button {
+  min-width: 160px;
+}
+
+.learn-signin-gate {
+  padding: 34px 30px;
+  border: 1px solid #c7ddcd;
+  border-radius: 14px;
+  background: #eff7f1;
+  box-shadow: 0 8px 24px rgba(26,54,36,.035);
+}
+
+.learn-signin-gate h1 {
+  margin: 7px 0 10px;
+  font-family: Georgia, serif;
+  font-size: clamp(34px, 5vw, 46px);
+  font-weight: 500;
+  letter-spacing: -.7px;
+  line-height: 1.05;
+}
+
+.learn-signin-gate > p:not(.eyebrow) {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.learn-signin-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+html.dark .learn-signin-gate {
+  border-color: #3f5143;
+  background: #151d17;
+}
+
+html.dark .learn-signin-gate > p:not(.eyebrow) {
+  color: #aeb9b1;
+}
+
+@media (max-width: 760px) {
+  .learn-signin-feature {
+    gap: 16px;
+  }
+
+  .learn-signin-feature > .button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .learn-signin-gate {
+    padding: 26px 20px;
+  }
+
+  .learn-signin-gate-actions {
+    display: grid;
+  }
+
+  .learn-signin-gate-actions .button {
+    width: 100%;
+  }
+}
