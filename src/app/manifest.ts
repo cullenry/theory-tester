@@ -22,7 +22,6 @@ export default function manifest(): MetadataRoute.Manifest {
       { name: "Start practice", short_name: "Practice", url: "/practice" },
       { name: "Learn the course", short_name: "Learn", url: "/practice/learn" },
       { name: "Take a mock test", short_name: "Mock test", url: "/mock-test" },
-      { name: "View my progress", short_name: "Progress", url: "/progress" },
       { name: "Offline practice", short_name: "Offline", url: "/offline-practice" },
     ],
   };
