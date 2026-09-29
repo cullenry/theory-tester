@@ -60,15 +60,6 @@ function Icon({ name }: { name: (typeof items)[number]["icon"] }) {
     );
   }
 
-  if (name === "practice") {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6.2 4.8h9.6a2.2 2.2 0 0 1 2.2 2.2v12.2H8.3a2.8 2.8 0 0 1-2.8-2.8V7.6a2.8 2.8 0 0 1 2.8-2.8Z" />
-        <path d="M8.2 4.8v14.4M10.7 9h4.7M10.7 12.4h4.7" />
-      </svg>
-    );
-  }
-
   if (name === "mock") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
