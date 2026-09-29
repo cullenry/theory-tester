@@ -3,41 +3,80 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { questions } from "@/lib/questions";
-import { taxonomyCategories } from "@/lib/question-taxonomy";
-import { DailyMission } from "@/components/daily-mission";
 import { getProgressData, type QuestionAttempt } from "@/lib/progress";
+import {
+  getChapterProgress,
+  getCourseChapters,
+  getCourseProgress,
+  getNextCourseLesson,
+} from "@/lib/course";
 
-type CategoryStat = { name: string; attempted: number; correct: number; accuracy: number };
-type ProgressTab = "overview" | "starred";
+type TopicRow = {
+  name: string;
+  seen: number;
+  total: number;
+  percent: number;
+  accuracy: number | null;
+  attempts: number;
+};
 
 function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
-  const name = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name.trim() : "";
+  const name =
+    typeof user.user_metadata?.full_name === "string"
+      ? user.user_metadata.full_name.trim()
+      : typeof user.user_metadata?.name === "string"
+        ? user.user_metadata.name.trim()
+        : "";
+
   if (name) return name;
+
   const fallback = user.email?.split("@")[0]?.replace(/[._-]+/g, " ");
-  return fallback ? fallback.split(" ").filter(Boolean).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ") : "there";
+  return fallback
+    ? fallback
+        .split(" ")
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ")
+    : "there";
 }
 
 function getStreak(attempts: QuestionAttempt[]) {
-  const days = new Set(attempts.map((attempt) => attempt.created_at.slice(0, 10)));
-  const currentDay = new Date();
+  const days = new Set(
+    attempts
+      .filter((attempt) => attempt.selected_answer !== null)
+      .map((attempt) => attempt.created_at.slice(0, 10)),
+  );
+
+  const today = new Date();
+  const todayKey = today.toISOString().slice(0, 10);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayKey = yesterday.toISOString().slice(0, 10);
+
   let current = 0;
-  while (true) {
-    const key = currentDay.toISOString().slice(0, 10);
-    if (!days.has(key)) break;
-    current += 1;
-    currentDay.setDate(currentDay.getDate() - 1);
+  const cursor = new Date(days.has(todayKey) ? today : yesterday);
+
+  if (!days.has(todayKey) && !days.has(yesterdayKey)) {
+    current = 0;
+  } else {
+    while (days.has(cursor.toISOString().slice(0, 10))) {
+      current += 1;
+      cursor.setDate(cursor.getDate() - 1);
+    }
   }
-  const sorted = [...days].sort();
+
   let best = 0;
   let run = 0;
   let previous: Date | null = null;
-  for (const key of sorted) {
+
+  for (const key of [...days].sort()) {
     const day = new Date(key + "T00:00:00Z");
-    if (previous && day.getTime() - previous.getTime() === 86400000) run += 1;
+    if (previous && day.getTime() - previous.getTime() === 86_400_000) run += 1;
     else run = 1;
     best = Math.max(best, run);
     previous = day;
   }
+
   return { current, best };
 }
 
@@ -45,197 +84,284 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-IE", { day: "numeric", month: "short" }).format(new Date(value));
 }
 
-function StatCard({ label, value, detail }: { label: string; value: string; detail: string }) {
-  return <article className="stat-card"><span>{label}</span><strong>{value}</strong><small>{detail}</small></article>;
+function Stat({ label, value, detail }: { label: string; value: string; detail: string }) {
+  return (
+    <article className="dashboard-stat">
+      <span>{label}</span>
+      <strong>{value}</strong>
+      <small>{detail}</small>
+    </article>
+  );
 }
 
-function AccuracyChart({ attempts }: { attempts: QuestionAttempt[] }) {
-  const points = useMemo(() => {
-    const grouped = new Map<string, { correct: number; total: number }>();
-    for (const attempt of [...attempts].reverse()) {
-      const key = attempt.created_at.slice(0, 10);
-      const entry = grouped.get(key) ?? { correct: 0, total: 0 };
-      if (attempt.selected_answer !== null) {
-        entry.total += 1;
-        if (attempt.is_correct) entry.correct += 1;
-      }
-      grouped.set(key, entry);
-    }
-    return [...grouped.entries()].slice(-14).map(([date, value]) => ({ date, accuracy: value.total ? Math.round((value.correct / value.total) * 100) : 0 }));
-  }, [attempts]);
-
-  if (points.length < 2) return <div className="chart-empty">Answer a few more questions to see your accuracy trend.</div>;
-  const coordinates = points.map((point, index) => {
-    const x = (index / (points.length - 1)) * 100;
-    const y = 92 - (point.accuracy / 100) * 78;
-    return x + "," + y;
-  }).join(" ");
-
-  return <div className="accuracy-chart"><svg viewBox="0 0 100 100" role="img" aria-label="Accuracy over the last fourteen active days"><line x1="0" y1="92" x2="100" y2="92" className="chart-grid-line" /><line x1="0" y1="53" x2="100" y2="53" className="chart-grid-line" /><line x1="0" y1="14" x2="100" y2="14" className="chart-grid-line" /><polyline points={coordinates} className="chart-line" /></svg><div className="chart-labels"><span>{formatDate(points[0].date)}</span><span>{formatDate(points[points.length - 1].date)}</span></div></div>;
-}
-
-function getReadinessComment(score: number) {
-  if (score === 100) return "Outstanding preparation. Your recorded performance is exceptionally strong.";
-  if (score >= 95) return "Excellent preparation. You're in very strong shape for test day.";
-  if (score >= 90) return "Great shape. Keep the momentum going and stay sharp.";
-  if (score >= 80) return "Solid preparation. A little more targeted practice can tighten things up.";
-  if (score >= 70) return "You're building well. Focus on your weaker areas next.";
-  if (score >= 60) return "Good start. More practice across your weaker topics should help.";
-  if (score >= 40) return "Keep going. Use Learn mode to target the areas giving you trouble.";
-  return "Just getting started. Build consistency with regular practice.";
-}
-
-function Readiness({ accuracy, mockAverage, coverage, userId }: { accuracy: number; mockAverage: number; coverage: number; userId: string }) {
-  const score = Math.round(accuracy * 0.45 + mockAverage * 0.35 + coverage * 0.2);
-  const comment = getReadinessComment(score);
-  const [history, setHistory] = useState<Array<{ date: string; score: number }>>([]);
-
-  useEffect(() => {
-    try {
-      const now = new Date();
-      const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("-");
-      const cutoffDate = new Date(now);
-      cutoffDate.setDate(cutoffDate.getDate() - 31);
-      const cutoff = [cutoffDate.getFullYear(), String(cutoffDate.getMonth() + 1).padStart(2, "0"), String(cutoffDate.getDate()).padStart(2, "0")].join("-");
-      const storageKey = "theorytester-readiness-history-" + userId;
-      const stored = JSON.parse(localStorage.getItem(storageKey) ?? "[]") as Array<{ date: string; score: number }>;
-      const withoutToday = stored.filter((entry) => entry.date !== today).filter((entry) => entry.date >= cutoff);
-      const next = [...withoutToday, { date: today, score }].slice(-31);
-      localStorage.setItem(storageKey, JSON.stringify(next));
-      setHistory(next);
-    } catch {
-      setHistory([]);
-    }
-  }, [score, userId]);
-
-  const previous = history.length > 1 ? history[history.length - 2] : null;
-  const delta = previous ? score - previous.score : null;
-
-  return <section className="progress-feature-card readiness-card">
-    <div>
-      <p className="eyebrow">Practice benchmark</p>
-      <h2>Test readiness</h2>
-      <p>Based on your question accuracy, mock-test performance and topic coverage. It is a practice metric, not a prediction of your test result.</p>
-      <p className="readiness-comment">{comment}</p>
-      <div className="readiness-actions">
-        <Link className="text-action" href="/test-ready">Open Test Ready check ↗</Link>
-        {delta !== null && <span className={delta >= 0 ? "readiness-delta readiness-delta-up" : "readiness-delta readiness-delta-down"}>{delta > 0 ? "+" : ""}{delta} since your last saved check</span>}
+function TopicProgress({ topics }: { topics: TopicRow[] }) {
+  return (
+    <section className="dashboard-card dashboard-topics-card">
+      <div className="dashboard-card-heading">
+        <div>
+          <p className="eyebrow">Topic progress</p>
+          <h2>Know where you stand.</h2>
+        </div>
+        <Link href="/questions">Browse all ↗</Link>
       </div>
-    </div>
-    <div className="readiness-score"><strong>{score}</strong><span>/100</span></div>
-    <div className="readiness-bar"><span style={{ width: score + "%" }} /></div>
-    <div className="readiness-facts"><span>{accuracy}% question accuracy</span><span>{mockAverage}% mock average</span><span>{coverage}% topic coverage</span></div>
-  </section>;
+
+      {topics.length === 0 ? (
+        <div className="dashboard-empty">
+          <strong>Your topics will appear here as you practise.</strong>
+          <span>Start with the course and your progress will build automatically.</span>
+        </div>
+      ) : (
+        <div className="dashboard-topic-list">
+          {topics.slice(0, 6).map((topic) => (
+            <Link className="dashboard-topic-row" href={"/practice?category=" + encodeURIComponent(topic.name)} key={topic.name}>
+              <div className="dashboard-topic-copy">
+                <strong>{topic.name}</strong>
+                <small>
+                  {topic.seen}/{topic.total} covered
+                  {topic.accuracy !== null ? ` · ${topic.accuracy}% accuracy` : " · Not tested yet"}
+                </small>
+              </div>
+              <span>{topic.percent}%</span>
+              <div className="dashboard-topic-bar"><i style={{ width: topic.percent + "%" }} /></div>
+              <span className="dashboard-topic-arrow" aria-hidden="true">→</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }
 
-function StarredQuestions({ questionIds, bookmarksAvailable }: { questionIds: number[]; bookmarksAvailable: boolean }) {
-  const starredQuestions = questionIds
+function RecentMocks({ mocks }: { mocks: Awaited<ReturnType<typeof getProgressData>>["mockTests"] }) {
+  return (
+    <section className="dashboard-card">
+      <div className="dashboard-card-heading">
+        <div>
+          <p className="eyebrow">Mock tests</p>
+          <h2>Recent results.</h2>
+        </div>
+        <Link href="/mock-test">Take one ↗</Link>
+      </div>
+
+      {mocks.length === 0 ? (
+        <div className="dashboard-empty">
+          <strong>No mocks yet.</strong>
+          <span>Take a full timed test when you want to check your progress under pressure.</span>
+        </div>
+      ) : (
+        <div className="dashboard-mock-list">
+          {mocks.slice(0, 4).map((test) => (
+            <div className="dashboard-mock-row" key={test.id}>
+              <div>
+                <strong>{test.question_count}-question mock</strong>
+                <small>{formatDate(test.created_at)} · {test.time_expired ? "Time expired" : "Completed"}</small>
+              </div>
+              <strong>{test.percentage}%</strong>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function RecentMistakes({ questionIds }: { questionIds: number[] }) {
+  const mistakeQuestions = questionIds
     .map((id) => questions.find((question) => question.id === id))
     .filter((question): question is (typeof questions)[number] => Boolean(question));
 
   return (
-    <section className="progress-feature-card starred-questions-panel">
-      <div className="feature-card-heading">
+    <section className="dashboard-card">
+      <div className="dashboard-card-heading">
         <div>
-          <p className="eyebrow">Saved for later</p>
-          <h2>Starred questions</h2>
+          <p className="eyebrow">Keep improving</p>
+          <h2>Questions to revisit.</h2>
         </div>
-        <span>{starredQuestions.length} saved</span>
+        <Link href="/mistakes">All mistakes ↗</Link>
       </div>
-      {!bookmarksAvailable ? (
-        <div className="chart-empty starred-empty">
-          <strong>One database step left.</strong>
-          <span>Run <code>supabase/migrations/002_question_bookmarks.sql</code> in Supabase to save starred questions.</span>
-        </div>
-      ) : starredQuestions.length === 0 ? (
-        <div className="chart-empty starred-empty">
-          <strong>No starred questions yet.</strong>
-          <span>Tap the ☆ Star button on any question to save it here.</span>
+
+      {mistakeQuestions.length === 0 ? (
+        <div className="dashboard-empty">
+          <strong>Nothing waiting for review.</strong>
+          <span>When you miss something, it will show up here.</span>
         </div>
       ) : (
         <>
-          <div className="starred-question-list">
-            {starredQuestions.map((question, index) => (
-              <Link className="starred-question-row" href={"/questions/" + question.id} key={question.id}>
-                <span className="starred-question-star" aria-hidden="true">★</span>
-                <div>
-                  <strong>{question.question}</strong>
-                  <small>Question {index + 1} · {question.taxonomy.category ?? "General"}</small>
-                </div>
-                <span className="row-arrow" aria-hidden="true">↗</span>
+          <div className="dashboard-mistake-list">
+            {mistakeQuestions.slice(0, 4).map((question) => (
+              <Link className="dashboard-mistake-row" href={"/questions/" + question.id} key={question.id}>
+                <span aria-hidden="true">×</span>
+                <strong>{question.question}</strong>
+                <small>{question.taxonomy.category ?? "General"} · Question {question.id}</small>
               </Link>
             ))}
           </div>
-          <div className="starred-actions">
-            <Link className="button button-primary" href="/practice?starred=1">Practise starred questions <span aria-hidden="true">→</span></Link>
-            <Link className="button button-secondary" href="/questions">Browse library</Link>
-          </div>
+          <Link className="button button-secondary dashboard-full-width-button" href="/mistakes">
+            Practise my mistakes <span aria-hidden="true">→</span>
+          </Link>
         </>
       )}
     </section>
   );
 }
+
 export function ProgressDashboard() {
   const [data, setData] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
-  const [activeTab, setActiveTab] = useState<ProgressTab>("overview");
-  useEffect(() => { getProgressData().then(setData); }, []);
 
-  if (!data) return <main className="app-main"><div className="page-shell progress-shell"><div className="progress-loading">Loading your progress…</div></div></main>;
-  if (!data.user) return <main className="app-main"><div className="page-shell progress-shell"><section className="empty-state progress-login-state"><p className="eyebrow">Your progress</p><h1>Sign in to see your stats.</h1><p>Your practice history, mock tests, streaks and mistakes will appear here once you have an account.</p><Link className="button button-primary" href="/login">Sign in <span aria-hidden="true">→</span></Link></section></div></main>;
+  useEffect(() => {
+    getProgressData(2000).then(setData);
+  }, []);
 
-  const answeredAttempts = data.attempts.filter((attempt) => attempt.selected_answer !== null);
-  const correct = answeredAttempts.filter((attempt) => attempt.is_correct).length;
-  const accuracy = answeredAttempts.length ? Math.round((correct / answeredAttempts.length) * 100) : 0;
-  const streak = getStreak(data.attempts);
-  const bestMock = data.mockTests.length ? Math.max(...data.mockTests.map((test) => test.percentage)) : 0;
-  const averageMock = data.mockTests.length ? Math.round(data.mockTests.reduce((total, test) => total + test.percentage, 0) / data.mockTests.length) : 0;
+  const chapters = useMemo(() => getCourseChapters(), []);
+  const courseProgress = useMemo(() => getCourseProgress(data?.attempts ?? []), [data?.attempts]);
+  const nextLesson = useMemo(() => getNextCourseLesson(data?.attempts ?? []), [data?.attempts]);
+  const streak = useMemo(() => getStreak(data?.attempts ?? []), [data?.attempts]);
 
-  const categoryStats: CategoryStat[] = taxonomyCategories.map((category) => {
-    const questionIds = new Set(questions.filter((question) => question.taxonomy.category === category.name).map((question) => question.id));
-    const categoryAttempts = answeredAttempts.filter((attempt) => questionIds.has(attempt.question_id));
-    const categoryCorrect = categoryAttempts.filter((attempt) => attempt.is_correct).length;
-    return { name: category.name, attempted: categoryAttempts.length, correct: categoryCorrect, accuracy: categoryAttempts.length ? Math.round((categoryCorrect / categoryAttempts.length) * 100) : 0 };
-  }).filter((category) => category.attempted > 0);
+  const topics = useMemo<TopicRow[]>(() => {
+    const attempts = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
+    const attemptedByQuestion = new Map<number, number>();
 
-  const sortedWeak = [...categoryStats].sort((a, b) => a.accuracy - b.accuracy || b.attempted - a.attempted);
-  const topicCoverage = Math.min(100, Math.round((categoryStats.length / Math.max(1, taxonomyCategories.length)) * 100));
-  const latestMistakes = data.attempts
-    .filter((attempt) => !attempt.is_correct && attempt.selected_answer !== null)
-    .filter((attempt, index, all) => all.findIndex((item) => item.question_id === attempt.question_id) === index)
-    .slice(0, 5)
-    .map((attempt) => questions.find((question) => question.id === attempt.question_id))
-    .filter((question): question is (typeof questions)[number] => Boolean(question));
+    for (const attempt of attempts) {
+      attemptedByQuestion.set(attempt.question_id, (attemptedByQuestion.get(attempt.question_id) ?? 0) + 1);
+    }
 
-  const achievements = [
-    { icon: "✓", title: "First question", earned: answeredAttempts.length >= 1 },
-    { icon: "5", title: "Quick five", earned: answeredAttempts.length >= 5 },
-    { icon: "100", title: "100 questions", earned: answeredAttempts.length >= 100 },
-    { icon: "500", title: "500 questions", earned: answeredAttempts.length >= 500 },
-    { icon: "80%", title: "80% accuracy", earned: answeredAttempts.length >= 20 && accuracy >= 80 },
-    { icon: "🔥", title: "7 day streak", earned: streak.best >= 7 },
-    { icon: "40", title: "First full mock", earned: data.mockTests.some((test) => test.question_count === 40) },
-    { icon: "★", title: "Perfect mock", earned: data.mockTests.some((test) => test.percentage === 100) },
-    { icon: "★", title: "10 starred", earned: data.starredQuestionIds.length >= 10 },
-    { icon: "🎯", title: "Ready to focus", earned: categoryStats.length >= 5 },
-  ];
+    return chapters
+      .map((chapter) => {
+        const questionIds = new Set(chapter.questions.map((question) => question.id));
+        const chapterAttempts = attempts.filter((attempt) => questionIds.has(attempt.question_id));
+        const correct = chapterAttempts.filter((attempt) => attempt.is_correct).length;
+        const chapterProgress = getChapterProgress(chapter, courseProgress.seen);
 
-  return <main className="app-main"><div className="page-shell progress-shell">
-    <div className="progress-hero"><div><p className="eyebrow">Your TheoryPrep</p><h1>Hello, {getDisplayName(data.user)}.</h1><p>See what you know, where you can improve and how your practice is building over time.</p></div><Link className="button button-primary" href="/practice">Practise now <span aria-hidden="true">→</span></Link></div>
-    {!data.available && <div className="setup-note"><strong>One database step left.</strong> Run <code>supabase/migrations/001_progress.sql</code> in your Supabase SQL Editor to turn on saved progress.</div>}
-    <div className="progress-tabs" role="tablist" aria-label="My progress sections">
-      <button className={activeTab === "overview" ? "progress-tab progress-tab-active" : "progress-tab"} type="button" role="tab" aria-selected={activeTab === "overview"} onClick={() => setActiveTab("overview")}>Overview</button>
-      <button className={activeTab === "starred" ? "progress-tab progress-tab-active" : "progress-tab"} type="button" role="tab" aria-selected={activeTab === "starred"} onClick={() => setActiveTab("starred")}>★ Starred questions <span>{data.starredQuestionIds.length}</span></button>
-    </div>
-    {activeTab === "starred" ? <StarredQuestions questionIds={data.starredQuestionIds} bookmarksAvailable={data.bookmarksAvailable} /> : <>
-    <div className="stats-grid"><StatCard label="Questions answered" value={answeredAttempts.length.toLocaleString()} detail="Across all practice modes" /><StatCard label="Accuracy" value={accuracy + "%"} detail={correct ? correct + " correct answers" : "Start answering to build your stats"} /><StatCard label="Current streak" value={streak.current + " day" + (streak.current === 1 ? "" : "s")} detail={streak.best + "-day best"} /><StatCard label="Mock tests" value={String(data.mockTests.length)} detail={bestMock ? "Best score " + bestMock + "%" : "Take your first mock"} /></div>
-    <div className="progress-main-grid"><section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Your trend</p><h2>Accuracy over time</h2></div><span>{answeredAttempts.length ? accuracy + "% overall" : "No data yet"}</span></div><AccuracyChart attempts={data.attempts} /></section>
-    <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mock tests</p><h2>Recent results</h2></div><Link href="/mock-test">Take one ↗</Link></div>{data.mockTests.length === 0 ? <div className="chart-empty">Your completed mock tests will appear here.</div> : <div className="mock-history-list">{data.mockTests.slice(0, 5).map((test) => <div className="mock-history-row" key={test.id}><div><strong>{test.question_count} Question Test</strong><small>{formatDate(test.created_at)} · {test.time_expired ? "Time expired" : "Completed"}</small></div><strong>{test.correct_count}/{test.question_count}</strong><span>{test.percentage}%</span></div>)}</div>}</section></div>
-    <Readiness accuracy={accuracy} mockAverage={averageMock} coverage={topicCoverage} userId={data.user.id} />
-    <div className="progress-main-grid"><section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Topic performance</p><h2>Where to focus</h2></div></div>{sortedWeak.length === 0 ? <div className="chart-empty">Start practising to build topic-level insights.</div> : <div className="topic-performance-list">{sortedWeak.slice(0, 6).map((category) => <div className="topic-performance-row" key={category.name}><div className="topic-performance-copy"><strong>{category.name}</strong><small>{category.attempted} questions attempted</small></div><span>{category.accuracy}%</span><div className="topic-performance-bar"><i style={{ width: category.accuracy + "%" }} /></div><Link href={"/practice?category=" + encodeURIComponent(category.name)}>Practise</Link></div>)}</div>}</section>
-    <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Mistakes</p><h2>Practise what you missed</h2></div><Link href="/mistakes">All mistakes ↗</Link></div>{latestMistakes.length === 0 ? <div className="chart-empty">Your recent incorrect answers will collect here.</div> : <div className="mistake-list">{latestMistakes.map((question) => <Link href={"/questions/" + question.id} className="mistake-row" key={question.id}><span>×</span><strong>{question.question}</strong><small>Question {question.id}</small></Link>)}</div>}{latestMistakes.length > 0 && <Link className="button button-secondary progress-inline-button" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}</section></div>
-    <DailyMission />
-    <section className="progress-feature-card"><div className="feature-card-heading"><div><p className="eyebrow">Achievements</p><h2>Keep building</h2></div></div><div className="achievement-grid">{achievements.map((achievement) => <div className={"achievement-card " + (achievement.earned ? "achievement-earned" : "")} key={achievement.title}><span>{achievement.icon}</span><div><strong>{achievement.title}</strong><small>{achievement.earned ? "Unlocked" : "Keep practising"}</small></div></div>)}</div></section>
-    <div className="progress-cta-row"><Link className="button button-secondary" href="/challenge">🔥 Daily Challenge</Link><Link className="button button-secondary" href="/test-ready">Test Ready</Link><Link className="button button-primary" href="/practice">Start a practice set <span aria-hidden="true">→</span></Link></div>
-    </>}
-  </div></main>;
+        return {
+          name: chapter.name,
+          seen: chapterProgress.seenCount,
+          total: chapterProgress.total,
+          percent: chapterProgress.percent,
+          accuracy: chapterAttempts.length ? Math.round((correct / chapterAttempts.length) * 100) : null,
+          attempts: [...questionIds].reduce((total, id) => total + (attemptedByQuestion.get(id) ?? 0), 0),
+        };
+      })
+      .filter((topic) => topic.total > 0)
+      .sort((a, b) => {
+        if (a.accuracy !== null && b.accuracy !== null && Math.abs(a.accuracy - b.accuracy) >= 1) {
+          return a.accuracy - b.accuracy;
+        }
+        return a.percent - b.percent;
+      });
+  }, [chapters, data?.attempts, courseProgress.seen]);
+
+  const answered = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
+  const correct = answered.filter((attempt) => attempt.is_correct).length;
+  const accuracy = answered.length ? Math.round((correct / answered.length) * 100) : 0;
+
+  const latestMistakes = useMemo(() => {
+    const seen = new Set<number>();
+    return (data?.attempts ?? [])
+      .filter((attempt) => attempt.selected_answer !== null && !attempt.is_correct)
+      .filter((attempt) => {
+        if (seen.has(attempt.question_id)) return false;
+        seen.add(attempt.question_id);
+        return true;
+      })
+      .slice(0, 5)
+      .map((attempt) => attempt.question_id);
+  }, [data?.attempts]);
+
+  if (!data) {
+    return (
+      <main className="app-main">
+        <div className="page-shell dashboard-shell">
+          <div className="dashboard-loading">Loading your dashboard…</div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!data.user) {
+    return (
+      <main className="app-main">
+        <div className="page-shell dashboard-shell">
+          <section className="empty-state dashboard-login-state">
+            <p className="eyebrow">Your TheoryPrep dashboard</p>
+            <h1>Sign in and make the practice yours.</h1>
+            <p>Your course position, topic progress, mistakes, streaks and mock-test history will stay with your account.</p>
+            <Link className="button button-primary" href="/login?next=/progress">Sign in <span aria-hidden="true">→</span></Link>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
+  const displayName = getDisplayName(data.user);
+  const firstName = displayName.split(" ")[0];
+  const continueHref = nextLesson
+    ? `/practice/learn/lesson?chapter=${nextLesson.chapterIndex}&lesson=${nextLesson.lessonIndex}`
+    : "/practice/learn";
+
+  return (
+    <main className="app-main">
+      <div className="page-shell dashboard-shell">
+        <section className="dashboard-hero">
+          <div>
+            <p className="eyebrow">Your TheoryPrep</p>
+            <h1>Good to see you, {firstName}.</h1>
+            <p>
+              Keep your momentum going. Your dashboard is centred on what to do next, with the detail underneath when you need it.
+            </p>
+          </div>
+          <Link className="button button-primary" href={continueHref}>
+            {courseProgress.seenCount ? "Continue learning" : "Start learning"} <span aria-hidden="true">→</span>
+          </Link>
+        </section>
+
+        <section className="dashboard-course-card">
+          <div className="dashboard-course-top">
+            <div>
+              <p className="eyebrow">The Learn course</p>
+              <h2>{courseProgress.seenCount ? "Keep moving through the question bank." : "Start with a small lesson."}</h2>
+              <p>
+                {nextLesson
+                  ? `${nextLesson.chapter.name} · Lesson ${nextLesson.lessonIndex + 1} of ${nextLesson.chapter.lessons.length}`
+                  : "You’ve covered the whole course. Revisit any chapter whenever you like."}
+              </p>
+            </div>
+            <strong>{courseProgress.percent}%</strong>
+          </div>
+          <div className="dashboard-course-bar"><span style={{ width: courseProgress.percent + "%" }} /></div>
+          <div className="dashboard-course-bottom">
+            <span><strong>{courseProgress.seenCount}</strong> of {courseProgress.total} questions covered</span>
+            <Link href="/practice/learn">View course map ↗</Link>
+          </div>
+        </section>
+
+        <div className="dashboard-stats">
+          <Stat label="Questions covered" value={courseProgress.seenCount.toLocaleString()} detail={`${courseProgress.percent}% of the bank`} />
+          <Stat label="Accuracy" value={accuracy + "%"} detail={answered.length ? `${correct} correct answers` : "Start answering"} />
+          <Stat label="Current streak" value={streak.current + " day" + (streak.current === 1 ? "" : "s")} detail={streak.best + "-day best"} />
+          <Stat label="Mock tests" value={String(data.mockTests.length)} detail={data.mockTests.length ? "Completed on this account" : "Take your first mock"} />
+        </div>
+
+        <div className="dashboard-grid">
+          <TopicProgress topics={topics} />
+          <div className="dashboard-stack">
+            <RecentMocks mocks={data.mockTests} />
+            <RecentMistakes questionIds={latestMistakes} />
+          </div>
+        </div>
+
+        <section className="dashboard-actions-card">
+          <div>
+            <p className="eyebrow">Quick actions</p>
+            <h2>What are you in the mood for?</h2>
+          </div>
+          <div className="dashboard-action-grid">
+            <Link href="/practice/learn"><strong>Learn</strong><span>Follow the 805-question course →</span></Link>
+            <Link href="/practice"><strong>Practise</strong><span>Pick a topic or session length →</span></Link>
+            <Link href="/mock-test"><strong>Mock test</strong><span>Take the timed 40-question test →</span></Link>
+            <Link href="/questions"><strong>Question bank</strong><span>Search and personalise the library →</span></Link>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
 }
