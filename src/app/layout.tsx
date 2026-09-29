@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     siteName: "TheoryPrep",
     type: "website",
   },
+  appleWebApp: {
+    capable: true,
+    title: "TheoryPrep",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
