@@ -16,6 +16,11 @@ function localDateKey(value: string | Date) {
   ].join("-");
 }
 
+function isIosDevice() {
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
 function urlBase64ToUint8Array(value: string) {
   const padding = "=".repeat((4 - (value.length % 4)) % 4);
   const base64 = (value + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -30,6 +35,7 @@ export function MobileAppTools() {
   const [notificationState, setNotificationState] = useState<"unknown" | "on" | "off" | "unavailable">("unknown");
   const [busy, setBusy] = useState<"notification" | "offline" | "test" | null>(null);
   const [message, setMessage] = useState("");
+  const [standalone, setStandalone] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -48,6 +54,13 @@ export function MobileAppTools() {
     return () => {
       mounted = false;
     };
+  }, []);
+
+  useEffect(() => {
+    setStandalone(
+      window.matchMedia("(display-mode: standalone)").matches ||
+      Boolean((navigator as Navigator & { standalone?: boolean }).standalone),
+    );
   }, []);
 
   useEffect(() => {
@@ -83,6 +96,11 @@ export function MobileAppTools() {
     setMessage("");
 
     try {
+      if (isIosDevice() && !standalone) {
+        setMessage("Add TheoryPrep to your Home Screen first. iPhone Web Push runs from the installed app.");
+        return;
+      }
+
       if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
         setNotificationState("unavailable");
         setMessage("Notifications aren't supported on this device.");
@@ -260,7 +278,11 @@ export function MobileAppTools() {
           <div className="mobile-app-tool-icon" aria-hidden="true">⌁</div>
           <div>
             <strong>Daily reminders</strong>
-            <small>{notificationOn ? "One gentle evening reminder when you haven't practised." : "Get a small nudge when your day is still empty."}</small>
+            <small>{notificationOn
+  ? "One gentle evening reminder when you haven't practised."
+  : isIosDevice() && !standalone
+    ? "Install TheoryPrep to your Home Screen first for iPhone notifications."
+    : "Get a small nudge when your day is still empty."}</small>
           </div>
           <div className="mobile-app-action-pair">
             <button className={notificationOn ? "mobile-app-tool-action mobile-app-tool-action-active" : "mobile-app-tool-action"} type="button" onClick={notificationOn ? disableNotifications : enableNotifications} disabled={busy === "notification" || notificationState === "unavailable"}>
