@@ -126,38 +126,29 @@ export async function recordMockTest(result: { formatId: string; questionCount: 
   const supabase = createClient();
   const { data: user } = await supabase.auth.getUser();
 
-  let sourceId: string | null = null;
-
   if (user.user) {
-    const { data, error } = await supabase.from("mock_tests").insert({
+    const { error } = await supabase.from("mock_tests").insert({
       user_id: user.user.id, format_id: result.formatId, question_count: result.questionCount, correct_count: result.correctCount, answered_count: result.answeredCount,
       percentage: result.percentage, time_expired: result.timeExpired,
-    }).select("id").single();
+    });
 
-    if (error) {
-      console.warn("Could not save mock test:", error.message);
-    } else {
-      sourceId = data?.id ?? null;
-    }
+    if (error) console.warn("Could not save mock test:", error.message);
   }
 
-  const { error: completionError } = await supabase.from("test_completions").insert({
-    user_id: user.user?.id ?? null,
-    test_type: "mock",
-    source_id: sourceId,
-  });
-
+  // This counter is global: every completed mock adds exactly one, regardless
+  // of whether the person is signed in.
+  const { error: completionError } = await supabase.rpc("increment_mock_test_count");
   if (completionError) {
-    console.warn("Could not record test completion:", completionError.message);
+    console.warn("Could not record global mock test completion:", completionError.message);
   }
 }
 
 export async function getTestCompletionCount(): Promise<number | null> {
   const supabase = createClient();
-  const { data, error } = await supabase.rpc("get_test_completion_count");
+  const { data, error } = await supabase.rpc("get_mock_test_count");
 
   if (error) {
-    console.warn("Could not load test completion count:", error.message);
+    console.warn("Could not load global mock test count:", error.message);
     return null;
   }
 
