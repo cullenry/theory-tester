@@ -222,11 +222,11 @@ export function PracticeSession() {
             <div className="practice-feature-stack">
               <section className="learn-launch-card learn-signin-feature">
                 <div className="learn-launch-copy">
-                  <p className="eyebrow">Personalised learning</p>
-                  <h2>Make practice personal.</h2>
-                  <p>Sign in to unlock Learn and use your saved results to focus on weak spots, reinforce what you know and revisit missed questions.</p>
+                  <p className="eyebrow">Learn from scratch</p>
+                  <h2>Work through all 805 questions.</h2>
+                  <p>Take the question bank as a course: short lessons, instant explanations and a second chance for anything that catches you out.</p>
                 </div>
-                <Link className="button button-primary" href="/login?next=/practice/learn">Sign in to Learn <span aria-hidden="true">→</span></Link>
+                <Link className="button button-primary" href="/practice/learn">Start Learn <span aria-hidden="true">→</span></Link>
               </section>
             </div>
 
