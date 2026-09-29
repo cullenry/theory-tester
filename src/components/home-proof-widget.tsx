@@ -21,7 +21,7 @@ export function HomeProofWidget() {
   return (
     <section className="home-proof-widget" aria-label="TheoryPrep practice activity">
       <strong>{count === null ? "—" : count.toLocaleString("en-IE")}</strong>
-      <span>practice tests completed so far</span>
+      <span>Mock Tests</span>
     </section>
   );
 }
