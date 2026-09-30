@@ -62,8 +62,12 @@ export function SettingsPageClient() {
     label: string,
     patch: Partial<Pick<AppPreferences, "daily_goal" | "reminders_enabled" | "streak_guard_enabled">>,
   ) {
+    if (!preferences) return;
+
+    const previous = preferences;
     setSaving(label);
     setMessage("");
+    setPreferences((current) => current ? { ...current, ...patch } : current);
 
     const next = await saveAppPreferences(patch);
     setSaving(null);
@@ -76,7 +80,8 @@ export function SettingsPageClient() {
         setSaved((current) => current === label ? null : current);
       }, 1400);
     } else {
-      setMessage("Couldn't update " + label.toLowerCase() + " right now.");
+      setPreferences(previous);
+      setMessage("Couldn't save " + label.toLowerCase() + ". Your previous setting was restored.");
     }
   }
 
