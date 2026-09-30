@@ -32,7 +32,7 @@ export function AppLaunchSplash() {
 
   return (
     <div className="app-launch-splash" aria-hidden="true">
-      <Image src="/icons/icon.svg" alt="" width={86} height={86} priority />
+      <Image src="/icons/theoryprep-bookOld.png" alt="" width={86} height={86} priority />
       <span>TheoryPrep</span>
     </div>
   );
