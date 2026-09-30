@@ -19,6 +19,9 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
+            <div className="hero-brand-badge" aria-hidden="true">
+              <Image src="/images/theoryprep-logo.png" alt="" width={88} height={53} priority />
+            </div>
             <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish car theory test practice</p>
             <h1>Get ready for your<br /><span className="hero-irish-text" data-text="Irish car theory test.">Irish car theory test.</span></h1>
             <p className="hero-description">Practise 805 Irish car theory questions, learn from clear explanations and take timed mock tests — all in your browser. Category B (BW) is the car theory test.</p>
@@ -26,7 +29,23 @@ export default function Home() {
               <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
               <Link className="button button-secondary" href="/mock-test">Take a mock test</Link>
             </div>
-            <div className="hero-proof"><strong>{questions.length}</strong><span>practice questions</span><span className="proof-separator" /><strong>40</strong><span>questions in a mock</span><span className="proof-separator" /><span>Free to start</span></div><p className="hero-trust">Independent study resource based on official RSA material.</p>
+            <div className="hero-proof" aria-label="TheoryPrep practice highlights">
+              <div className="hero-stat">
+                <span className="hero-stat-icon" aria-hidden="true">?</span>
+                <strong>{questions.length}</strong>
+                <span>practice questions</span>
+              </div>
+              <div className="hero-stat">
+                <span className="hero-stat-icon hero-stat-icon-check" aria-hidden="true">✓</span>
+                <strong>40</strong>
+                <span>questions in a mock</span>
+              </div>
+              <div className="hero-stat">
+                <span className="hero-stat-icon hero-stat-icon-play" aria-hidden="true">▶</span>
+                <strong>Free</strong>
+                <span>to start</span>
+              </div>
+            </div><p className="hero-trust">Independent study resource based on official RSA material.</p>
           </div>
           <div className="hero-art">
             <Image
