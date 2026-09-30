@@ -128,8 +128,8 @@ function getWeekActivity(
 function StreakIcon() {
   return (
     <svg className="home-streak-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M13.8 3.4c.5 3.2-1 4.6-2.5 6.1-1.2 1.2-2.3 2.3-2.3 4.3 0 1.4.7 2.5 1.9 3.2-.1-.5-.1-1 .1-1.5.4-1 1.2-1.7 2-2.5.8 1.3 1.8 2.5 1.8 4.3 0 .5-.1 1-.3 1.4 2.4-.8 4.1-3 4.1-5.7 0-4.1-2.9-6.7-4.8-9.6Z" />
-      <path d="M8.7 18.1c-.1.3-.2.7-.2 1.1 0 .9.7 1.6 1.6 1.6" />
+      <path d="M13.8 3.7c.1 2.5-.8 4-2.3 5.5-1.3 1.3-2.5 2.5-2.5 4.6a5.4 5.4 0 0 0 1.5 3.8 4.3 4.3 0 0 1 .2-3.1c.4-.9 1.1-1.7 2-2.5.8 1.2 1.7 2.5 1.7 4.2 0 1-.2 2-.7 2.7a5.8 5.8 0 0 0 4.4-5.7c0-3.5-2.4-6.2-4.3-9.5Z" />
+      <path d="M9.2 17.4c.3 1.9 1.4 3 2.8 3.2" />
     </svg>
   );
 }
@@ -193,11 +193,12 @@ function ProtectionIcon() {
     <span className="home-streak-protection-icon" aria-hidden="true">
       <svg viewBox="0 0 24 24" focusable="false">
         <path d="M12 3.5 19 6v5.3c0 4.2-2.7 7.3-7 9.2-4.3-1.9-7-5-7-9.2V6l7-2.5Z" />
-        <path d="m9.1 12.2 1.9 1.9 4.1-4.3" />
+        <path d="m8.9 12.3 2 1.9 4.2-4.4" />
       </svg>
     </span>
   );
 }
+
 
 function StreakProtectionAction({
   protection,
