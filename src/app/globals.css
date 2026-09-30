@@ -7063,3 +7063,50 @@ html.dark .hero-proof .hero-stat + .hero-stat {
     display: none;
   }
 }
+
+
+/* Mobile flashcard category picker: give the menu room to breathe. */
+@media (max-width: 760px) {
+  .flashcard-filters {
+    position: relative;
+  }
+
+  .flashcard-filters .flashcard-select:first-child {
+    z-index: 50;
+  }
+
+  .flashcard-filters .flashcard-select:first-child .flashcard-select-menu {
+    width: calc(200% + 11px);
+    max-width: calc(100vw - 48px);
+    max-height: min(330px, calc(100svh - 250px));
+  }
+
+  .flashcard-select-menu-heading {
+    padding: 11px 13px 9px;
+  }
+
+  .flashcard-select-options {
+    padding: 6px;
+  }
+
+  .flashcard-select-option {
+    grid-template-columns: 26px minmax(0, 1fr);
+    min-height: 48px;
+    gap: 9px;
+    padding: 7px 9px;
+  }
+
+  .flashcard-select-check {
+    width: 22px;
+    height: 22px;
+  }
+
+  .flashcard-select-option-copy strong {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .flashcard-select-option-copy small {
+    font-size: 9px;
+  }
+}
