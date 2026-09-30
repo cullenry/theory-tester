@@ -6971,3 +6971,38 @@ html.dark .auth-logo {
     flex-basis: 92px;
   }
 }
+
+/* Auth logo switches to the dark-mode artwork without changing layout. */
+.auth-logo-wrap {
+  position: relative;
+  display: block;
+  width: 108px;
+  height: 65px;
+  flex: 0 0 108px;
+}
+.auth-logo-wrap .auth-logo {
+  position: absolute;
+  inset: 0;
+  width: 108px;
+  height: auto;
+  object-fit: contain;
+}
+.auth-logo-dark {
+  display: none;
+}
+html.dark .auth-logo-light {
+  display: none;
+}
+html.dark .auth-logo-dark {
+  display: block;
+}
+@media (max-width: 520px) {
+  .auth-logo-wrap {
+    width: 92px;
+    height: 56px;
+    flex-basis: 92px;
+  }
+  .auth-logo-wrap .auth-logo {
+    width: 92px;
+  }
+}
