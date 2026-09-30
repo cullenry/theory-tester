@@ -5747,6 +5747,19 @@ html.dark .course-signin-lesson-points span {
   }
 }
 
+/* Mobile answer explanation auto-scroll */
+@media (max-width: 760px) and (pointer: coarse) {
+  .feedback-block {
+    scroll-margin-top: 92px;
+  }
+}
+
+@media (max-width: 760px) {
+  .course-map-chevron {
+    display: none;
+  }
+}
+
 
 @media (max-width: 760px) {
   .flashcard-launch-card {
