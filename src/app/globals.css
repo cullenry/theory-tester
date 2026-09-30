@@ -4598,9 +4598,9 @@ html.dark .flashcard-select-option-selected .flashcard-select-check {
 .course-hero-progress > div { display: grid; justify-items: center; gap: 2px; }
 .course-hero-progress strong { font-size: 13px; }
 .course-hero-progress div span { color: var(--muted); font-size: 10px; }
-.course-progress-ring { display: grid; width: 88px; height: 88px; place-items: center; border: 7px solid #dbeadf; border-right-color: var(--green); border-radius: 50%; font-family: Georgia, serif; font-size: 28px; color: var(--ink); }
+.course-progress-ring { display: grid; width: 88px; height: 88px; place-items: center; border-radius: 50%; font-family: Georgia, serif; font-size: 28px; color: var(--ink); background: radial-gradient(circle, var(--surface) 0 82%, transparent 83%), conic-gradient(from -45deg, var(--green) 0 var(--course-progress), #dbeadf var(--course-progress) 100%); }
 .course-progress-ring small { margin-left: 2px; color: var(--muted); font-family: "Aptos", "Segoe UI", sans-serif; font-size: 12px; }
-html.dark .course-progress-ring { border-color: #303a33; border-right-color: var(--green); }
+html.dark .course-progress-ring { background: radial-gradient(circle, var(--surface) 0 82%, transparent 83%), conic-gradient(from -45deg, var(--green) 0 var(--course-progress), #303a33 var(--course-progress) 100%); }
 
 .course-signin-strip { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 14px; padding: 14px 16px; border: 1px solid #d7e4da; border-radius: 11px; background: #f3f8f4; }
 .course-signin-strip > div { display: grid; gap: 3px; min-width: 0; }
