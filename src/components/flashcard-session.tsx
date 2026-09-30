@@ -117,8 +117,34 @@ function Flashcard({ question, flipped, onFlip }: { question: Question; flipped:
           <span>Tap to reveal</span>
         </span>
         {question.image && (
-          <span className="flashcard-image">
-            <img src={question.image} alt="Illustration for this theory test flashcard" />
+          <span
+            className="flashcard-image"
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "min(360px, 42vw)",
+              minHeight: "220px",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+              padding: "16px",
+              borderRadius: "14px",
+              background: "var(--green-soft)",
+            }}
+          >
+            <img
+              src={question.image}
+              alt="Illustration for this theory test flashcard"
+              style={{
+                display: "block",
+                width: "100%",
+                height: "100%",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+                objectPosition: "center",
+              }}
+            />
           </span>
         )}
         <span className="flashcard-question">{question.question}</span>
