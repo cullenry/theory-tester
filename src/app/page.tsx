@@ -181,11 +181,19 @@ export default function Home() {
       <footer className="site-footer">
         <Link className="brand footer-brand" href="/" aria-label="TheoryPrep home">
           <Image
-            className="footer-brand-logo"
+            className="footer-brand-logo footer-brand-logo-light"
             src="/images/theoryprep-logo.png"
             alt="TheoryPrep"
             width={102}
             height={61}
+          />
+          <Image
+            className="footer-brand-logo footer-brand-logo-dark"
+            src="/images/theoryprep-logo-dark.png"
+            alt=""
+            width={102}
+            height={61}
+            aria-hidden="true"
           />
         </Link>
         <span>Practice with purpose. Drive with confidence.</span>
