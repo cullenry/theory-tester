@@ -2862,6 +2862,11 @@ html.dark .site-footer-links .support-link {
   padding-top: 36px;
   border-top: 1px solid var(--line);
 }
+.seo-home-guide-section {
+  width: min(1000px, calc(100% - 48px));
+  margin-right: auto;
+  margin-left: auto;
+}
 .seo-section-heading {
   margin-bottom: 22px;
 }
