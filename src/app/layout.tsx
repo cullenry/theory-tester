@@ -9,7 +9,6 @@ import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = "https://theoryprep.irish";
-// Favicon deployment refresh
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -47,7 +46,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icons/theoryprep-car.png", type: "image/png", sizes: "96x96" },
+      { url: "/icons/theoryprep-book.png", type: "image/png", sizes: "96x96" },
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
