@@ -4,6 +4,9 @@ export type AppPreferences = {
   streak_guard_enabled: boolean;
   reminder_timezone: string;
   last_reminder_sent_on: string | null;
+  streak_shields: number;
+  streak_protection_active: boolean;
+  streak_protection_activated_at: string | null;
 };
 
 const defaults: AppPreferences = {
@@ -12,6 +15,9 @@ const defaults: AppPreferences = {
   streak_guard_enabled: true,
   reminder_timezone: "Europe/Dublin",
   last_reminder_sent_on: null,
+  streak_shields: 0,
+  streak_protection_active: false,
+  streak_protection_activated_at: null,
 };
 
 export async function getAppPreferences(): Promise<AppPreferences> {
