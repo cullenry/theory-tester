@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -80,7 +81,14 @@ export function AuthForm({ mode }: AuthFormProps) {
   return (
     <div className="auth-card">
       <div className="auth-card-top">
-        <span className="auth-mark" aria-hidden="true">T</span>
+        <Image
+          className="auth-logo"
+          src="/images/theoryprep-logo.png"
+          alt="TheoryPrep"
+          width={108}
+          height={65}
+          priority
+        />
         <div>
           <p className="eyebrow">TheoryPrep account</p>
           <h1>{isSignup ? "Create your account." : "Welcome back."}</h1>
