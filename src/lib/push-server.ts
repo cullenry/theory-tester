@@ -23,8 +23,8 @@ export async function sendTheoryPrepPush(
     },
     JSON.stringify({
       ...payload,
-      icon: "/icons/icon.svg",
-      badge: "/icons/icon.svg",
+      icon: "/icons/theoryprep-bookOld.png",
+      badge: "/icons/theoryprep-bookOld.png",
     }),
     {
       TTL: 60 * 60 * 24,
