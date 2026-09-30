@@ -4941,9 +4941,9 @@ html.dark .site-header .brand {
 }
 
 html.dark .site-footer .footer-brand {
-  padding: 2px;
-  border-radius: 11px;
-  background: #ffffff;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 
