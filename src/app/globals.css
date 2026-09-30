@@ -5780,11 +5780,6 @@ html.dark .course-signin-lesson-points span {
   }
 }
 
-@media (max-width: 760px) {
-  .course-map-chevron {
-    display: none;
-  }
-}
 
 
 @media (max-width: 760px) {
