@@ -118,7 +118,7 @@ export async function GET(request: Request) {
           await sendTheoryPrepPush(subscription, {
             title,
             body,
-            url: atRisk ? "/" : "/practice/learn",
+            url: atRisk ? "/#streak-protection" : "/practice/learn",
             tag: atRisk && hasUnusedProtection ? "theoryprep-streak-protection" : atRisk ? "theoryprep-streak" : "theoryprep-daily",
           });
           sent += 1;
