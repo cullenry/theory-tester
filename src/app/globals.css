@@ -6210,10 +6210,32 @@ html.dark .home-streak-dot-today {
   font-weight: 800;
 }
 
-.settings-choice-active {
-  background: var(--surface);
+.settings-choice {
+  position: relative;
+  transition: background .16s ease, color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.settings-choice:hover:not(:disabled) {
+  background: var(--green-soft);
   color: var(--green-dark);
-  box-shadow: 0 2px 7px rgba(20, 60, 38, .08);
+}
+.settings-choice:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.settings-choice-active {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(22,112,76,.16);
+}
+.settings-choice-active:hover:not(:disabled) {
+  background: var(--green-dark);
+  color: #fff;
+}
+.settings-choice-saved {
+  box-shadow: 0 0 0 2px #a7cfb1, 0 4px 10px rgba(22,112,76,.16);
+}
+.settings-choice:disabled {
+  cursor: wait;
+  opacity: .68;
 }
 
 .settings-toggle {
@@ -6247,8 +6269,36 @@ html.dark .home-streak-dot-today {
   background: #f0f7f2;
 }
 
+.settings-toggle {
+  transition: border-color .16s ease, background .16s ease, color .16s ease, transform .16s ease, box-shadow .16s ease;
+}
+.settings-toggle:hover:not(:disabled) {
+  border-color: #a7c6b0;
+  background: var(--green-soft);
+}
+.settings-toggle:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.settings-toggle-on {
+  border-color: #8fbea0;
+  background: #e7f3ea;
+  color: var(--green-dark);
+  box-shadow: inset 0 0 0 1px rgba(22,112,76,.05);
+}
 .settings-toggle-on > span {
   background: var(--green);
+  box-shadow: 0 0 0 3px rgba(22,112,76,.08);
+}
+.settings-toggle > strong {
+  font-size: 10px;
+  font-weight: 800;
+}
+.settings-toggle:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+.settings-control-saved {
+  box-shadow: 0 0 0 2px #a7cfb1;
 }
 
 .settings-date-input {
@@ -6391,9 +6441,88 @@ html.dark .home-streak-dot-today {
 }
 
 .settings-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   margin: 10px 0 0;
+  padding: 7px 10px;
+  border: 1px solid #b7d6bf;
+  border-radius: 7px;
+  background: #eef7f0;
   color: var(--green-dark);
   font-size: 10px;
+  font-weight: 750;
+  animation: settings-message-in .18s ease-out;
+}
+.settings-message-mark {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+  border-radius: 50%;
+  background: #dcefe1;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 900;
+}
+.settings-message-error {
+  border-color: #dfb9b3;
+  background: #fff7f5;
+  color: #9b3e34;
+}
+.settings-message-error .settings-message-mark {
+  background: #f2d9d4;
+  color: #a9493f;
+}
+@keyframes settings-message-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+html.dark .settings-choice:hover:not(:disabled) {
+  background: #203126;
+  color: #c1e2c8;
+}
+html.dark .settings-choice-active {
+  background: #2b8d61;
+  color: #fff;
+}
+html.dark .settings-choice-active:hover:not(:disabled) {
+  background: #359b6c;
+  color: #fff;
+}
+html.dark .settings-choice-saved,
+html.dark .settings-control-saved {
+  box-shadow: 0 0 0 2px #5e8b6c;
+}
+html.dark .settings-toggle:hover:not(:disabled) {
+  border-color: #52705b;
+  background: #1e2c22;
+}
+html.dark .settings-toggle-on {
+  border-color: #4e765a;
+  background: #203126;
+}
+html.dark .settings-toggle-on > span {
+  background: #6fbe88;
+  box-shadow: 0 0 0 3px rgba(111,190,136,.10);
+}
+html.dark .settings-message {
+  border-color: #3e6248;
+  background: #1d2b22;
+  color: #b9dfc2;
+}
+html.dark .settings-message-mark {
+  background: #294332;
+  color: #83cb99;
+}
+html.dark .settings-message-error {
+  border-color: #684139;
+  background: #2b1e1b;
+  color: #ef9e92;
+}
+html.dark .settings-message-error .settings-message-mark {
+  background: #4d2d28;
+  color: #ef9e92;
 }
 
 .settings-loading {
@@ -6461,6 +6590,25 @@ html.dark .settings-delete-confirm input {
     width: calc(100% - 24px);
     padding-top: 28px;
     padding-bottom: 92px;
+  }
+  .settings-segmented,
+  .settings-toggle {
+    width: 100%;
+  }
+  .settings-segmented {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+  .settings-choice {
+    min-width: 0;
+    min-height: 40px;
+  }
+  .settings-toggle {
+    justify-content: space-between;
+    min-height: 40px;
+    padding-left: 7px;
+    padding-right: 9px;
   }
 
   .settings-card {
