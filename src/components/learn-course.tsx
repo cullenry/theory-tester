@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { getProgressData } from "@/lib/progress";
 import {
   getChapterProgress,
@@ -56,6 +56,10 @@ export function LearnCourse() {
   const complete = progress.seenCount >= progress.total;
   const progressLabel = data.user ? `${progress.seenCount} / ${progress.total}` : "Sign in to track";
   const progressDescription = data.user ? "questions covered" : "progress saved to your account";
+  const courseProgressPercent = data.user && progress.total > 0
+    ? (progress.seenCount / progress.total) * 100
+    : 0;
+  const courseRingStyle = { "--course-progress": courseProgressPercent + "%" } as CSSProperties;
 
   return (
     <main className="app-main">
@@ -70,7 +74,7 @@ export function LearnCourse() {
           </div>
 
           <div className="course-hero-progress" aria-label={data.user ? `${progress.seenCount} of ${progress.total} questions covered` : "Sign in to track course progress"}>
-            <span className="course-progress-ring">{data.user ? progress.percent : "—"}<small>{data.user ? "%" : ""}</small></span>
+            <span className="course-progress-ring" style={courseRingStyle}>{data.user ? progress.percent : "—"}<small>{data.user ? "%" : ""}</small></span>
             <div>
               <strong>{progressLabel}</strong>
               <span>{progressDescription}</span>
