@@ -14,7 +14,7 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["education", "automotive"],
     lang: "en-IE",
     icons: [
-      { src: "/icons/icon.svg", sizes: "512x512", type: "image/svg+xml", purpose: "any" },
+      { src: "/icons/theoryprep-car.png", sizes: "96x96", type: "image/png", purpose: "any" },
       { src: "/icons/icon-maskable.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" },
     ],
     shortcuts: [
