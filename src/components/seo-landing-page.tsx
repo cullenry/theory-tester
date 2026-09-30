@@ -36,7 +36,17 @@ const popularLinks: SeoLink[] = [
 ];
 
 export function SeoLandingPage({
-  eyebrow, title, intro, primaryAction, secondaryAction, sections, questionCategory, sampleHeading, sampleDescription,
+  eyebrow,
+  title,
+  intro,
+  primaryAction,
+  secondaryAction,
+  sections,
+  questionCategory,
+  canonicalPath,
+  breadcrumbParent,
+  sampleHeading,
+  sampleDescription,
 }: SeoLandingPageProps) {
   const samplePool = questionCategory
     ? questions.filter((question) => question.taxonomy.category === questionCategory)
