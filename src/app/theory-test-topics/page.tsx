@@ -14,6 +14,22 @@ export default function TheoryTestTopicsPage() {
     <main className="app-main">
       <div className="page-shell seo-landing-shell">
         <header className="seo-landing-hero">
+          <p className="eyebrow">
+            <Link href="/" aria-label="TheoryPrep home">Home</Link> / Irish Theory Test Topics
+          </p>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Home", item: "https://theoryprep.irish/" },
+                  { "@type": "ListItem", position: 2, name: "Irish Theory Test Topics", item: "https://theoryprep.irish/theory-test-topics" },
+                ],
+              }),
+            }}
+          />
           <p className="eyebrow">Topic practice</p>
           <h1>Irish Theory Test Topics</h1>
           <p className="seo-landing-lead">
