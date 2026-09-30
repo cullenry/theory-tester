@@ -4888,13 +4888,13 @@ html.dark .browser-signin-panel { background: var(--surface); }
   object-fit: contain;
 }
 .footer-brand-logo-dark {
-  display: none;
+  display: none !important;
 }
 html.dark .footer-brand-logo-light {
-  display: none;
+  display: none !important;
 }
 html.dark .footer-brand-logo-dark {
-  display: block;
+  display: block !important;
 }
 
 @media (max-width: 900px) {
