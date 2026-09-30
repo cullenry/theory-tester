@@ -9,6 +9,7 @@ import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = "https://theoryprep.irish";
+// Favicon deployment refresh
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
