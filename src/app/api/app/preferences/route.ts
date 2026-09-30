@@ -7,6 +7,9 @@ const DEFAULTS = {
   reminders_enabled: false,
   streak_guard_enabled: true,
   reminder_timezone: "Europe/Dublin",
+  streak_shields: 0,
+  streak_protection_active: false,
+  streak_protection_activated_at: null,
 };
 
 export const runtime = "nodejs";
@@ -20,7 +23,7 @@ async function getUser() {
 async function loadPreferences(userId: string) {
   const { data, error } = await supabaseAdmin
     .from("user_app_preferences")
-    .select("daily_goal, reminders_enabled, streak_guard_enabled, reminder_timezone, last_reminder_sent_on")
+    .select("daily_goal, reminders_enabled, streak_guard_enabled, reminder_timezone, last_reminder_sent_on, streak_shields, streak_protection_active, streak_protection_activated_at")
     .eq("user_id", userId)
     .maybeSingle();
 
@@ -45,14 +48,17 @@ export async function PUT(request: Request) {
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
   const body = await request.json();
-  const dailyGoal = Number(body.daily_goal ?? DEFAULTS.daily_goal);
-  const remindersEnabled = Boolean(body.reminders_enabled);
+  const existing = await loadPreferences(user.id);
+  const dailyGoal = body.daily_goal === undefined ? existing.daily_goal : Number(body.daily_goal);
+  const remindersEnabled = body.reminders_enabled === undefined
+    ? existing.reminders_enabled
+    : Boolean(body.reminders_enabled);
   const streakGuardEnabled = body.streak_guard_enabled === undefined
-    ? true
+    ? existing.streak_guard_enabled
     : Boolean(body.streak_guard_enabled);
   const timezone = typeof body.reminder_timezone === "string" && body.reminder_timezone.length < 80
     ? body.reminder_timezone
-    : "Europe/Dublin";
+    : existing.reminder_timezone;
 
   if (![10, 20, 30].includes(dailyGoal)) {
     return NextResponse.json({ error: "Invalid daily goal." }, { status: 400 });
@@ -67,7 +73,7 @@ export async function PUT(request: Request) {
       streak_guard_enabled: streakGuardEnabled,
       reminder_timezone: timezone,
     }, { onConflict: "user_id" })
-    .select("daily_goal, reminders_enabled, streak_guard_enabled, reminder_timezone, last_reminder_sent_on")
+    .select("daily_goal, reminders_enabled, streak_guard_enabled, reminder_timezone, last_reminder_sent_on, streak_shields, streak_protection_active, streak_protection_activated_at")
     .single();
 
   if (error) {
