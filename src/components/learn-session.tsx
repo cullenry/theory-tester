@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
 import { questions, type Question } from "@/lib/questions";
 import { getProgressData, recordQuestionAttempt, type QuestionAttempt } from "@/lib/progress";
@@ -35,6 +35,10 @@ export function LearnSession() {
   const [coreCorrectCount, setCoreCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
   const [retryCorrectCount, setRetryCorrectCount] = useState(0);
+  const feedbackRef = useRef<HTMLDivElement>(null);
+
+  const isMobileTouch = () =>
+    typeof window !== "undefined" && window.innerWidth <= 760 && window.matchMedia("(pointer: coarse)").matches;
 
   useEffect(() => {
     if (phase !== "complete" || !userId) return;
@@ -97,6 +101,18 @@ export function LearnSession() {
 
     void recordQuestionAttempt(current, answer, isCorrect, "smart");
   }
+
+  useEffect(() => {
+    if (selected === null || !current || !isMobileTouch()) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        feedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [selected, current?.id, phase]);
 
   function nextStep() {
     setSelected(null);
@@ -243,7 +259,7 @@ export function LearnSession() {
         </QuestionCard>
 
         {selected !== null && (
-          <div className="feedback-block">
+          <div ref={feedbackRef} className="feedback-block">
             <p className={"feedback-line " + (selected === current.correctAnswer ? "feedback-good" : "feedback-bad")} role="status">
               <strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong>{" "}
               {isRetry
