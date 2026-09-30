@@ -312,8 +312,8 @@ export function MobileAppTools() {
         <div className="mobile-app-tool-row">
           <div className="mobile-app-tool-icon" aria-hidden="true">◌</div>
           <div>
-            <strong>Streak protection</strong>
-            <small>{preferences.streak_guard_enabled ? "Use your evening reminder to protect a run from going quiet." : "The streak guard is currently off."}</small>
+            <strong>Streak alerts</strong>
+            <small>{preferences.streak_guard_enabled ? "Get an evening reminder when your streak is at risk." : "Streak-risk reminders are currently off."}</small>
           </div>
           <button className={preferences.streak_guard_enabled ? "mobile-app-tool-action mobile-app-tool-action-active" : "mobile-app-tool-action"} type="button" onClick={() => void setStreakGuard(!preferences.streak_guard_enabled)}>
             {preferences.streak_guard_enabled ? "On" : "Off"}
