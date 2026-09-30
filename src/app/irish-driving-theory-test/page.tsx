@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { SeoLandingPage } from "@/components/seo-landing-page";
 
 export const metadata: Metadata = {
-  title: "Irish Driving Theory Test",
-  description: "Prepare for the Irish driving theory test with TheoryPrep: questions, explanations, topic practice and mock tests.",
+  title: "Irish Driving Theory Test 2026 | Guide & Practice",
+  description: "Prepare for the Irish driving theory test in 2026 with questions, explanations, topic practice and mock tests on TheoryPrep.",
   alternates: { canonical: "/irish-driving-theory-test" },
 };
 
