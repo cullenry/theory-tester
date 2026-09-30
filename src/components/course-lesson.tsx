@@ -31,9 +31,13 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   const [correct, setCorrect] = useState(0);
   const [missed, setMissed] = useState(0);
   const questionAnchorRef = useRef<HTMLDivElement>(null);
+  const feedbackRef = useRef<HTMLDivElement>(null);
+
+  const isMobileTouch = () =>
+    typeof window !== "undefined" && window.innerWidth <= 760 && window.matchMedia("(pointer: coarse)").matches;
 
   const scrollQuestionToTop = () => {
-    if (typeof window === "undefined" || window.innerWidth > 760 || !window.matchMedia("(pointer: coarse)").matches) return;
+    if (!isMobileTouch()) return;
 
     window.requestAnimationFrame(() => {
       questionAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -117,8 +121,19 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
     }
 
     void recordQuestionAttempt(current, answer, isCorrect, "smart");
-    scrollQuestionToTop();
   }
+
+  useEffect(() => {
+    if (selected === null || !current || phase === "complete" || !isMobileTouch()) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        feedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [selected, current?.id, phase]);
 
   useEffect(() => {
     if (!current || phase === "complete") return;
@@ -344,7 +359,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
         )}
 
         {current && selected !== null && (
-          <div className="feedback-block">
+          <div ref={feedbackRef} className="feedback-block">
             <p className={`feedback-line ${selected === current.correctAnswer ? "feedback-good" : "feedback-bad"}`} role="status">
               <strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong>{" "}
               {isReview
