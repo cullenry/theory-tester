@@ -124,18 +124,6 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
   }
 
   useEffect(() => {
-    if (selected === null || !current || phase === "complete" || !isMobileTouch()) return;
-
-    const frame = window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        feedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [selected, current?.id, phase]);
-
-  useEffect(() => {
     if (!current || phase === "complete") return;
 
     window.requestAnimationFrame(() => {
