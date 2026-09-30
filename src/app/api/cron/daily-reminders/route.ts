@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 
   const { data: preferences, error: preferencesError } = await supabaseAdmin
     .from("user_app_preferences")
-    .select("user_id, daily_goal, reminders_enabled, streak_guard_enabled, reminder_timezone, last_reminder_sent_on")
+    .select("user_id, daily_goal, reminders_enabled, streak_guard_enabled, streak_shields, streak_protection_active, reminder_timezone, last_reminder_sent_on")
     .eq("reminders_enabled", true);
 
   if (preferencesError) return NextResponse.json({ error: "Could not load preferences." }, { status: 500 });
@@ -98,20 +98,28 @@ export async function GET(request: Request) {
         (attempt) => localDateKey(new Date(attempt.created_at), timezone) === yesterday,
       );
 
-      const title = preference.streak_guard_enabled && practicedYesterday
-        ? "Your TheoryPrep streak is waiting"
-        : "A little TheoryPrep for today";
-      const body = preference.streak_guard_enabled && practicedYesterday
-        ? "You haven't practised today yet. A quick set keeps the momentum going."
-        : "You're aiming for " + preference.daily_goal + " questions today. Ten minutes is enough to keep moving.";
+      const atRisk = preference.streak_guard_enabled && practicedYesterday;
+      const hasUnusedProtection = Number(preference.streak_shields ?? 0) > 0;
+      const hasActiveProtection = Boolean(preference.streak_protection_active);
+
+      const title = atRisk && hasActiveProtection
+        ? "Your TheoryPrep protection is active"
+        : atRisk && hasUnusedProtection
+          ? "Protect your TheoryPrep streak"
+          : "A little TheoryPrep for today";
+      const body = atRisk && hasActiveProtection
+        ? "Your next missed day is covered. No action needed — a quick set today keeps the run moving."
+        : atRisk && hasUnusedProtection
+          ? "Your streak is at risk. You have a protection ready — activate it before your day ends."
+          : "You're aiming for " + preference.daily_goal + " questions today. Ten minutes is enough to keep moving.";
 
       for (const subscription of subscriptionsByUser.get(preference.user_id) ?? []) {
         try {
           await sendTheoryPrepPush(subscription, {
             title,
             body,
-            url: "/practice/learn",
-            tag: practicedYesterday ? "theoryprep-streak" : "theoryprep-daily",
+            url: atRisk ? "/" : "/practice/learn",
+            tag: atRisk && hasUnusedProtection ? "theoryprep-streak-protection" : atRisk ? "theoryprep-streak" : "theoryprep-daily",
           });
           sent += 1;
         } catch (pushError) {
