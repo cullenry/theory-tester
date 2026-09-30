@@ -662,6 +662,15 @@ html.dark .mistake-row > span { background: #35201d; color: #eea39a; }
 .home-streak-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 22px; padding: 19px 20px; border: 1px solid #cfe0d3; border-radius: 13px; background: #f2f8f3; }
 .home-streak-copy { display: flex; align-items: center; gap: 13px; min-width: 0; }
 .home-streak-icon { display: grid; width: 40px; height: 40px; flex: 0 0 40px; place-items: center; border: 1px solid #c8ddce; border-radius: 11px; background: #e2f0e5; font-size: 19px; }
+.home-streak-flame {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: var(--green);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.65;
+}
 .home-streak-copy h2 { margin: 4px 0 4px; font-family: Georgia, serif; font-size: 22px; font-weight: 500; letter-spacing: -.3px; line-height: 1.1; }
 .home-streak-copy > div > p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .home-streak-week { display: flex; align-items: end; gap: 8px; }
@@ -675,6 +684,9 @@ html.dark .mistake-row > span { background: #35201d; color: #eea39a; }
 .home-streak-link:hover { text-decoration: underline; }
 html.dark .home-streak-inner { border-color: #3f5143; background: #151d17; }
 html.dark .home-streak-icon { border-color: #3b4f40; background: #1e2b21; }
+html.dark .home-streak-flame {
+  stroke: #73c28b;
+}
 html.dark .home-streak-dot { border-color: #4b4b4b; background: #1d1d1d; }
 html.dark .home-streak-dot-active { border-color: var(--green); background: var(--green); box-shadow: inset 0 0 0 3px #151d17; }
 html.dark .home-streak-stats { border-left-color: #3a3a3a; }
