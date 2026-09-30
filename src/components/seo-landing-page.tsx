@@ -20,6 +20,8 @@ type SeoLandingPageProps = {
   secondaryAction?: SeoLink;
   sections: SeoSection[];
   questionCategory?: string;
+  canonicalPath?: string;
+  breadcrumbParent?: { name: string; path: string };
   sampleHeading: string;
   sampleDescription: string;
 };
@@ -40,11 +42,40 @@ export function SeoLandingPage({
     ? questions.filter((question) => question.taxonomy.category === questionCategory)
     : questions;
   const sampleQuestions = samplePool.slice(0, 6);
+  const breadcrumbItems = [
+    { name: "Home", path: "/" },
+    ...(breadcrumbParent ? [breadcrumbParent] : []),
+    ...(canonicalPath ? [{ name: title, path: canonicalPath }] : []),
+  ];
 
   return (
     <main className="app-main">
       <div className="page-shell seo-landing-shell">
         <header className="seo-landing-hero">
+          {canonicalPath && (
+            <>
+              <p className="eyebrow">
+                <Link href="/" aria-label="TheoryPrep home">Home</Link>
+                {breadcrumbParent ? <> / <Link href={breadcrumbParent.path}>{breadcrumbParent.name}</Link></> : null}
+                {" / "}{title}
+              </p>
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "BreadcrumbList",
+                    itemListElement: breadcrumbItems.map((item, index) => ({
+                      "@type": "ListItem",
+                      position: index + 1,
+                      name: item.name,
+                      item: `https://theoryprep.irish${item.path}`,
+                    })),
+                  }),
+                }}
+              />
+            </>
+          )}
           <p className="eyebrow">{eyebrow}</p>
           <h1>{title}</h1>
           <p className="seo-landing-lead">{intro}</p>
