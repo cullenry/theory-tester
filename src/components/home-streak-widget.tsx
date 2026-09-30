@@ -190,7 +190,7 @@ function ProtectionIcon() {
   );
 }
 
-function StreakProtectionRow({
+function StreakProtectionAction({
   protection,
   currentStreak,
   onChange,
@@ -200,95 +200,60 @@ function StreakProtectionRow({
   onChange: (next: StreakProtectionState) => void;
 }) {
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("");
+  const available = protection.streak_shields;
+  const active = protection.streak_protection_active;
+  const canActivate = available > 0 && currentStreak > 0 && !active;
 
   async function activate() {
     setBusy(true);
-    setMessage("");
     const next = await activateStreakProtection();
-    if (next) {
-      onChange(next);
-      setMessage("Your next missed day is protected.");
-    } else {
-      setMessage("That protection could not be activated. Please try again.");
-    }
+    if (next) onChange(next);
     setBusy(false);
   }
 
   async function deactivate() {
     setBusy(true);
-    setMessage("");
     const next = await deactivateStreakProtection();
-    if (next) {
-      onChange(next);
-      setMessage("Protection returned to your balance.");
-    } else {
-      setMessage("That protection could not be changed. Please try again.");
-    }
+    if (next) onChange(next);
     setBusy(false);
   }
 
-  const available = protection.streak_shields;
-  const canActivate = available > 0 && currentStreak > 0 && !protection.streak_protection_active;
+  if (active) {
+    return (
+      <button
+        className="home-streak-protection-chip home-streak-protection-chip-active"
+        type="button"
+        onClick={() => void deactivate()}
+        disabled={busy}
+        aria-label="Streak protection is active. Release it to return it to your balance."
+      >
+        <ProtectionIcon />
+        <span>{busy ? "Saving…" : "Protected"}</span>
+      </button>
+    );
+  }
+
+  if (available > 0) {
+    return (
+      <button
+        className="home-streak-protection-chip"
+        type="button"
+        onClick={() => void activate()}
+        disabled={busy || !canActivate}
+        title={!currentStreak ? "Start a practice streak before using streak protection." : undefined}
+      >
+        <ProtectionIcon />
+        <span>{busy ? "Saving…" : "Use protection"}</span>
+        <small>{available} left</small>
+      </button>
+    );
+  }
 
   return (
-    <div className="home-streak-protection" id="streak-protection">
-      <div className="home-streak-protection-copy">
-        <ProtectionIcon />
-        <div>
-          <p className="eyebrow">Streak protection</p>
-          {protection.streak_protection_active ? (
-            <>
-              <strong>Your next missed day is protected.</strong>
-              <small>No action needed. Practise normally and the protection only gets used if you miss a day.</small>
-            </>
-          ) : available > 0 ? (
-            <>
-              <strong>{available} protection{available === 1 ? "" : "s"} ready.</strong>
-              <small>Earn more by answering 20 practice questions in a day or completing a mock test.</small>
-            </>
-          ) : (
-            <>
-              <strong>No protection ready yet.</strong>
-              <small>Complete a mock test or answer 20 practice questions in a day to earn one.</small>
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="home-streak-protection-actions">
-        {protection.streak_protection_active ? (
-          <div className="home-streak-protection-active-wrap">
-            <span className="home-streak-protection-active-label">
-              {busy ? "Saving…" : "Active"}
-            </span>
-            <button
-              className="home-streak-protection-release"
-              type="button"
-              onClick={() => void deactivate()}
-              disabled={busy}
-            >
-              Release
-            </button>
-          </div>
-        ) : available > 0 ? (
-          <button
-            className="home-streak-protection-button"
-            type="button"
-            onClick={() => void activate()}
-            disabled={busy || !canActivate}
-            title={!currentStreak ? "Start a practice streak before activating protection." : undefined}
-          >
-            {busy ? "…" : canActivate ? "Activate" : "Start streak"}
-          </button>
-        ) : null}
-        <span className="home-streak-protection-count" aria-label={available + " unused protections"}>
-          {available} left
-        </span>
-      </div>
-
-      {message && <span className="home-streak-protection-message" role="status">{message}</span>}
-    </div>
+    <Link className="home-streak-protection-chip home-streak-protection-chip-muted" href="/practice">
+      <ProtectionIcon />
+      <span>Earn protection</span>
+    </Link>
   );
 }
 
@@ -332,7 +297,16 @@ export function HomeStreakWidget() {
           <div className="home-streak-icon" aria-hidden="true">🔥</div>
           <div>
             <p className="eyebrow">Your practice streak</p>
-            <h2>{streak.current > 0 ? streak.current + " day" + (streak.current === 1 ? "" : "s") + " strong." : "Start your streak today."}</h2>
+            <div className="home-streak-title-row">
+              <h2>{streak.current > 0 ? streak.current + " day" + (streak.current === 1 ? "" : "s") + " strong." : "Start your streak today."}</h2>
+              {protection ? (
+                <StreakProtectionAction
+                  protection={protection}
+                  currentStreak={streak.current}
+                  onChange={setProtection}
+                />
+              ) : null}
+            </div>
             <p>
               {activeProtection && !todayActive
                 ? "Your protection is ready for a missed day. Practise today to keep the run moving."
@@ -374,13 +348,7 @@ export function HomeStreakWidget() {
           View my progress <span aria-hidden="true">↗</span>
         </Link>
 
-        {protection ? (
-          <StreakProtectionRow
-            protection={protection}
-            currentStreak={streak.current}
-            onChange={setProtection}
-          />
-        ) : null}
+
       </div>
     </section>
   );
