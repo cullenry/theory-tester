@@ -123,7 +123,7 @@ export function PwaInstallPrompt() {
   return (
     <>
       <aside className="pwa-install-prompt" aria-label="Install TheoryPrep">
-        <div className="pwa-install-icon" aria-hidden="true"><Image src="/icons/icon.svg" alt="" width={42} height={42} /></div>
+        <div className="pwa-install-icon" aria-hidden="true"><Image src="/icons/theoryprep-bookOld.png" alt="" width={42} height={42} /></div>
         <div className="pwa-install-copy">
           <strong>Add TheoryPrep to your Home Screen</strong>
           <span>{iosInstallable ? "Use the Share button, then choose Add to Home Screen." : "Keep your theory practice one tap away."}</span>
