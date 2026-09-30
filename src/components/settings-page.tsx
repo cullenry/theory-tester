@@ -26,6 +26,7 @@ export function SettingsPageClient() {
   const [user, setUser] = useState<{ email?: string | null; user_metadata?: Record<string, unknown> } | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [saving, setSaving] = useState<string | null>(null);
+  const [saved, setSaved] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteText, setDeleteText] = useState("");
@@ -69,7 +70,11 @@ export function SettingsPageClient() {
 
     if (next) {
       setPreferences(next);
-      setMessage(label + " updated.");
+      setSaved(label);
+      setMessage(label + " saved.");
+      window.setTimeout(() => {
+        setSaved((current) => current === label ? null : current);
+      }, 1400);
     } else {
       setMessage("Couldn't update " + label.toLowerCase() + " right now.");
     }
@@ -77,6 +82,8 @@ export function SettingsPageClient() {
 
   function updateTheme(nextTheme: "light" | "dark") {
     setTheme(nextTheme);
+    setSaved("Appearance");
+    setMessage("Appearance saved.");
     document.documentElement.classList.toggle("dark", nextTheme === "dark");
 
     try {
@@ -84,6 +91,10 @@ export function SettingsPageClient() {
     } catch {
       // Theme still changes for this session.
     }
+
+    window.setTimeout(() => {
+      setSaved((current) => current === "Appearance" ? null : current);
+    }, 1400);
   }
 
   async function signOut() {
@@ -183,7 +194,12 @@ export function SettingsPageClient() {
                 <button
                   key={value}
                   type="button"
-                  className={preferences.daily_goal === value ? "settings-choice settings-choice-active" : "settings-choice"}
+                  className={[
+                    "settings-choice",
+                    preferences.daily_goal === value ? "settings-choice-active" : "",
+                    saved === "Daily goal" && preferences.daily_goal === value ? "settings-choice-saved" : "",
+                  ].filter(Boolean).join(" ")}
+                  aria-pressed={preferences.daily_goal === value}
                   onClick={() => void updatePreference("Daily goal", { daily_goal: value })}
                   disabled={saving === "Daily goal"}
                 >
@@ -199,15 +215,20 @@ export function SettingsPageClient() {
               <span>Use reminders to help protect an active study streak.</span>
             </div>
             <button
-              className={preferences.streak_guard_enabled ? "settings-toggle settings-toggle-on" : "settings-toggle"}
+              className={[
+                "settings-toggle",
+                preferences.streak_guard_enabled ? "settings-toggle-on" : "",
+                saved === "Streak protection" ? "settings-control-saved" : "",
+              ].filter(Boolean).join(" ")}
               type="button"
               role="switch"
               aria-checked={preferences.streak_guard_enabled}
+              aria-busy={saving === "Streak protection"}
               onClick={() => void updatePreference("Streak protection", { streak_guard_enabled: !preferences.streak_guard_enabled })}
               disabled={saving === "Streak protection"}
             >
               <span />
-              {preferences.streak_guard_enabled ? "On" : "Off"}
+              <strong>{saving === "Streak protection" ? "Saving…" : preferences.streak_guard_enabled ? "On" : "Off"}</strong>
             </button>
           </div>
 
@@ -217,15 +238,20 @@ export function SettingsPageClient() {
               <span>Allow TheoryPrep to send a gentle reminder when you have not practised that day.</span>
             </div>
             <button
-              className={preferences.reminders_enabled ? "settings-toggle settings-toggle-on" : "settings-toggle"}
+              className={[
+                "settings-toggle",
+                preferences.reminders_enabled ? "settings-toggle-on" : "",
+                saved === "Daily reminders" ? "settings-control-saved" : "",
+              ].filter(Boolean).join(" ")}
               type="button"
               role="switch"
               aria-checked={preferences.reminders_enabled}
+              aria-busy={saving === "Daily reminders"}
               onClick={() => void updatePreference("Daily reminders", { reminders_enabled: !preferences.reminders_enabled })}
               disabled={saving === "Daily reminders"}
             >
               <span />
-              {preferences.reminders_enabled ? "On" : "Off"}
+              <strong>{saving === "Daily reminders" ? "Saving…" : preferences.reminders_enabled ? "On" : "Off"}</strong>
             </button>
           </div>
         </section>
@@ -244,8 +270,26 @@ export function SettingsPageClient() {
               <span>Choose light or dark mode for this device.</span>
             </div>
             <div className="settings-segmented settings-theme-choice" role="group" aria-label="Appearance">
-              <button type="button" className={theme === "light" ? "settings-choice settings-choice-active" : "settings-choice"} onClick={() => updateTheme("light")}>Light</button>
-              <button type="button" className={theme === "dark" ? "settings-choice settings-choice-active" : "settings-choice"} onClick={() => updateTheme("dark")}>Dark</button>
+              <button
+                type="button"
+                className={[
+                  "settings-choice",
+                  theme === "light" ? "settings-choice-active" : "",
+                  saved === "Appearance" && theme === "light" ? "settings-choice-saved" : "",
+                ].filter(Boolean).join(" ")}
+                aria-pressed={theme === "light"}
+                onClick={() => updateTheme("light")}
+              >Light</button>
+              <button
+                type="button"
+                className={[
+                  "settings-choice",
+                  theme === "dark" ? "settings-choice-active" : "",
+                  saved === "Appearance" && theme === "dark" ? "settings-choice-saved" : "",
+                ].filter(Boolean).join(" ")}
+                aria-pressed={theme === "dark"}
+                onClick={() => updateTheme("dark")}
+              >Dark</button>
             </div>
           </div>
         </section>
@@ -310,7 +354,12 @@ export function SettingsPageClient() {
           )}
         </section>
 
-        {message && <p className="settings-message" role="status">{message}</p>}
+        {message && (
+          <p className={message.startsWith("Couldn't") ? "settings-message settings-message-error" : "settings-message"} role="status" aria-live="polite">
+            <span className="settings-message-mark" aria-hidden="true">{message.startsWith("Couldn't") ? "!" : "✓"}</span>
+            {message}
+          </p>
+        )}
       </div>
     </main>
   );
