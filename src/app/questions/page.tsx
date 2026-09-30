@@ -4,8 +4,8 @@ import { QuestionBrowser } from "@/components/question-browser";
 import { questions } from "@/lib/questions";
 
 export const metadata: Metadata = {
-  title: "Irish Theory Test Questions",
-  description: "Search and browse Irish driving theory test questions by topic with answers and explanations.",
+  title: "Irish Theory Test Questions 2026 | Answers & Explanations",
+  description: "Search and browse Irish driving theory test questions by topic with answers and explanations on TheoryPrep.",
   alternates: { canonical: "/questions" },
 };
 
