@@ -42,7 +42,7 @@ export const metadata: Metadata = {
         sizes: "48x48",
       },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/icons/theoryprep-bookOld.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
