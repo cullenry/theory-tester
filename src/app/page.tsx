@@ -110,7 +110,7 @@ export default function Home() {
         <HomeProofWidget />
       </section>
 
-      <section className="seo-content-section" aria-labelledby="seo-home-guide-title">
+      <section className="seo-content-section seo-home-guide-section" aria-labelledby="seo-home-guide-title">
         <div className="section-heading seo-section-heading">
           <div>
             <p className="eyebrow">Irish driving theory test 2026</p>
