@@ -184,6 +184,12 @@ export function PracticeSession() {
   const fullSessionLength = selectedPool.length;
   const sessionLengthLabel = sessionLength === "full" ? "Full " + fullSessionLength : "Quick " + sessionLength;
 
+  useEffect(() => {
+    if (sessionLength === "full" || fullSessionLength === 0) return;
+    if (fullSessionLength >= sessionLength) return;
+    setSessionLength(fullSessionLength >= 10 ? 10 : "full");
+  }, [fullSessionLength, sessionLength]);
+
   const scrollQuestionToTop = () => {
     if (typeof window === "undefined" || window.innerWidth > 760 || !window.matchMedia("(pointer: coarse)").matches) return;
 
