@@ -1,5 +1,6 @@
 const CACHE_NAME = "theoryprep-mobile-v2";
 const APP_SHELL = ["/", "/practice", "/practice/learn", "/practice/flashcards", "/questions", "/mock-test", "/offline-practice"];
+const APP_ASSETS = ["/icons/theoryprep-bookOld.png"];
 
 async function cacheDocumentAndAssets(url, cache) {
   const response = await fetch(url);
@@ -32,6 +33,7 @@ self.addEventListener("install", (event) => {
     caches.open(CACHE_NAME)
       .then(async (cache) => {
         await Promise.allSettled(APP_SHELL.map((url) => cacheDocumentAndAssets(url, cache)));
+        await Promise.allSettled(APP_ASSETS.map((url) => cache.add(url)));
       })
       .then(() => self.skipWaiting()),
   );
@@ -117,6 +119,7 @@ self.addEventListener("message", (event) => {
       caches.open(CACHE_NAME)
         .then(async (cache) => {
           await Promise.allSettled(APP_SHELL.map((url) => cacheDocumentAndAssets(url, cache)));
+          await Promise.allSettled(APP_ASSETS.map((url) => cache.add(url)));
         }),
     );
   }
