@@ -5,7 +5,8 @@ export default function manifest(): MetadataRoute.Manifest {
     id: "/",
     name: "TheoryPrep — Irish Car Theory Test Practice",
     short_name: "TheoryPrep",
-    description: "Practise Irish driving theory test questions for 2026, build your confidence and take timed mock tests.",
+    description:
+      "Practise Irish driving theory test questions for 2026, build your confidence and take timed mock tests.",
     start_url: "/",
     scope: "/",
     display: "standalone",
@@ -14,8 +15,18 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["education", "automotive"],
     lang: "en-IE",
     icons: [
-      { src: "/icons/theoryprep-book-v2.png", sizes: "96x96", type: "image/png", purpose: "any" },
-      { src: "/icons/icon-maskable.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" },
+      {
+        src: "/icons/theoryprep-book.png",
+        sizes: "96x96",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icons/icon-maskable.svg",
+        sizes: "any",
+        type: "image/svg+xml",
+        purpose: "maskable",
+      },
     ],
     shortcuts: [
       { name: "Start practice", short_name: "Practice", url: "/practice" },
