@@ -12,15 +12,32 @@ const siteUrl = "https://theoryprep.irish";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "Irish Car Theory Test Practice", template: "%s | TheoryPrep" },
-  description: "Practise 805 Irish car theory test questions, learn from clear explanations and take timed mock tests. Free to start with TheoryPrep.",
+  applicationName: "TheoryPrep",
+  title: {
+    default: "Irish Theory Test Practice 2026 | TheoryPrep",
+    template: "%s | TheoryPrep",
+  },
+  description:
+    "Free Irish theory test practice with 805+ questions, mock tests, flashcards and clear explanations. Prepare for your Irish Driver Theory Test online.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "TheoryPrep | Irish Car Theory Test Practice",
-    description: "Learn, practise and prepare for the Irish car theory test.",
+    title: "Irish Theory Test Practice 2026 | TheoryPrep",
+    description:
+      "Free Irish theory test practice with questions, mock tests, flashcards and clear explanations.",
     url: siteUrl,
     siteName: "TheoryPrep",
+    locale: "en_IE",
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Irish Theory Test Practice 2026 | TheoryPrep",
+    description:
+      "Free Irish theory test practice with questions, mock tests and flashcards.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   appleWebApp: {
     capable: true,
