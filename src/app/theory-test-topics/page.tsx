@@ -4,8 +4,8 @@ import { seoTopicPages } from "@/lib/seo-topics";
 import { questions } from "@/lib/questions";
 
 export const metadata: Metadata = {
-  title: "Irish Theory Test Topics",
-  description: "Browse Irish driving theory test topics on TheoryPrep, including road positioning, hazards, vehicle safety, road law and more.",
+  title: "Irish Theory Test Topics 2026 | Topic Practice",
+  description: "Browse Irish driving theory test topics on TheoryPrep, including road signs, vehicle safety, hazards, road law and more.",
   alternates: { canonical: "/theory-test-topics" },
 };
 
