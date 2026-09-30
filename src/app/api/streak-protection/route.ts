@@ -171,14 +171,11 @@ export async function DELETE() {
   try {
     await ensurePreferences(user.id);
 
+    const current = await loadState(user.id);
     const { data: updated, error } = await supabaseAdmin
       .from("user_app_preferences")
       .update({
-        streak_shields: Math.min(MAX_SHIELDS, Number((await supabaseAdmin
-          .from("user_app_preferences")
-          .select("streak_shields")
-          .eq("user_id", user.id)
-          .single()).data?.streak_shields ?? 0) + 1),
+        streak_shields: Math.min(MAX_SHIELDS, current.streak_shields + 1),
         streak_protection_active: false,
         streak_protection_activated_at: null,
         updated_at: new Date().toISOString(),
