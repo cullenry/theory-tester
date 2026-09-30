@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: TopicPageProps): Promise<Meta
   }
 
   return {
-    title: topic.title,
+    title: `${topic.title} 2026`,
     description: topic.description,
     alternates: { canonical: `/theory-test-topics/${topic.slug}` },
     openGraph: {
