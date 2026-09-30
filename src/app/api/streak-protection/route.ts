@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
-
 const MAX_SHIELDS = 3;
 
 function localDateKey(date: Date, timezone: string) {
@@ -26,27 +24,29 @@ function getYesterdayKey(timezone: string) {
   return localDateKey(new Date(Date.now() - 24 * 60 * 60 * 1000), timezone);
 }
 
-async function getUser() {
+async function getSessionClient() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  return user;
+  return { supabase, user };
 }
 
-async function ensurePreferences(userId: string) {
-  await supabaseAdmin
+async function ensurePreferences(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+  const { error } = await supabase
     .from("user_app_preferences")
     .upsert({ user_id: userId }, { onConflict: "user_id" });
+  if (error) throw error;
 }
 
-async function reconcile(userId: string) {
-  await supabaseAdmin.rpc("reconcile_streak_protection", { target_user: userId });
+async function reconcile(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+  const { error } = await supabase.rpc("reconcile_streak_protection", { target_user: userId });
+  if (error) throw error;
 }
 
-async function loadState(userId: string) {
-  await ensurePreferences(userId);
-  await reconcile(userId);
+async function loadState(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
+  await ensurePreferences(supabase, userId);
+  await reconcile(supabase, userId);
 
-  const { data: preferences, error } = await supabaseAdmin
+  const { data: preferences, error } = await supabase
     .from("user_app_preferences")
     .select(
       "streak_shields, streak_protection_active, streak_protection_activated_at, reminders_enabled, streak_guard_enabled, reminder_timezone",
@@ -56,7 +56,7 @@ async function loadState(userId: string) {
 
   if (error) throw error;
 
-  const { data: protectedDays, error: protectedDaysError } = await supabaseAdmin
+  const { data: protectedDays, error: protectedDaysError } = await supabase
     .from("streak_protected_days")
     .select("protected_date")
     .eq("user_id", userId)
@@ -77,11 +77,11 @@ async function loadState(userId: string) {
 }
 
 export async function GET() {
-  const user = await getUser();
+  const { supabase, user } = await getSessionClient();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
   try {
-    return NextResponse.json({ protection: await loadState(user.id) });
+    return NextResponse.json({ protection: await loadState(supabase, user.id) });
   } catch (error) {
     console.error("Could not load streak protection:", error);
     return NextResponse.json({ error: "Could not load streak protection." }, { status: 500 });
@@ -89,11 +89,11 @@ export async function GET() {
 }
 
 export async function POST() {
-  const user = await getUser();
+  const { supabase, user } = await getSessionClient();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
   try {
-    const state = await loadState(user.id);
+    const state = await loadState(supabase, user.id);
     if (state.streak_protection_active) {
       return NextResponse.json({ protection: state });
     }
@@ -105,7 +105,7 @@ export async function POST() {
       );
     }
 
-    const { data: attempts, error: attemptsError } = await supabaseAdmin
+    const { data: attempts, error: attemptsError } = await supabase
       .from("question_attempts")
       .select("created_at, selected_answer")
       .eq("user_id", user.id)
@@ -127,7 +127,7 @@ export async function POST() {
       );
     }
 
-    const { data: updated, error: updateError } = await supabaseAdmin
+    const { data: updated, error: updateError } = await supabase
       .from("user_app_preferences")
       .update({
         streak_shields: Math.max(0, state.streak_shields - 1),
@@ -165,14 +165,14 @@ export async function POST() {
 }
 
 export async function DELETE() {
-  const user = await getUser();
+  const { supabase, user } = await getSessionClient();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
   try {
-    await ensurePreferences(user.id);
+    await ensurePreferences(supabase, user.id);
 
-    const current = await loadState(user.id);
-    const { data: updated, error } = await supabaseAdmin
+    const current = await loadState(supabase, user.id);
+    const { data: updated, error } = await supabase
       .from("user_app_preferences")
       .update({
         streak_shields: Math.min(MAX_SHIELDS, current.streak_shields + 1),
@@ -189,10 +189,10 @@ export async function DELETE() {
 
     if (error) throw error;
     if (!updated) {
-      return NextResponse.json({ protection: await loadState(user.id) });
+      return NextResponse.json({ protection: await loadState(supabase, user.id) });
     }
 
-    const state = await loadState(user.id);
+    const state = await loadState(supabase, user.id);
     return NextResponse.json({ protection: state });
   } catch (error) {
     console.error("Could not deactivate streak protection:", error);
