@@ -125,6 +125,15 @@ function getWeekActivity(
   });
 }
 
+function StreakIcon() {
+  return (
+    <svg className="home-streak-flame" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M13.8 3.4c.5 3.2-1 4.6-2.5 6.1-1.2 1.2-2.3 2.3-2.3 4.3 0 1.4.7 2.5 1.9 3.2-.1-.5-.1-1 .1-1.5.4-1 1.2-1.7 2-2.5.8 1.3 1.8 2.5 1.8 4.3 0 .5-.1 1-.3 1.4 2.4-.8 4.1-3 4.1-5.7 0-4.1-2.9-6.7-4.8-9.6Z" />
+      <path d="M8.7 18.1c-.1.3-.2.7-.2 1.1 0 .9.7 1.6 1.6 1.6" />
+    </svg>
+  );
+}
+
 function LockedStreakWidget() {
   const previewDays = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -133,7 +142,7 @@ function LockedStreakWidget() {
       <div className="home-streak-inner home-streak-locked">
         <div className="home-streak-locked-blur" aria-hidden="true">
           <div className="home-streak-copy">
-            <div className="home-streak-icon">🔥</div>
+            <div className="home-streak-icon"><StreakIcon /></div>
             <div>
               <p className="eyebrow">Your practice streak</p>
               <h2>7 days strong.</h2>
@@ -294,7 +303,7 @@ export function HomeStreakWidget() {
     <section className="home-streak-section" aria-label="Your TheoryPrep streak">
       <div className="home-streak-inner home-streak-with-protection">
         <div className="home-streak-copy">
-          <div className="home-streak-icon" aria-hidden="true">🔥</div>
+          <div className="home-streak-icon"><StreakIcon /></div>
           <div>
             <p className="eyebrow">Your practice streak</p>
             <div className="home-streak-title-row">
