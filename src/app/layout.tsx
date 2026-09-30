@@ -39,7 +39,7 @@ export const metadata: Metadata = {
       {
         url: "/icons/theoryprep-book.png",
         type: "image/png",
-        sizes: "96x96",
+        sizes: "48x48",
       },
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],

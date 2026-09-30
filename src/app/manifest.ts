@@ -17,7 +17,7 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         src: "/icons/theoryprep-book.png",
-        sizes: "96x96",
+        sizes: "48x48",
         type: "image/png",
         purpose: "any",
       },
