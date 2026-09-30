@@ -6936,58 +6936,15 @@ html.dark .hero-brand-badge {
   }
 }
 
-/* Final mobile homepage stats + auth branding refresh */
-.hero-proof {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-  width: 100% !important;
-  margin-top: 22px !important;
-}
-.hero-stat {
-  display: grid !important;
-  min-width: 0 !important;
-  min-height: 76px !important;
-  align-content: center !important;
-  justify-items: center !important;
-  gap: 3px !important;
-  padding: 9px 6px !important;
-  border: 1px solid #d5e2d8 !important;
-  border-radius: 12px !important;
-  background: rgba(255,255,255,.86) !important;
-  text-align: center !important;
-}
-.hero-stat-icon {
-  display: grid !important;
-  width: 23px !important;
-  height: 23px !important;
-  margin: 0 0 2px !important;
-  place-items: center !important;
-  border-radius: 7px !important;
-  background: var(--green-soft) !important;
-  color: var(--green) !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1 !important;
-}
-.hero-stat strong {
-  display: block !important;
-  margin: 0 !important;
-  color: var(--ink) !important;
-  font-family: Georgia, serif !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
-}
-.hero-stat > span:last-child {
-  display: block !important;
-  color: #69756e !important;
-  font-size: 9px !important;
-  font-weight: 700 !important;
-  line-height: 1.2 !important;
-  white-space: normal !important;
-}
-.hero-proof .proof-separator { display: none !important; }
 
+/* Keep the original compact hero proof on desktop; hide it on small screens. */
+@media (max-width: 760px) {
+  .hero-proof {
+    display: none;
+  }
+}
+
+/* TheoryPrep branding on the auth card */
 .auth-card-top {
   align-items: center;
   gap: 17px;
@@ -7001,28 +6958,11 @@ html.dark .hero-brand-badge {
 }
 .auth-mark { display: none; }
 
-html.dark .hero-stat {
-  border-color: #435249 !important;
-  background: rgba(29,35,30,.86) !important;
-}
 html.dark .auth-logo {
   filter: brightness(1.04);
 }
 
 @media (max-width: 520px) {
-  .hero-proof {
-    gap: 7px !important;
-  }
-  .hero-stat {
-    min-height: 78px !important;
-    padding: 8px 4px !important;
-  }
-  .hero-stat strong {
-    font-size: 17px !important;
-  }
-  .hero-stat > span:last-child {
-    font-size: 8.5px !important;
-  }
   .auth-card-top {
     gap: 13px;
   }
