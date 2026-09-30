@@ -7,8 +7,8 @@ import { getRandomQuestionsFromPool, questions, type Question } from "@/lib/ques
 import { taxonomyCategories } from "@/lib/question-taxonomy";
 import { getStarredQuestionIds, recordQuestionAttempt } from "@/lib/progress";
 
-const SESSION_LENGTHS = [5, 10, 20] as const;
-type SessionLength = (typeof SESSION_LENGTHS)[number];
+const QUICK_SESSION_LENGTHS = [10, 20] as const;
+type SessionLength = 10 | 20 | "full";
 
 type PickerOption = {
   value: string;
@@ -181,6 +181,8 @@ export function PracticeSession() {
   const current = session?.[position];
   const finished = session !== null && position >= session.length;
   const answered = selected !== null;
+  const fullSessionLength = selectedPool.length;
+  const sessionLengthLabel = sessionLength === "full" ? "Full " + fullSessionLength : "Quick " + sessionLength;
 
   const scrollQuestionToTop = () => {
     if (typeof window === "undefined" || window.innerWidth > 760 || !window.matchMedia("(pointer: coarse)").matches) return;
@@ -200,7 +202,7 @@ export function PracticeSession() {
     });
   }, [position, session, finished]);
 
-  const beginSession = (pool: Question[], length: number = sessionLength, review = false) => {
+  const beginSession = (pool: Question[], length: number = sessionLength === "full" ? pool.length : sessionLength, review = false) => {
     const nextSession = getRandomQuestionsFromPool(pool, length);
     setActivePool(pool);
     setSession(nextSession);
@@ -299,10 +301,33 @@ export function PracticeSession() {
               <div className="practice-length-row">
                 <span>Session length</span>
                 <div className="practice-length-options" role="group" aria-label="Session length">
-                  {SESSION_LENGTHS.map((length) => <button key={length} className={sessionLength === length ? "practice-length-option practice-length-option-active" : "practice-length-option"} type="button" onClick={() => setSessionLength(length)}>{length === 5 ? "Quick 5" : length === 10 ? "Quick 10" : "Full 20"}<small>{length} questions</small></button>)}
+                  {QUICK_SESSION_LENGTHS.map((length) => {
+                    const available = selectedPool.length >= length;
+                    return (
+                      <button
+                        key={length}
+                        className={sessionLength === length ? "practice-length-option practice-length-option-active" : "practice-length-option"}
+                        type="button"
+                        disabled={!available}
+                        onClick={() => setSessionLength(length)}
+                      >
+                        <span>Quick {length}</span>
+                        <small>{available ? length + " questions" : "Not enough questions"}</small>
+                      </button>
+                    );
+                  })}
+                  <button
+                    className={sessionLength === "full" ? "practice-length-option practice-length-option-active practice-length-option-full" : "practice-length-option practice-length-option-full"}
+                    type="button"
+                    onClick={() => setSessionLength("full")}
+                    disabled={fullSessionLength === 0}
+                  >
+                    <span>Full {fullSessionLength}</span>
+                    <small>All available</small>
+                  </button>
                 </div>
               </div>
-              <div className="practice-start-row"><p>{Math.min(sessionLength, selectedPool.length)} questions in this session</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0 || loadingSpecialMode} onClick={() => beginSession(selectedPool)}>{starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span></button></div>
+              <div className="practice-start-row"><p>{fullSessionLength === 0 ? "No questions available for this selection." : sessionLengthLabel + " questions in this session"}</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0 || loadingSpecialMode} onClick={() => beginSession(selectedPool)}>{starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span></button></div>
 
             </section>
 
