@@ -102,18 +102,6 @@ export function LearnSession() {
     void recordQuestionAttempt(current, answer, isCorrect, "smart");
   }
 
-  useEffect(() => {
-    if (selected === null || !current || !isMobileTouch()) return;
-
-    const frame = window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        feedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [selected, current?.id, phase]);
-
   function nextStep() {
     setSelected(null);
 
