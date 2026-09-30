@@ -7266,6 +7266,40 @@ html.dark .hero-proof .hero-stat + .hero-stat {
   background: #e1efe5;
   color: var(--green-dark);
 }
+.home-streak-protection-active-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.home-streak-protection-active-label {
+  display: inline-flex;
+  min-height: 37px;
+  align-items: center;
+  padding: 0 11px;
+  border: 1px solid #b7d0bd;
+  border-radius: 8px;
+  background: #eaf4ed;
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 800;
+}
+.home-streak-protection-release {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 750;
+}
+.home-streak-protection-release:hover:not(:disabled) {
+  color: var(--green);
+  text-decoration: underline;
+}
+.home-streak-protection-release:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
 .home-streak-protection-count {
   color: var(--muted);
   font-size: 9px;
@@ -7298,6 +7332,11 @@ html.dark .home-streak-protection-button-active {
 html.dark .home-streak-protection-button-active:hover:not(:disabled) {
   border-color: #668570;
   background: #2a3c2f;
+}
+html.dark .home-streak-protection-active-label {
+  border-color: #4e6957;
+  background: #243328;
+  color: #bfe3c8;
 }
 html.dark .home-streak-dot-protected {
   border-color: #6f8f79;
