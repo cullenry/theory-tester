@@ -81,14 +81,24 @@ export function AuthForm({ mode }: AuthFormProps) {
   return (
     <div className="auth-card">
       <div className="auth-card-top">
-        <Image
-          className="auth-logo"
-          src="/images/theoryprep-logo.png"
-          alt="TheoryPrep"
-          width={108}
-          height={65}
-          priority
-        />
+        <span className="auth-logo-wrap">
+          <Image
+            className="auth-logo auth-logo-light"
+            src="/images/theoryprep-logo.png"
+            alt="TheoryPrep"
+            width={108}
+            height={65}
+            priority
+          />
+          <Image
+            className="auth-logo auth-logo-dark"
+            src="/images/theoryprep-logo-dark.png"
+            alt=""
+            width={108}
+            height={65}
+            priority
+          />
+        </span>
         <div>
           <p className="eyebrow">TheoryPrep account</p>
           <h1>{isSignup ? "Create your account." : "Welcome back."}</h1>
