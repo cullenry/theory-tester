@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     id: "/",
     name: "TheoryPrep — Irish Car Theory Test Practice",
     short_name: "TheoryPrep",
-    description: "Practise Irish car theory test questions, build your confidence and take timed mock tests.",
+    description: "Practise Irish driving theory test questions for 2026, build your confidence and take timed mock tests.",
     start_url: "/",
     scope: "/",
     display: "standalone",
@@ -14,8 +14,7 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["education", "automotive"],
     lang: "en-IE",
     icons: [
-      { src: "/icons/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
-      { src: "/apple-touch-icon.png", sizes: "180x180", type: "image/png", purpose: "any" },
+      { src: "/icons/icon.svg", sizes: "512x512", type: "image/svg+xml", purpose: "any" },
       { src: "/icons/icon-maskable.svg", sizes: "any", type: "image/svg+xml", purpose: "maskable" },
     ],
     shortcuts: [

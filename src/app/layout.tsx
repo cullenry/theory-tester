@@ -14,16 +14,16 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: "TheoryPrep",
   title: {
-    default: "Irish Theory Test Practice 2026 | TheoryPrep",
+    default: "Irish Driving Theory Test 2026 | TheoryPrep",
     template: "%s | TheoryPrep",
   },
   description:
-    "Free Irish theory test practice with 805+ questions, mock tests, flashcards and clear explanations. Prepare for your Irish Driver Theory Test online.",
+    "Practise 805 Irish driving theory questions for 2026, take realistic mock tests, study clear explanations and track your progress online — free with TheoryPrep.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Irish Theory Test Practice 2026 | TheoryPrep",
+    title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
-      "Free Irish theory test practice with questions, mock tests, flashcards and clear explanations.",
+      "Practise 805 Irish driving theory questions for 2026. Take realistic mock tests, study clear explanations and track your progress.",
     url: siteUrl,
     siteName: "TheoryPrep",
     locale: "en_IE",
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Irish Theory Test Practice 2026 | TheoryPrep",
+    title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
-      "Free Irish theory test practice with questions, mock tests and flashcards.",
+      "Practise 805 Irish driving theory questions for 2026, plus mock tests and clear explanations.",
   },
   robots: {
     index: true,
@@ -45,7 +45,9 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
   },
   icons: {
-    icon: [{ url: "/icons/icon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/icons/icon.svg", type: "image/svg+xml", sizes: "512x512" },
+    ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
