@@ -19,9 +19,6 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
-            <div className="hero-brand-badge" aria-hidden="true">
-              <Image src="/images/theoryprep-logo.png" alt="" width={88} height={53} priority />
-            </div>
             <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish car theory test practice</p>
             <h1>Get ready for your<br /><span className="hero-irish-text" data-text="Irish car theory test.">Irish car theory test.</span></h1>
             <p className="hero-description">Practise 805 Irish car theory questions, learn from clear explanations and take timed mock tests — all in your browser. Category B (BW) is the car theory test.</p>
