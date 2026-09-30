@@ -16,16 +16,10 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "en-IE",
     icons: [
       {
-        src: "/icons/theoryprep-book.png",
-        sizes: "48x48",
+        src: "/icons/theoryprep-bookOld.png",
+        sizes: "any",
         type: "image/png",
         purpose: "any",
-      },
-      {
-        src: "/icons/icon-maskable.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "maskable",
       },
     ],
     shortcuts: [
