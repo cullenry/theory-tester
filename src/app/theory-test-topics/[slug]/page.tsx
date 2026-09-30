@@ -53,6 +53,8 @@ export default async function TheoryTestTopicPage({ params }: TopicPageProps) {
       }}
       secondaryAction={{ href: "/questions", label: "Browse all questions", description: "" }}
       sections={topic.sections}
+      canonicalPath={`/theory-test-topics/${topic.slug}`}
+      breadcrumbParent={{ name: "Irish Theory Test Topics", path: "/theory-test-topics" }}
       questionCategory={topic.category}
       sampleHeading={`Questions about ${topic.category.toLowerCase()}.`}
       sampleDescription={`Practise examples from TheoryPrep's ${topic.category.toLowerCase()} category.`}
