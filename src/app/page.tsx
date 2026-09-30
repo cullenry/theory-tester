@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { questions } from "@/lib/questions";
@@ -5,6 +6,48 @@ import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
 import { HomeProofWidget } from "@/components/home-proof-widget";
+
+export const metadata: Metadata = {
+  title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
+  description:
+    "Practise the Irish driving theory test in 2026 with 805 questions, clear explanations, topic practice and full mock tests. Free to start with TheoryPrep.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
+    description:
+      "Practise 805 Irish driving theory questions, study by topic and take full mock tests with TheoryPrep.",
+    url: "https://theoryprep.irish/",
+    siteName: "TheoryPrep",
+    locale: "en_IE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
+    description:
+      "Practise 805 Irish driving theory questions, study by topic and take full mock tests.",
+  },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "TheoryPrep",
+  url: "https://theoryprep.irish",
+  logo: "https://theoryprep.irish/images/theoryprep-logo.png",
+  description:
+    "Independent Irish driving theory test study resource with practice questions, explanations and mock tests.",
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "TheoryPrep",
+  url: "https://theoryprep.irish",
+  inLanguage: "en-IE",
+  description:
+    "Irish driving theory test practice, topic study and mock tests.",
+};
 
 const modes = [
   { number: "01", title: "Learn & Practice", description: "Learn from the ground up, target weak spots and practise questions at your own pace.", href: "/practice", action: "Open Learn & Practice" },
@@ -16,6 +59,14 @@ const modes = [
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
@@ -57,6 +108,19 @@ export default function Home() {
           </div>
         </div>
         <HomeProofWidget />
+      </section>
+
+      <section className="seo-content-section" aria-labelledby="seo-home-guide-title">
+        <div className="section-heading seo-section-heading">
+          <div>
+            <p className="eyebrow">Irish driving theory test 2026</p>
+            <h2 id="seo-home-guide-title">Prepare with questions, explanations and realistic mock tests.</h2>
+          </div>
+          <p>
+            Use TheoryPrep to study the Irish car theory test at your own pace. Practise individual topics,
+            review answers and explanations, then use a full mock test to check your knowledge under timed conditions.
+          </p>
+        </div>
       </section>
 
       <div className="home-learning-widgets">
