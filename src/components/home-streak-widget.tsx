@@ -232,7 +232,7 @@ function StreakProtectionRow({
   const canActivate = available > 0 && currentStreak > 0 && !protection.streak_protection_active;
 
   return (
-    <div className="home-streak-protection">
+    <div className="home-streak-protection" id="streak-protection">
       <div className="home-streak-protection-copy">
         <ProtectionIcon />
         <div>
@@ -258,14 +258,19 @@ function StreakProtectionRow({
 
       <div className="home-streak-protection-actions">
         {protection.streak_protection_active ? (
-          <button
-            className="home-streak-protection-button home-streak-protection-button-active"
-            type="button"
-            onClick={() => void deactivate()}
-            disabled={busy}
-          >
-            {busy ? "…" : "Protected"}
-          </button>
+          <div className="home-streak-protection-active-wrap">
+            <span className="home-streak-protection-active-label">
+              {busy ? "Saving…" : "Active"}
+            </span>
+            <button
+              className="home-streak-protection-release"
+              type="button"
+              onClick={() => void deactivate()}
+              disabled={busy}
+            >
+              Release
+            </button>
+          </div>
         ) : available > 0 ? (
           <button
             className="home-streak-protection-button"
