@@ -140,8 +140,8 @@ self.addEventListener("push", (event) => {
   const title = data.title || "TheoryPrep";
   const options = {
     body: data.body || "A little theory practice is waiting for you.",
-    icon: data.icon || "/icons/icon.svg",
-    badge: data.badge || "/icons/icon.svg",
+    icon: data.icon || "/icons/theoryprep-bookOld.png",
+    badge: data.badge || "/icons/theoryprep-bookOld.png",
     tag: data.tag || "theoryprep-reminder",
     renotify: Boolean(data.renotify),
     data: { url: data.url || "/practice/learn" },
