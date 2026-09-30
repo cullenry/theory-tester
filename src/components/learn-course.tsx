@@ -54,6 +54,8 @@ export function LearnCourse() {
   const firstName = data.user ? getDisplayName(data.user).split(" ")[0] : "there";
   const hasStarted = progress.seenCount > 0;
   const complete = progress.seenCount >= progress.total;
+  const progressLabel = data.user ? `${progress.seenCount} / ${progress.total}` : "Sign in to track";
+  const progressDescription = data.user ? "questions covered" : "progress saved to your account";
 
   return (
     <main className="app-main">
@@ -67,11 +69,11 @@ export function LearnCourse() {
             </p>
           </div>
 
-          <div className="course-hero-progress" aria-label={`${progress.seenCount} of ${progress.total} questions covered`}>
-            <span className="course-progress-ring">{progress.percent}<small>%</small></span>
+          <div className="course-hero-progress" aria-label={data.user ? `${progress.seenCount} of ${progress.total} questions covered` : "Sign in to track course progress"}>
+            <span className="course-progress-ring">{data.user ? progress.percent : "—"}<small>{data.user ? "%" : ""}</small></span>
             <div>
-              <strong>{progress.seenCount} / {progress.total}</strong>
-              <span>questions covered</span>
+              <strong>{progressLabel}</strong>
+              <span>{progressDescription}</span>
             </div>
           </div>
         </section>
