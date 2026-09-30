@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { questions } from "@/lib/questions";
 import { getProgressData, type QuestionAttempt } from "@/lib/progress";
+import { getStreakProtection } from "@/lib/streak-protection";
 import { MobileAppTools } from "@/components/mobile-app-tools";
 import {
   getChapterProgress,
@@ -41,28 +42,62 @@ function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?:
     : "there";
 }
 
-function getStreak(attempts: QuestionAttempt[]) {
+function localDateKey(value: Date, timezone: string) {
+  try {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: timezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(value);
+  } catch {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Dublin",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(value);
+  }
+}
+
+function shiftLocalDay(date: Date, days: number, timezone: string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(date);
+
+  const shifted = new Date(
+    Number(parts.find((part) => part.type === "year")?.value),
+    Number(parts.find((part) => part.type === "month")?.value) - 1,
+    Number(parts.find((part) => part.type === "day")?.value),
+  );
+  shifted.setDate(shifted.getDate() + days);
+  return shifted;
+}
+
+function getStreak(attempts: QuestionAttempt[], protectedDates: string[] = [], timezone = "Europe/Dublin") {
   const days = new Set(
     attempts
       .filter((attempt) => attempt.selected_answer !== null)
-      .map((attempt) => attempt.created_at.slice(0, 10)),
+      .map((attempt) => localDateKey(new Date(attempt.created_at), timezone)),
   );
+  const activeDays = new Set([...days, ...protectedDates]);
 
-  const today = new Date();
-  const todayKey = today.toISOString().slice(0, 10);
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayKey = yesterday.toISOString().slice(0, 10);
+  const today = localDateKey(new Date(), timezone);
+  const yesterday = localDateKey(shiftLocalDay(new Date(), -1, timezone), timezone);
 
   let current = 0;
-  const cursor = new Date(days.has(todayKey) ? today : yesterday);
+  let cursor: Date | null = null;
 
-  if (!days.has(todayKey) && !days.has(yesterdayKey)) {
-    current = 0;
-  } else {
-    while (days.has(cursor.toISOString().slice(0, 10))) {
+  if (activeDays.has(today)) cursor = new Date();
+  else if (activeDays.has(yesterday)) cursor = shiftLocalDay(new Date(), -1, timezone);
+
+  if (cursor) {
+    while (activeDays.has(localDateKey(cursor, timezone))) {
       current += 1;
-      cursor.setDate(cursor.getDate() - 1);
+      cursor = shiftLocalDay(cursor, -1, timezone);
     }
   }
 
@@ -70,8 +105,8 @@ function getStreak(attempts: QuestionAttempt[]) {
   let run = 0;
   let previous: Date | null = null;
 
-  for (const key of [...days].sort()) {
-    const day = new Date(key + "T00:00:00Z");
+  for (const key of [...activeDays].sort()) {
+    const day = new Date(key + "T00:00:00");
     if (previous && day.getTime() - previous.getTime() === 86_400_000) run += 1;
     else run = 1;
     best = Math.max(best, run);
@@ -251,15 +286,26 @@ function RecentMistakes({ questionIds }: { questionIds: number[] }) {
 
 export function ProgressDashboard() {
   const [data, setData] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
+  const [protection, setProtection] = useState<Awaited<ReturnType<typeof getStreakProtection>> | null>(null);
 
   useEffect(() => {
-    getProgressData(2000).then(setData);
+    getProgressData(2000).then(async (nextData) => {
+      setData(nextData);
+      if (nextData.user) setProtection(await getStreakProtection());
+    });
   }, []);
 
   const chapters = useMemo(() => getCourseChapters(), []);
   const courseProgress = useMemo(() => getCourseProgress(data?.attempts ?? []), [data?.attempts]);
   const nextLesson = useMemo(() => getNextCourseLesson(data?.attempts ?? []), [data?.attempts]);
-  const streak = useMemo(() => getStreak(data?.attempts ?? []), [data?.attempts]);
+  const streak = useMemo(
+    () => getStreak(
+      data?.attempts ?? [],
+      protection?.protected_dates ?? [],
+      protection?.reminder_timezone || "Europe/Dublin",
+    ),
+    [data?.attempts, protection?.protected_dates, protection?.reminder_timezone],
+  );
 
   const topics = useMemo<TopicRow[]>(() => {
     const attempts = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
