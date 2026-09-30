@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function IrishDrivingTheoryTestPage() {
-  return <SeoLandingPage eyebrow="Prepare with TheoryPrep" title="Irish Driving Theory Test" intro="Get ready for the Irish driving theory test with a practical online study resource built around repeated question practice, explanations and mock tests." primaryAction={{ href: "/theory-test-practice", label: "Practise the questions", description: "" }} secondaryAction={{ href: "/questions", label: "Browse the library", description: "" }} sections={[
+  return <SeoLandingPage eyebrow="Prepare with TheoryPrep" title="Irish Driving Theory Test 2026" intro="Get ready for the Irish driving theory test with a practical online study resource built around repeated question practice, explanations and mock tests." primaryAction={{ href: "/theory-test-practice", label: "Practise the questions", description: "" }} secondaryAction={{ href: "/questions", label: "Browse the library", description: "" }} canonicalPath="/irish-driving-theory-test" sections={[
     { title: "One library, many ways to study", body: "TheoryPrep brings the question bank together with search, category browsing, practice sessions, daily challenges and mock tests." },
     { title: "Use explanations as you learn", body: "After each answer, you can read the explanation and then continue practising instead of leaving the topic behind." },
     { title: "Track your preparation", body: "Create an account to keep question history, mistakes, starred questions, streaks and mock-test results in one place." },
