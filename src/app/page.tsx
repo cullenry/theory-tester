@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { questions } from "@/lib/questions";
+import { questionDatasetScrapedAt, questions } from "@/lib/questions";
 import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
@@ -132,12 +132,19 @@ export default function Home() {
               </div>
               <div className="hero-stat">
                 <strong>Free</strong>
-                <span>to get started</span>
+                <span>free</span>
               </div>
             </div>
 
             <p className="hero-trust">
               Independent study resource based on official RSA material. Not affiliated with or endorsed by the RSA.
+            </p>
+            <p className="hero-data-freshness">
+              Question bank last refreshed {new Date(questionDatasetScrapedAt).toLocaleDateString("en-IE", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}.
             </p>
           </div>
 
