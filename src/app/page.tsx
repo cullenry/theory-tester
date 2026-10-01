@@ -21,7 +21,8 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
+    images: ["/opengraph-image"],
     title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
     description:
       "Practise 805 Irish driving theory questions, study by topic and take full mock tests.",
