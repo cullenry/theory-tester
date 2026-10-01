@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
 const MAX_SHIELDS = 3;
 
 function localDateKey(date: Date, timezone: string) {
@@ -76,7 +77,9 @@ async function loadState(supabase: Awaited<ReturnType<typeof createClient>>, use
   };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rate = rateLimit(request, { scope: "streak-protection-read", limit: 60, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
   const { supabase, user } = await getSessionClient();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
@@ -88,7 +91,9 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
+  const rate = rateLimit(request, { scope: "streak-protection-write", limit: 30, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
   const { supabase, user } = await getSessionClient();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
@@ -164,7 +169,9 @@ export async function POST() {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const rate = rateLimit(request, { scope: "streak-protection-write", limit: 30, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
   const { supabase, user } = await getSessionClient();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
