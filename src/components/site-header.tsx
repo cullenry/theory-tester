@@ -9,10 +9,17 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigation = [
   { href: "/", label: "Home" },
-  { href: "/practice", label: "Learn & Practice" },
+  { href: "/practice", label: "Practice" },
   { href: "/mock-test", label: "Mock test" },
-  { href: "/questions", label: "Questions" },
-  { href: "/progress", label: "My Progress" },
+  { href: "/practice/learn", label: "Learn" },
+];
+
+const moreNavigation = [
+  { href: "/questions", label: "Question library", description: "Browse all 805 questions" },
+  { href: "/theory-test-topics", label: "Topics", description: "Study one area at a time" },
+  { href: "/practice/flashcards", label: "Flashcards", description: "Use active recall to revise" },
+  { href: "/mistakes", label: "My mistakes", description: "Review questions you missed" },
+  { href: "/progress", label: "My progress", description: "See your scores and history" },
 ];
 
 function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
@@ -38,19 +45,25 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [userName, setUserName] = useState<string | null>(null);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
-    if (!accountOpen) return;
+    if (!accountOpen && !moreOpen) return;
 
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
-      const menu = document.querySelector(".account-menu");
-      if (menu && !menu.contains(target)) setAccountOpen(false);
+      const accountMenu = document.querySelector(".account-menu");
+      const desktopMoreMenu = document.querySelector(".desktop-more-menu");
+      if (accountMenu && !accountMenu.contains(target)) setAccountOpen(false);
+      if (desktopMoreMenu && !desktopMoreMenu.contains(target)) setMoreOpen(false);
     };
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setAccountOpen(false);
+      if (event.key === "Escape") {
+        setAccountOpen(false);
+        setMoreOpen(false);
+      }
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
@@ -59,7 +72,12 @@ export function SiteHeader() {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [accountOpen]);
+  }, [accountOpen, moreOpen]);
+
+  useEffect(() => {
+    setMoreOpen(false);
+    setAccountOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     const updateTheme = () => {
@@ -121,14 +139,52 @@ export function SiteHeader() {
         <nav className="main-nav" aria-label="Main navigation">
           {navigation.map((item) => (
             <Link
-              className={item.href === "/progress" ? "nav-link nav-progress-link" : "nav-link"}
+              className="nav-link"
               href={item.href}
               key={item.href}
-              aria-current={pathname === item.href ? "page" : undefined}
+              aria-current={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/")) ? "page" : undefined}
             >
               {item.label}
             </Link>
           ))}
+
+          <div className="desktop-more-menu">
+            <button
+              className={moreOpen ? "nav-link nav-more-trigger nav-more-trigger-open" : "nav-link nav-more-trigger"}
+              type="button"
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
+              onClick={() => {
+                setMoreOpen((open) => !open);
+                setAccountOpen(false);
+              }}
+            >
+              More <span className={moreOpen ? "nav-more-chevron nav-more-chevron-open" : "nav-more-chevron"} aria-hidden="true" />
+            </button>
+
+            {moreOpen && (
+              <div className="desktop-more-popover" role="menu">
+                <div className="desktop-more-heading">
+                  <p className="eyebrow">More ways to study</p>
+                  <span>Pick up where you left off.</span>
+                </div>
+                {moreNavigation.map((item) => (
+                  <Link
+                    key={item.href}
+                    className="desktop-more-item"
+                    href={item.href}
+                    role="menuitem"
+                  >
+                    <span>
+                      <strong>{item.label}</strong>
+                      <small>{item.description}</small>
+                    </span>
+                    <span aria-hidden="true">↗</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
 
         <div className="header-actions">
@@ -139,7 +195,10 @@ export function SiteHeader() {
                 type="button"
                 aria-expanded={accountOpen}
                 aria-haspopup="menu"
-                onClick={() => setAccountOpen((open) => !open)}
+                onClick={() => {
+                  setAccountOpen((open) => !open);
+                  setMoreOpen(false);
+                }}
               >
                 <span className="account-avatar" aria-hidden="true">{userName.charAt(0).toUpperCase()}</span>
                 <span className="account-name">{userName}</span>
