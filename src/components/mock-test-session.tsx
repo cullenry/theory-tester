@@ -247,7 +247,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
             <p className="eyebrow">Finish mock test</p>
             <h2 id="mock-submit-confirm-title">Are you sure you want to finish?</h2>
             <p id="mock-submit-confirm-copy">
-              You still have <strong>{formatTime(timeRemaining)}</strong> left. Once you submit, you won't be able to change your answers.
+              You still have <strong>{formatTime(timeRemaining)}</strong> left. Once you submit, you won&apos;t be able to change your answers.
             </p>
             {unansweredCount > 0 && (
               <div className="mock-submit-confirm-warning">
