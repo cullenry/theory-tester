@@ -67,6 +67,8 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
   const incorrectCount = answeredCount - correctCount;
   const unansweredCount = test.length - answeredCount;
   const percentage = test.length ? Math.round((correctCount / test.length) * 100) : 0;
+  const passThreshold = activeFormat.questionCount === 40 ? 35 : Math.ceil(activeFormat.questionCount * 0.8);
+  const passed = correctCount >= passThreshold;
 
   useEffect(() => {
     if (!hasStarted || submitted) return;
@@ -201,6 +203,14 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
       <main className="app-main"><div className="page-shell results-shell">
         <div className="page-heading"><div><p className="eyebrow">{timeExpired ? "Time limit reached" : "Mock test complete"}</p><h1>{activeFormat.title} Complete</h1></div><span className="result-grade">{percentage}%</span></div>
         <div className="result-scoreline"><strong>{correctCount} / {test.length}</strong><span>{percentage}% correct</span></div>
+        <div className="results-status" aria-live="polite">
+          <strong>{passed ? "Pass" : "Not yet passed"}</strong>
+          <span>
+            {passed
+              ? `You met the mock-test target with ${correctCount} correct answers.`
+              : `You need ${Math.max(0, passThreshold - correctCount)} more correct answers to reach the pass mark of ${passThreshold}/${test.length}.`}
+          </span>
+        </div>
         <div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{incorrectCount}</strong><span>Incorrect</span></div><div><strong>{unansweredCount}</strong><span>Unanswered</span></div><div><strong>{percentage}%</strong><span>Percentage</span></div></div>
         <div className="results-actions"><button className="button button-primary" type="button" onClick={retakeTest}>Retake {activeFormat.title} <span aria-hidden="true">↻</span></button><ShareResultButton title="My TheoryPrep result" text={`I got ${correctCount}/${test.length} on TheoryPrep 🚗 Can you beat me?`} url={`${typeof window !== "undefined" ? window.location.origin : "https://theoryprep.irish"}/mock-test`} />{incorrectCount > 0 && <Link className="button button-secondary" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/">Back to Home</Link></div>
         <section className="review-section"><p className="eyebrow">Answer review</p><h2>Every question, at a glance</h2><ol className="review-list">{test.map((question, index) => {

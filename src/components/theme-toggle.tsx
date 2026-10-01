@@ -1,21 +1,31 @@
 "use client";
 
-/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
+import { useLayoutEffect } from "react";
 
-import { useEffect, useState } from "react";
+let themeTransitionTimeout: number | undefined;
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    setIsDark(document.documentElement.classList.contains("dark"));
+  useLayoutEffect(() => {
+    try {
+      document.documentElement.classList.toggle(
+        "dark",
+        localStorage.getItem("theorytester-theme") === "dark",
+      );
+    } catch {
+      // The pre-hydration initializer also tolerates unavailable local storage.
+    }
   }, []);
 
   function toggleTheme() {
-    const nextIsDark = !isDark;
-    document.documentElement.classList.toggle("dark", nextIsDark);
+    const root = document.documentElement;
+    const nextIsDark = !root.classList.contains("dark");
+    root.classList.add("theme-transition");
+    root.classList.toggle("dark", nextIsDark);
+    window.clearTimeout(themeTransitionTimeout);
+    themeTransitionTimeout = window.setTimeout(() => {
+      root.classList.remove("theme-transition");
+    }, 280);
     localStorage.setItem("theorytester-theme", nextIsDark ? "dark" : "light");
-    setIsDark(nextIsDark);
   }
 
   return (
@@ -23,11 +33,11 @@ export function ThemeToggle() {
       className="theme-toggle"
       type="button"
       onClick={toggleTheme}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label="Switch colour theme"
+      title="Switch colour theme"
     >
-      <span aria-hidden="true">{isDark ? "☀" : "☾"}</span>
-      <span className="theme-toggle-label">{isDark ? "Light" : "Dark"}</span>
+      <span className="theme-toggle-icon" aria-hidden="true" />
+      <span className="theme-toggle-label" aria-hidden="true" />
     </button>
   );
 }

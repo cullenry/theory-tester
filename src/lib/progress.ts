@@ -297,6 +297,15 @@ export async function getTestCompletionCount(): Promise<number | null> {
   const { data, error } = await supabase.rpc("get_mock_test_count");
 
   if (error) {
+    const permissionDenied =
+      error.code === "42501" ||
+      error.code === "PGRST301" ||
+      /permission denied|does not have permission|not authorized|not allowed/i.test(error.message);
+
+    if (permissionDenied) {
+      return null;
+    }
+
     console.warn("Could not load global mock test count:", error.message);
     return null;
   }
