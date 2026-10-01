@@ -654,15 +654,202 @@ html.dark .account-signout:hover { background: #262626; color: #fff; }
 .mock-history-row small, .mock-history-row span { color: var(--muted); font-size: 10px; }
 .mock-history-row > span { color: var(--green); font-weight: 750; }
 
-.readiness-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 13px 28px; margin-bottom: 14px; }
-.readiness-card > div:first-child p:not(.eyebrow) { max-width: 650px; margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
-.readiness-score { display: flex; align-items: baseline; gap: 4px; }
-.readiness-score strong { font-family: Georgia, serif; font-size: 44px; font-weight: 500; line-height: 1; }
-.readiness-score span { color: var(--muted); font-size: 13px; }
-.readiness-bar { grid-column: 1 / -1; height: 8px; overflow: hidden; border-radius: 999px; background: #e8eee9; }
-.readiness-bar span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
-.readiness-facts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 22px; color: var(--muted); font-size: 11px; }
-.readiness-facts span::before { content: "•"; margin-right: 6px; color: var(--green); }
+/* Practice readiness card: give the headline, gauge and next action distinct space. */
+.readiness-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  align-items: center;
+  gap: 21px 34px;
+  margin-bottom: 14px;
+}
+
+.readiness-overview {
+  min-width: 0;
+}
+
+.readiness-overview h2 {
+  margin: 7px 0 9px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -.45px;
+  line-height: 1.05;
+}
+
+.readiness-overview > p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.readiness-gauge {
+  position: relative;
+  display: grid;
+  width: 124px;
+  height: 124px;
+  flex: 0 0 124px;
+  place-items: center;
+  justify-self: end;
+}
+
+.readiness-gauge svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: rotate(-90deg);
+}
+
+.readiness-gauge-track,
+.readiness-gauge-progress {
+  fill: none;
+  stroke-width: 8;
+}
+
+.readiness-gauge-track {
+  stroke: #e7eee9;
+}
+
+.readiness-gauge-progress {
+  stroke: var(--green);
+  stroke-dasharray: 270.18;
+  stroke-linecap: round;
+}
+
+.readiness-gauge span {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.readiness-gauge span small {
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.readiness-focus {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 17px 18px 18px;
+  border: 1px solid #cfe0d3;
+  border-radius: 12px;
+  background: #f5faf6;
+}
+
+.readiness-focus-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.readiness-focus-heading > div {
+  min-width: 0;
+}
+
+.readiness-focus-heading h3 {
+  margin: 5px 0 0;
+  max-width: 760px;
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: -.15px;
+  line-height: 1.25;
+}
+
+.readiness-focus-heading > strong {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--green-dark);
+  font-size: 17px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.readiness-focus-heading > strong span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.readiness-topic-bar {
+  height: 7px;
+  margin-top: 13px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dfe9e1;
+}
+
+.readiness-topic-bar span {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: inherit;
+  background: var(--green);
+}
+
+.readiness-milestone {
+  margin: 11px 0 13px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.readiness-practice-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 128px;
+  justify-content: center;
+}
+
+.readiness-facts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.readiness-facts span {
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface);
+  line-height: 1.4;
+}
+
+.readiness-facts span::before {
+  content: "•";
+  margin-right: 5px;
+  color: var(--green);
+}
+
+html.dark .readiness-gauge-track {
+  stroke: #303a33;
+}
+
+html.dark .readiness-focus {
+  border-color: #3f5a46;
+  background: #1b271f;
+}
+
+html.dark .readiness-topic-bar {
+  background: #29372d;
+}
 
 .topic-performance-list { display: grid; gap: 11px; margin-top: 15px; }
 .topic-performance-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 5px 13px; align-items: center; }
@@ -725,7 +912,12 @@ html.dark .mistake-row > span { background: #35201d; color: #eea39a; }
   .progress-hero { align-items: flex-start; flex-direction: column; }
   .progress-hero h1 { font-size: 32px; }
   .progress-main-grid { grid-template-columns: 1fr; }
-  .readiness-card { grid-template-columns: 1fr auto; }
+  .readiness-card { grid-template-columns: minmax(0, 1fr) 108px; gap: 18px 18px; }
+  .readiness-gauge { width: 104px; height: 104px; flex-basis: 104px; }
+  .readiness-gauge span { font-size: 24px; }
+  .readiness-focus-heading { align-items: flex-start; gap: 11px; }
+  .readiness-focus-heading h3 { font-size: 16px; }
+  .readiness-facts { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .achievement-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .mistake-setup-card { padding: 24px 20px; }
   .mistake-setup-card > h1 { font-size: 29px; }
@@ -739,10 +931,16 @@ html.dark .mistake-row > span { background: #35201d; color: #eea39a; }
   .stat-card { min-height: 126px; padding: 15px; }
   .stat-card strong { font-size: 25px; }
   .progress-feature-card { padding: 17px; }
+  .readiness-card { grid-template-columns: 1fr; gap: 16px; }
+  .readiness-overview h2 { font-size: 29px; }
+  .readiness-gauge { justify-self: start; width: 96px; height: 96px; flex-basis: 96px; }
+  .readiness-gauge span { font-size: 22px; }
+  .readiness-focus { padding: 15px; }
+  .readiness-focus-heading { flex-direction: column; }
+  .readiness-facts { grid-template-columns: 1fr; }
   .achievement-grid { grid-template-columns: 1fr; }
   .mock-history-row { grid-template-columns: 1fr auto; }
   .mock-history-row > span { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
-  .readiness-score strong { font-size: 38px; }
 }
 
 /* Homepage streak widget */
