@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
+
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
