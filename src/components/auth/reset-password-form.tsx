@@ -44,7 +44,27 @@ export function ResetPasswordForm() {
       }
     });
 
-    supabase.auth.getSession().then(({ data, error }) => {
+    const initialiseRecovery = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (!mounted) return;
+
+        if (error) {
+          markInvalid();
+          return;
+        }
+
+        window.history.replaceState({}, "", "/reset-password");
+        markAuthenticated();
+        return;
+      }
+
+      const { data, error } = await supabase.auth.getSession();
+
       if (!mounted) return;
 
       if (error) {
@@ -55,10 +75,11 @@ export function ResetPasswordForm() {
       if (data.session?.user) {
         markAuthenticated();
       }
-      // When the recovery URL contains a browser fragment, Supabase processes it
-      // on the client and emits PASSWORD_RECOVERY; leave the loading state alone
-      // until that event arrives instead of prematurely sending the user to login.
-    });
+      // Supabase may also establish a browser recovery session from URL fragments.
+      // The PASSWORD_RECOVERY listener above handles that case.
+    };
+
+    void initialiseRecovery();
 
     return () => {
       mounted = false;
