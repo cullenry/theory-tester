@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "scrape": "node scripts/scrape-theory-tester.mjs",
-    "typecheck": "tsc --noEmit",
-    "security:scan": "gitleaks git --redact --verbose"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
