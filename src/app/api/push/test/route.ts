@@ -2,10 +2,14 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { pushConfigured, sendTheoryPrepPush } from "@/lib/push-server";
+import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: Request) {
+  const rate = rateLimit(request, { scope: "push-test", limit: 3, windowMs: 10 * 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
+
   if (!pushConfigured) return NextResponse.json({ error: "Push is not configured yet." }, { status: 503 });
 
   const supabase = await createClient();
