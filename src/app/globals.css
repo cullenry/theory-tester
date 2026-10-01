@@ -2960,7 +2960,7 @@ html.dark .site-footer-links .support-link {
 }
 .seo-links-section {
   width: min(1000px, calc(100% - 48px));
-  margin: 0 auto;
+  margin: 52px auto 0;
   padding: 0 0 76px;
 }
 .seo-home-links {
