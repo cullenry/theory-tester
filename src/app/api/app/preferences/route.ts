@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
 
 const DEFAULTS = {
   daily_goal: 20,
@@ -31,7 +32,10 @@ async function loadPreferences(userId: string) {
   return data ?? { ...DEFAULTS, last_reminder_sent_on: null };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const rate = rateLimit(request, { scope: "app-preferences-read", limit: 60, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
+
   const user = await getUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
@@ -44,21 +48,46 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  const rate = rateLimit(request, { scope: "app-preferences-write", limit: 30, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
+
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 8 * 1024) {
+    return NextResponse.json({ error: "Request body is too large." }, { status: 413 });
+  }
+
   const user = await getUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
-  const body = await request.json();
+  let rawBody: unknown;
+  try {
+    rawBody = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody)) {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  const body = rawBody as Record<string, unknown>;
   const existing = await loadPreferences(user.id);
   const dailyGoal = body.daily_goal === undefined ? existing.daily_goal : Number(body.daily_goal);
   const remindersEnabled = body.reminders_enabled === undefined
     ? existing.reminders_enabled
-    : Boolean(body.reminders_enabled);
+    : typeof body.reminders_enabled === "boolean"
+      ? body.reminders_enabled
+      : existing.reminders_enabled;
   const streakGuardEnabled = body.streak_guard_enabled === undefined
     ? existing.streak_guard_enabled
-    : Boolean(body.streak_guard_enabled);
-  const timezone = typeof body.reminder_timezone === "string" && body.reminder_timezone.length < 80
-    ? body.reminder_timezone
-    : existing.reminder_timezone;
+    : typeof body.streak_guard_enabled === "boolean"
+      ? body.streak_guard_enabled
+      : existing.streak_guard_enabled;
+  const timezone = typeof body.reminder_timezone === "string" &&
+    body.reminder_timezone.length > 0 &&
+    body.reminder_timezone.length < 80
+      ? body.reminder_timezone
+      : existing.reminder_timezone;
 
   if (![10, 20, 30].includes(dailyGoal)) {
     return NextResponse.json({ error: "Invalid daily goal." }, { status: 400 });
