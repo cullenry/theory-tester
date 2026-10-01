@@ -35,7 +35,7 @@ export function DailyMission() {
   useEffect(() => {
     if (!progress?.user) return;
     const today = localDateKey(new Date());
-    // eslint-disable-next-line react-hooks/set-state-in-effect\n    setLearnDone(localStorage.getItem("theorytester-learn-completed-" + progress.user.id) === today);
+    setLearnDone(localStorage.getItem("theorytester-learn-completed-" + progress.user.id) === today);
   }, [progress?.user?.id]);
 
   const todayStats = useMemo(() => {
