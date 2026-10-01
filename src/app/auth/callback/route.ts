@@ -16,6 +16,14 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(new URL(safeNext, url.origin));
     }
+
+    // Keep recovery codes available to the dedicated reset page so it can
+    // complete the exchange in the browser instead of falling through to login.
+    if (safeNext === "/reset-password") {
+      const resetUrl = new URL("/reset-password", url.origin);
+      resetUrl.searchParams.set("code", code);
+      return NextResponse.redirect(resetUrl);
+    }
   }
 
   if (tokenHash && type === "recovery") {
