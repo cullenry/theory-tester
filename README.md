@@ -1,5 +1,7 @@
 # TheoryPrep
 
+**Live site:** https://theoryprep.irish
+
 TheoryPrep is a modern Irish driving theory test study app built around the full question bank, short practice sessions, mock exams, progress tracking and an adaptive learning course.
 
 The aim is to make studying feel less like working through a long list of questions and more like following a simple plan: learn the material, practise it, review mistakes and build confidence before test day.
@@ -80,7 +82,7 @@ When a signed-in user answers questions offline, their attempts are stored local
 
 ## Accounts and data
 
-Supabase is used for authentication and persistent user data.
+Supabase is used for authentication and persistent user data. Signed-in users can delete their account from Settings; account deletion is performed server-side and the database's foreign-key relationships remove the associated user-owned records.
 
 User-specific features include:
 
@@ -95,6 +97,8 @@ User-specific features include:
 Row Level Security is enabled for user-owned data so account data is scoped to the signed-in user.
 
 ## Security
+
+The app keeps server-only Supabase credentials out of browser code, verifies mock-test submissions on the server, uses Row Level Security for user-owned data, validates account display names and protects sensitive server routes against oversized or malformed input. A CI secret scan is also configured with Gitleaks.
 
 Mock test completion is verified on the server rather than trusting the score calculated in the browser.
 
@@ -137,6 +141,8 @@ Server-only Supabase credentials must never be exposed to the browser or committ
     │   └── types/                  # Shared TypeScript declarations
     ├── supabase/
     │   └── migrations/             # Database migrations
+    ├── .github/
+    │   └── workflows/              # CI and secret scanning
     ├── package.json
     └── README.md
 
@@ -159,9 +165,10 @@ For a production build:
     npm run build
     npm run start
 
-Run the linter with:
+Run the linter and type checker with:
 
     npm run lint
+    npm run typecheck
 
 ## Environment variables
 
@@ -211,7 +218,9 @@ It is protected by CRON_SECRET and only sends reminders to users who have opted 
 
 ## Question data
 
-The project currently contains 805 theory test questions in src/data/questions.json.
+The project currently contains 805 theory test questions in src/data/questions.json. The dataset records its source URL and the time it was scraped; the current dataset was scraped on 28 September 2026.
+
+The question data is separate from the repository's original source-code licence. Before redistributing or commercially using question text, answers, explanations or other third-party content, verify that you have the necessary permission or licence from the relevant rights holder.
 
 The repository also includes a scraper used to refresh the question data:
 
@@ -237,6 +246,10 @@ TheoryPrep's original source code, design, branding and original assets are prop
 See the [LICENSE](LICENSE) file for the full terms.
 
 Third-party dependencies and external content may have separate licences or rights.
+
+## Quality checks
+
+Every push and pull request runs linting, TypeScript type checking, a production build and a full-history secret scan in GitHub Actions. Vercel Git deployments remain intentionally disabled so production releases can be chosen manually.
 
 ## Status
 
