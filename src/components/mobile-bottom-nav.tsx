@@ -58,7 +58,7 @@ function Icon({ name }: { name: "home" | "learn" | "mock" | "questions" | "topic
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4.5 6.2c2.5-1.3 5-.9 7.5.7v12.1c-2.5-1.6-5-2-7.5-.7z" />
-        <path d="M19.5 6.2c-2.5-1.3-5-.9-7.5.7v12.1c-2.5-1.6-5-.9-7.5-.7z" />
+        <path d="M19.5 6.2c-2.5-1.3-5-.9-7.5.7v12.1c-2.5-1.6-5-2-7.5-.7z" />
         <path d="M12 8.1v9.8M9.2 11.5h.01M14.8 11.5h.01M9.2 14.8h.01M14.8 14.8h.01" />
       </svg>
     );
