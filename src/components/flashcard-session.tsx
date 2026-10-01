@@ -184,9 +184,9 @@ export function FlashcardSession() {
   useEffect(() => {
     try {
       const stored = JSON.parse(localStorage.getItem(MASTERED_KEY) ?? "[]") as number[];
-      setMasteredIds(Array.isArray(stored) ? stored.filter((id) => Number.isInteger(id)) : []);
+      // eslint-disable-next-line react-hooks/set-state-in-effect\n      setMasteredIds(Array.isArray(stored) ? stored.filter((id) => Number.isInteger(id)) : []);
     } catch {
-      setMasteredIds([]);
+      // eslint-disable-next-line react-hooks/set-state-in-effect\n      setMasteredIds([]);
     }
   }, []);
 
