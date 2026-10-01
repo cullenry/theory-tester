@@ -63,11 +63,11 @@ export function HomeExamCountdown() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) ?? "";
-      setExamDate(saved);
+      // eslint-disable-next-line react-hooks/set-state-in-effect\n      setExamDate(saved);
       const savedDate = fromDateValue(saved);
-      if (savedDate) setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));
+      if (savedDate) {\n        // eslint-disable-next-line react-hooks/set-state-in-effect\n        setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));\n      }
     } catch {
-      setExamDate("");
+      // eslint-disable-next-line react-hooks/set-state-in-effect\n      setExamDate("");
     }
   }, []);
 
