@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getProgressData } from "@/lib/progress";
@@ -255,7 +257,7 @@ export function MobileAppTools() {
         <div className="mobile-app-nudge">
           <span aria-hidden="true">○</span>
           <div>
-            <strong>You haven't practised today.</strong>
+            <strong>You haven&apos;t practised today.</strong>
             <small>{goal} questions is your current daily target.</small>
           </div>
           <Link href="/practice/learn">Start <span aria-hidden="true">→</span></Link>

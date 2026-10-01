@@ -47,7 +47,7 @@ export function QuestionCard({ question, eyebrow, children }: { question: Questi
           <ReportQuestionButton questionId={question.id} questionText={question.question} />
         </div>
       </div>
-      <h1 className="question-title" id={"question-title-" + question.id}>{question.question}</h1>
+      <h2 className="question-title" id={"question-title-" + question.id}>{question.question}</h2>
       <QuestionImage question={question} />
       <div className="answer-list" role="group" aria-labelledby={"question-title-" + question.id}>{children}</div>
     </section>

@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
+
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const STORAGE_KEY = "theorytester-exam-date";
@@ -63,7 +65,9 @@ export function HomeExamCountdown() {
       const saved = localStorage.getItem(STORAGE_KEY) ?? "";
       setExamDate(saved);
       const savedDate = fromDateValue(saved);
-      if (savedDate) setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));
+      if (savedDate) {
+        setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));
+      }
     } catch {
       setExamDate("");
     }

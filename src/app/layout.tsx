@@ -5,7 +5,6 @@ import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 import { MobilePwaManager } from "@/components/mobile-pwa-manager";
 import { AppLaunchSplash } from "@/components/app-launch-splash";
-import Script from "next/script";
 import "./globals.css";
 
 const siteUrl = "https://theoryprep.irish";
@@ -16,7 +15,6 @@ export const metadata: Metadata = {
   title: { default: "Irish Driving Theory Test 2026 | TheoryPrep", template: "%s | TheoryPrep" },
   description:
     "Practise 805 Irish driving theory questions for 2026, take realistic mock tests, study clear explanations and track your progress online — free with TheoryPrep.",
-  alternates: { canonical: "/" },
   openGraph: {
     title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
@@ -25,9 +23,18 @@ export const metadata: Metadata = {
     siteName: "TheoryPrep",
     locale: "en_IE",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "TheoryPrep — Irish Driving Theory Test 2026",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
+    images: ["/opengraph-image"],
     title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
       "Practise 805 Irish driving theory questions for 2026, plus mock tests and clear explanations.",
@@ -59,7 +66,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theorytester-theme");var d=t==="dark";if(d)document.documentElement.classList.add("dark");var r=localStorage.getItem("theorytester-reading-mode");if(r==="on")document.documentElement.classList.add("reading-mode")}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body>
         <a className="skip-link" href="#main-content">
           Skip to main content
@@ -73,13 +87,6 @@ export default function RootLayout({
         <MobilePwaManager />
         <AppLaunchSplash />
         <Analytics />
-        <Script
-          id="theoryprep-theme"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theorytester-theme");var d=t==="dark";if(d)document.documentElement.classList.add("dark");var r=localStorage.getItem("theorytester-reading-mode");if(r==="on")document.documentElement.classList.add("reading-mode")}catch(e){}})()`,
-          }}
-        />
       </body>
     </html>
   );

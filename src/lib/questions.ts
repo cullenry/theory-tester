@@ -45,6 +45,8 @@ type QuestionDataset = {
 const dataset = questionData as QuestionDataset;
 
 export const questions = dataset.questions;
+export const questionDatasetSource = dataset.source;
+export const questionDatasetScrapedAt = dataset.scrapedAt;
 
 export function getQuestionById(id: number): Question | undefined {
   return questions.find((question) => question.id === id);

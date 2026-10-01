@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -22,7 +24,7 @@ export function AppLaunchSplash() {
       // Continue without persistence if session storage is unavailable.
     }
 
-    setVisible(true);
+    // Browser-only launch state is intentionally initialised after mount.\n    // eslint-disable-next-line react-hooks/set-state-in-effect\n    setVisible(true);
 
     const hide = window.setTimeout(() => setVisible(false), 700);
     return () => window.clearTimeout(hide);

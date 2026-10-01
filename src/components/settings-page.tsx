@@ -1,4 +1,6 @@
 
+
+/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
 "use client";
 
 import Link from "next/link";
@@ -147,7 +149,7 @@ export function SettingsPageClient() {
           <section className="empty-state settings-login-state">
             <p className="eyebrow">Account settings</p>
             <h1>Sign in to manage your settings.</h1>
-            <p>Your practice preferences and account controls are only available when you're signed in.</p>
+            <p>Your practice preferences and account controls are only available when you&apos;re signed in.</p>
             <Link className="button button-primary" href="/login?next=/settings">
               Sign in <span aria-hidden="true">→</span>
             </Link>

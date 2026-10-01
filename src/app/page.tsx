@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { questions } from "@/lib/questions";
+import { questionDatasetScrapedAt, questions } from "@/lib/questions";
 import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
+import { HomeProofWidget } from "@/components/home-proof-widget";
 
 export const metadata: Metadata = {
   title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
+    images: ["/opengraph-image"],
     title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
     description:
       "Practise 805 Irish driving theory questions, study by topic and take full mock tests.",
@@ -132,12 +134,22 @@ export default function Home() {
               </div>
               <div className="hero-stat">
                 <strong>Free</strong>
-                <span>to get started</span>
+                <span>core practice</span>
               </div>
             </div>
 
             <p className="hero-trust">
               Independent study resource based on official RSA material. Not affiliated with or endorsed by the RSA.
+            </p>
+            <p className="hero-data-freshness">
+              Question bank updated{" "}
+              <time dateTime={questionDatasetScrapedAt}>
+                {new Date(questionDatasetScrapedAt).toLocaleDateString("en-IE", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </time>
             </p>
           </div>
 
@@ -152,6 +164,7 @@ export default function Home() {
             />
           </div>
         </div>
+        <HomeProofWidget />
       </section>
 
       <section className="home-start-section" aria-labelledby="home-start-title">

@@ -4,11 +4,23 @@ const publicKey = process.env.VAPID_PUBLIC_KEY;
 const privateKey = process.env.VAPID_PRIVATE_KEY;
 const subject = process.env.VAPID_SUBJECT || "mailto:hello@theoryprep.irish";
 
-export const pushConfigured = Boolean(publicKey && privateKey);
+export const pushConfigured = (() => {
+  if (!publicKey || !privateKey) return false;
 
-if (pushConfigured) {
-  webpush.setVapidDetails(subject, publicKey!, privateKey!);
-}
+  try {
+    const publicKeyBytes = Buffer.from(publicKey, "base64url");
+    const privateKeyBytes = Buffer.from(privateKey, "base64url");
+
+    if (publicKeyBytes.length !== 65 || privateKeyBytes.length !== 32) {
+      return false;
+    }
+
+    webpush.setVapidDetails(subject, publicKey, privateKey);
+    return true;
+  } catch {
+    return false;
+  }
+})();
 
 export async function sendTheoryPrepPush(
   subscription: { endpoint: string; p256dh: string; auth: string },
