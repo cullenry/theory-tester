@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export function ResetPasswordForm() {
@@ -12,24 +12,57 @@ export function ResetPasswordForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     let mounted = true;
 
-    supabase.auth.getUser().then(({ data, error }) => {
+    const markAuthenticated = () => {
+      if (!mounted) return;
+      setInvalidLink(false);
+      setErrorMessage("");
+      setReady(true);
+    };
+
+    const markInvalid = () => {
+      if (!mounted) return;
+      setInvalidLink(true);
+      setErrorMessage("This password reset link is invalid or has expired. Please request a new one.");
+      setReady(true);
+    };
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
 
-      if (error || !data.user) {
-        setInvalidLink(true);
-        setErrorMessage("This password reset link is invalid or has expired. Please request a new one.");
+      if (event === "PASSWORD_RECOVERY" && session?.user) {
+        markAuthenticated();
+        return;
       }
 
-      setReady(true);
+      if (session?.user) {
+        markAuthenticated();
+      }
+    });
+
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (!mounted) return;
+
+      if (error) {
+        markInvalid();
+        return;
+      }
+
+      if (data.session?.user) {
+        markAuthenticated();
+      }
+      // When the recovery URL contains a browser fragment, Supabase processes it
+      // on the client and emits PASSWORD_RECOVERY; leave the loading state alone
+      // until that event arrives instead of prematurely sending the user to login.
     });
 
     return () => {
       mounted = false;
+      authListener.subscription.unsubscribe();
     };
   }, [supabase]);
 
