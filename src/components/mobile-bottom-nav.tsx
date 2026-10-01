@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { href: "/", label: "Home", icon: "home" },
-  { href: "/practice", label: "Practice", icon: "learn" },
+  { href: "/practice", label: "Practice", icon: "practice" },
   { href: "/mock-test", label: "Mock", icon: "mock" },
   { href: "/practice/learn", label: "Learn", icon: "learn" },
 ] as const;
@@ -43,13 +43,23 @@ function isMoreActive(pathname: string) {
   ) || pathname.startsWith("/theory-test-questions") || pathname.startsWith("/irish-road-signs");
 }
 
-function Icon({ name }: { name: "home" | "learn" | "mock" | "questions" | "topics" | "flashcards" | "mistakes" | "progress" }) {
+function Icon({ name }: { name: "home" | "practice" | "learn" | "mock" | "questions" | "topics" | "flashcards" | "mistakes" | "progress" }) {
   if (name === "home") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3.5 10.5 12 3.8l8.5 6.7" />
         <path d="M5.5 9.7v10.1h13V9.7" />
         <path d="M9.4 19.8v-5.6h5.2v5.6" />
+      </svg>
+    );
+  }
+
+  if (name === "practice") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 5.5h14v13H5z" />
+        <path d="M8.5 9h7M8.5 12h7M8.5 15h4" />
+        <path d="m15.6 15.2 1.4 1.4 2.5-2.7" />
       </svg>
     );
   }
