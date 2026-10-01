@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getDisplayName } from "@/lib/auth/display-name";
 
 const navigation = [
   { href: "/", label: "Home" },
@@ -21,24 +22,6 @@ const moreNavigation = [
   { href: "/mistakes", label: "My mistakes", description: "Review questions you missed" },
   { href: "/progress", label: "My progress", description: "See your scores and history" },
 ];
-
-function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
-  const metadataName =
-    typeof user.user_metadata?.full_name === "string"
-      ? user.user_metadata.full_name.trim()
-      : typeof user.user_metadata?.name === "string"
-        ? user.user_metadata.name.trim()
-        : "";
-
-  if (metadataName) return metadataName;
-
-  const emailName = user.email?.split("@")[0]?.replace(/[._-]+/g, " ").trim();
-  if (!emailName) return "Account";
-
-  return emailName.split(" ").filter(Boolean).map((part) =>
-    part.charAt(0).toUpperCase() + part.slice(1)
-  ).join(" ");
-}
 
 export function SiteHeader() {
   const supabase = useMemo(() => createClient(), []);
