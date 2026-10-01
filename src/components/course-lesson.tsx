@@ -48,7 +48,7 @@ export function CourseLesson({ chapterIndex, lessonIndex }: { chapterIndex: numb
 
   useEffect(() => {
     if (!chapter || !lesson) {
-      setLoading(false);
+      // eslint-disable-next-line react-hooks/set-state-in-effect\n      setLoading(false);
       return;
     }
 
