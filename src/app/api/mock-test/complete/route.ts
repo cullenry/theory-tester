@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getQuestionById } from "@/lib/questions";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
 
 const TEST_FORMATS = {
   full: { questionCount: 40 },
@@ -19,6 +20,14 @@ type CompletionPayload = {
 };
 
 export async function POST(request: Request) {
+  const rate = rateLimit(request, { scope: "mock-test-complete", limit: 12, windowMs: 60_000 });
+  if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
+
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 128 * 1024) {
+    return NextResponse.json({ error: "Request body is too large." }, { status: 413 });
+  }
+
   let body: CompletionPayload;
 
   try {
