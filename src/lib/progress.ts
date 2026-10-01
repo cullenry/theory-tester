@@ -29,6 +29,7 @@ type OfflineAttempt = {
   selected_answer: string | null;
   mode: AttemptMode;
   created_at: string;
+  client_event_id?: string;
 };
 
 const OFFLINE_QUEUE_KEY_PREFIX = "theoryprep-offline-attempts-";
@@ -42,16 +43,37 @@ function readOfflineQueue(userId: string) {
     const raw = localStorage.getItem(offlineQueueKey(userId));
     if (!raw) return [] as OfflineAttempt[];
     const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? parsed.filter((item): item is OfflineAttempt =>
-      Boolean(item && typeof item === "object" &&
-        typeof (item as OfflineAttempt).question_id === "number" &&
-        typeof (item as OfflineAttempt).is_correct === "boolean" &&
-        typeof (item as OfflineAttempt).mode === "string" &&
-        typeof (item as OfflineAttempt).created_at === "string")
-    ) : [];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((item): item is OfflineAttempt =>
+        Boolean(item && typeof item === "object" &&
+          Number.isInteger((item as OfflineAttempt).question_id) &&
+          (item as OfflineAttempt).question_id > 0 &&
+          typeof (item as OfflineAttempt).is_correct === "boolean" &&
+          typeof (item as OfflineAttempt).mode === "string" &&
+          ["practice", "mock", "daily", "smart"].includes((item as OfflineAttempt).mode) &&
+          typeof (item as OfflineAttempt).created_at === "string")
+      )
+      .map((item) => ({
+        ...item,
+        client_event_id:
+          typeof item.client_event_id === "string" && item.client_event_id.length <= 100
+            ? item.client_event_id
+            : createClientEventId(),
+      }));
+
   } catch {
     return [] as OfflineAttempt[];
   }
+}
+
+function createClientEventId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  return `offline-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 function writeOfflineQueue(userId: string, queue: OfflineAttempt[]) {
@@ -64,7 +86,10 @@ function writeOfflineQueue(userId: string, queue: OfflineAttempt[]) {
 }
 
 function queueOfflineAttempt(userId: string, attempt: OfflineAttempt) {
-  writeOfflineQueue(userId, [...readOfflineQueue(userId), attempt]);
+  writeOfflineQueue(userId, [
+    ...readOfflineQueue(userId),
+    { ...attempt, client_event_id: attempt.client_event_id ?? createClientEventId() },
+  ]);
 }
 
 let bookmarkCache: Set<number> | null = null;
@@ -167,7 +192,7 @@ export async function flushOfflineAttempts() {
   const queue = readOfflineQueue(user.id);
   if (!queue.length) return 0;
 
-  const { error } = await supabase.from("question_attempts").insert(
+  const { error } = await supabase.from("question_attempts").upsert(
     queue.map((attempt) => ({
       user_id: user.id,
       question_id: attempt.question_id,
@@ -175,7 +200,9 @@ export async function flushOfflineAttempts() {
       selected_answer: attempt.selected_answer,
       mode: attempt.mode,
       created_at: attempt.created_at,
+      client_event_id: attempt.client_event_id ?? createClientEventId(),
     })),
+    { onConflict: "client_event_id", ignoreDuplicates: true },
   );
 
   if (error) {
@@ -195,6 +222,7 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
 
   if (!user) return;
 
+  const clientEventId = createClientEventId();
   const attempt = {
     user_id: user.id,
     question_id: question.id,
@@ -202,6 +230,7 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
     selected_answer: selectedAnswer,
     mode,
     created_at: createdAt,
+    client_event_id: clientEventId,
   };
 
   if (typeof window !== "undefined" && !navigator.onLine) {
@@ -211,6 +240,7 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
       selected_answer: selectedAnswer,
       mode,
       created_at: createdAt,
+      client_event_id: clientEventId,
     });
     return;
   }
@@ -224,6 +254,7 @@ export async function recordQuestionAttempt(question: Question, selectedAnswer: 
       selected_answer: selectedAnswer,
       mode,
       created_at: createdAt,
+      client_event_id: clientEventId,
     });
     return;
   }
