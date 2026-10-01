@@ -25,9 +25,18 @@ export const metadata: Metadata = {
     siteName: "TheoryPrep",
     locale: "en_IE",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "TheoryPrep — Irish Driving Theory Test 2026",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
+    images: ["/opengraph-image"],
     title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
       "Practise 805 Irish driving theory questions for 2026, plus mock tests and clear explanations.",
