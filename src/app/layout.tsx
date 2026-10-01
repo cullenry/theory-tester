@@ -16,7 +16,6 @@ export const metadata: Metadata = {
   title: { default: "Irish Driving Theory Test 2026 | TheoryPrep", template: "%s | TheoryPrep" },
   description:
     "Practise 805 Irish driving theory questions for 2026, take realistic mock tests, study clear explanations and track your progress online — free with TheoryPrep.",
-  alternates: { canonical: "/" },
   openGraph: {
     title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
