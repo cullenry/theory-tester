@@ -408,17 +408,6 @@ export function PracticeSession() {
               </div>
             </section>
 
-            <section className="learn-launch-card practice-secondary-card">
-              <div className="learn-launch-copy">
-                <p className="eyebrow">Prefer a guided route?</p>
-                <h2>Learn step by step.</h2>
-                <p>Work through short lessons, see explanations as you go and build your knowledge before switching back to mixed practice.</p>
-              </div>
-              <Link className="button button-secondary" href="/practice/learn">
-                Start learning <span aria-hidden="true">→</span>
-              </Link>
-            </section>
-
             <section className="flashcard-launch-card practice-secondary-card">
               <div className="flashcard-launch-icon" aria-hidden="true">
                 <svg viewBox="0 0 32 32" focusable="false">
@@ -436,7 +425,18 @@ export function PracticeSession() {
                 Open flashcards <span aria-hidden="true">→</span>
               </Link>
             </section>
-          </>
+
+
+            <section className="learn-launch-card practice-secondary-card">
+              <div className="learn-launch-copy">
+                <p className="eyebrow">Prefer a guided route?</p>
+                <h2>Learn step by step.</h2>
+                <p>Work through short lessons, see explanations as you go and build your knowledge before switching back to mixed practice.</p>
+              </div>
+              <Link className="button button-secondary" href="/practice/learn">
+                Start learning <span aria-hidden="true">→</span>
+              </Link>
+            </section>          </>
         ) : finished || !current ? (
           <section className="completion-panel">
             <span className="completion-mark" aria-hidden="true">✓</span>
