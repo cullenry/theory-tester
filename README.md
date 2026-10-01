@@ -249,7 +249,7 @@ Third-party dependencies and external content may have separate licences or righ
 
 ## Quality checks
 
-Every push and pull request runs linting, TypeScript type checking, a production build and a full-history secret scan in GitHub Actions. Vercel Git deployments remain intentionally disabled so production releases can be chosen manually.
+Every push and pull request runs linting, TypeScript type checking, a production build and a full-history secret scan in GitHub Actions. Vercel Git deployments remain intentionally disabled so production releases can be chosen manually. After the hardened application is deployed, apply the final streak-reconciliation migration before removing the compatibility grant in Supabase.
 
 ## Status
 
