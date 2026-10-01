@@ -5,20 +5,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getAppPreferences, saveAppPreferences, type AppPreferences } from "@/lib/app-preferences";
 import { createClient } from "@/lib/supabase/client";
+import { getDisplayName } from "@/lib/auth/display-name";
 
 const THEME_KEY = "theorytester-theme";
-
-function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
-  const metadataName =
-    typeof user.user_metadata?.full_name === "string"
-      ? user.user_metadata.full_name.trim()
-      : typeof user.user_metadata?.name === "string"
-        ? user.user_metadata.name.trim()
-        : "";
-
-  if (metadataName) return metadataName;
-  return user.email?.split("@")[0] ?? "Account";
-}
 
 export function SettingsPageClient() {
   const supabase = useMemo(() => createClient(), []);
