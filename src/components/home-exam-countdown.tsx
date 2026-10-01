@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react-hooks/set-state-in-effect -- Browser-only state initialization is intentionally performed after hydration. */
+
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const STORAGE_KEY = "theorytester-exam-date";
