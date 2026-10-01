@@ -66,7 +66,8 @@ export function HomeExamCountdown() {
       setExamDate(saved);
       const savedDate = fromDateValue(saved);
       if (savedDate) {
-        setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));\n      }
+        setViewMonth(new Date(savedDate.getFullYear(), savedDate.getMonth(), 1));
+      }
     } catch {
       setExamDate("");
     }
