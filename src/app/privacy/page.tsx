@@ -38,7 +38,7 @@ export default function PrivacyPage() {
 
         <section className="legal-card">
           <h2>Question data</h2>
-          <p>TheoryPrep is an independent study resource. The question bank is stored as practice data and records its source and refresh date. The repository's source-code licence does not automatically grant rights to third-party question content.</p>
+          <p>TheoryPrep is an independent study resource. The question bank is stored as practice data and records its source and refresh date. The repository&apos;s source-code licence does not automatically grant rights to third-party question content.</p>
         </section>
 
         <section className="legal-card">
