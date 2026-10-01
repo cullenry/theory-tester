@@ -130,17 +130,44 @@ html.dark .home-proof-widget {
 }
 html.dark .hero-trust { color: #aab4ad; }
 .hero-data-freshness {
-  margin: 5px 0 0;
-  color: #87938b;
-  font-size: 10px;
-  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 10px 0 0;
+  padding: 6px 10px;
+  border: 1px solid rgba(120, 147, 130, .28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .5);
+  color: #738078;
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.hero-data-freshness::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: var(--green);
 }
 .hero-data-freshness time {
-  color: #718077;
-  font-weight: 600;
+  color: #536158;
+  font-weight: 650;
 }
-html.dark .hero-data-freshness { color: #929d95; }
-html.dark .hero-data-freshness time { color: #abb6ae; }
+html.dark .hero-data-freshness {
+  border-color: rgba(150, 169, 157, .24);
+  background: rgba(28, 34, 29, .48);
+  color: #a0aaa3;
+}
+html.dark .hero-data-freshness time { color: #c1cac4; }
+
+@media (max-width: 520px) {
+  .hero-data-freshness {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
 
 .road-illustration { position: relative; height: 390px; overflow: hidden; border-radius: 48% 48% 12px 12px; background: #deebdf; }
 .road-sun { position: absolute; top: 34px; right: 68px; width: 92px; height: 92px; border-radius: 50%; background: #f0cb82; }
