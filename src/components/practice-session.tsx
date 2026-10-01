@@ -60,11 +60,12 @@ function TopicPicker({
     };
   }, [open, onOpen]);
 
+  const selectedLabel = label === "Topic" ? "topics" : "subtopics";
   const triggerTitle = isAll
     ? options[0]?.label ?? placeholder
     : selectedOptions.length === 1
       ? selectedOptions[0].label
-      : `${selectedOptions.length} ${label === "Category" ? "categories" : "subcategories"} selected`;
+      : selectedOptions.length + " " + selectedLabel + " selected";
 
   const triggerCount = isAll
     ? options[0]?.count
@@ -92,7 +93,7 @@ function TopicPicker({
         <div className="topic-picker-menu" role="listbox" aria-label={label} aria-multiselectable="true">
           <div className="topic-picker-menu-heading">
             <span>Choose {label.toLowerCase()}</span>
-            <span>{isAll ? "All selected" : `${values.length} selected`}</span>
+            <span>{isAll ? "All selected" : values.length + " selected"}</span>
           </div>
           <div className="topic-picker-options">
             {options.map((option) => {
@@ -116,7 +117,6 @@ function TopicPicker({
               );
             })}
           </div>
-
         </div>
       )}
     </div>
@@ -139,21 +139,25 @@ export function PracticeSession() {
   const [correctCount, setCorrectCount] = useState(0);
   const [openPicker, setOpenPicker] = useState<"category" | "subcategory" | null>(null);
   const questionAnchorRef = useRef<HTMLDivElement>(null);
+
   const selectedCategorySummaries = taxonomyCategories.filter((item) => selectedCategories.includes(item.name));
   const availableSubcategoryOptions = selectedCategorySummaries.flatMap((category) =>
     category.subcategories.map((item) => ({
-      value: `${category.name}\u0000${item.name}`,
+      value: category.name + "\u0000" + item.name,
       label: item.name,
       detail: category.name,
       count: item.count,
     })),
   );
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const category = params.get("category");
+
     if (category && taxonomyCategories.some((item) => item.name === category)) {
       setSelectedCategories([category]);
     }
+
     if (params.get("starred") === "1") {
       setStarredMode(true);
       getStarredQuestionIds().then((ids) => {
@@ -171,13 +175,15 @@ export function PracticeSession() {
     : selectedCategories.length === 0
       ? questions
       : questions.filter((question) => {
-      if (!question.taxonomy.category || !selectedCategories.includes(question.taxonomy.category)) {
-        return false;
-      }
-      if (selectedSubcategories.length === 0) return true;
-      const subcategoryKey = `${question.taxonomy.category}\u0000${question.taxonomy.subcategory}`;
-      return selectedSubcategories.includes(subcategoryKey);
-    });
+          if (!question.taxonomy.category || !selectedCategories.includes(question.taxonomy.category)) {
+            return false;
+          }
+          if (selectedSubcategories.length === 0) return true;
+          const subcategoryKey = question.taxonomy.category + "\u0000" + question.taxonomy.subcategory;
+          return selectedSubcategories.includes(subcategoryKey);
+        });
+
+  const quickStartPool = starredMode ? starredPool : questions;
   const current = session?.[position];
   const finished = session !== null && position >= session.length;
   const answered = selected !== null;
@@ -208,7 +214,11 @@ export function PracticeSession() {
     });
   }, [position, session, finished]);
 
-  const beginSession = (pool: Question[], length: number = sessionLength === "full" ? pool.length : sessionLength, review = false) => {
+  const beginSession = (
+    pool: Question[],
+    length: number = sessionLength === "full" ? pool.length : sessionLength,
+    review = false,
+  ) => {
     const nextSession = getRandomQuestionsFromPool(pool, length);
     setActivePool(pool);
     setSession(nextSession);
@@ -234,34 +244,79 @@ export function PracticeSession() {
       <div className="page-shell practice-shell">
         {session === null ? (
           <>
-            <div className="page-heading"><div><p className="eyebrow">Learn smarter. Practise better.</p><h1>Learn &amp; Practice</h1></div></div>
-                        {starredMode ? (
+            <header className="practice-page-intro">
+              <div>
+                <p className="eyebrow">Start with questions</p>
+                <h1>Practice the Irish theory test.</h1>
+                <p className="practice-page-lead">
+                  Not sure where to begin? Start with a quick set of questions. You can focus on a topic or use the full library whenever you are ready.
+                </p>
+              </div>
+              <div className="practice-intro-count" aria-label={questions.length + " questions in the library"}>
+                <strong>{questions.length}</strong>
+                <span>questions</span>
+              </div>
+            </header>
+
+            {starredMode ? (
               <section className="learn-launch-card starred-practice-banner">
                 <div className="learn-launch-copy">
                   <p className="eyebrow">Saved for later</p>
                   <h2>Practise your starred questions.</h2>
-                  <p>{loadingSpecialMode ? "Loading your saved questions…" : `You have ${starredPool.length} starred question${starredPool.length === 1 ? "" : "s"} ready to practise.`}</p>
-                  <div className="learn-launch-points"><span>Saved questions only</span><span>Fresh attempt history</span><span>Review every answer</span></div>
+                  <p>
+                    {loadingSpecialMode
+                      ? "Loading your saved questions…"
+                      : "You have " + starredPool.length + " starred question" + (starredPool.length === 1 ? "" : "s") + " ready to practise."}
+                  </p>
+                  <div className="learn-launch-points">
+                    <span>Saved questions only</span>
+                    <span>Fresh attempt history</span>
+                    <span>Review every answer</span>
+                  </div>
                 </div>
-                <button className="button button-secondary" type="button" onClick={() => { window.history.replaceState({}, "", "/practice"); setStarredMode(false); }}>Back to all practice</button>
+                <button
+                  className="button button-secondary"
+                  type="button"
+                  onClick={() => {
+                    window.history.replaceState({}, "", "/practice");
+                    setStarredMode(false);
+                  }}
+                >
+                  Back to all practice
+                </button>
               </section>
             ) : null}
-            <div className="practice-feature-stack">
-              <section className="learn-launch-card learn-signin-feature">
-                <div className="learn-launch-copy">
-                  <p className="eyebrow">Learn from scratch</p>
-                  <h2>Work through all 805 questions.</h2>
-                  <p>Take the question bank as a course: short lessons, instant explanations and a second chance for anything that catches you out.</p>
-                </div>
-                <Link className="button button-primary" href="/practice/learn">Learn <span aria-hidden="true">→</span></Link>
-              </section>
-            </div>
 
-            <section className="practice-setup question-card">
-              <p className="eyebrow">Question bank</p>
+            {!starredMode && !loadingSpecialMode && (
+              <section className="quick-start-card" aria-labelledby="quick-start-title">
+                <div className="quick-start-copy">
+                  <p className="eyebrow">Recommended for a first session</p>
+                  <h2 id="quick-start-title">Start with 10 questions.</h2>
+                  <p>It takes a few minutes and gives you an immediate feel for the question style.</p>
+                </div>
+                <button
+                  className="button button-primary"
+                  type="button"
+                  onClick={() => beginSession(quickStartPool, 10)}
+                  disabled={quickStartPool.length < 10}
+                >
+                  Start 10 questions <span aria-hidden="true">→</span>
+                </button>
+              </section>
+            )}
+
+            <section className="practice-setup question-card" aria-labelledby="practice-options-title">
+              <div className="practice-setup-heading">
+                <div>
+                  <p className="eyebrow">Choose your focus</p>
+                  <h2 id="practice-options-title">Want to practise something specific?</h2>
+                </div>
+                <span className="practice-setup-note">{fullSessionLength} available</span>
+              </div>
+
               <div className="practice-filters">
                 <TopicPicker
-                  label="Category"
+                  label="Topic"
                   values={selectedCategories}
                   placeholder="All questions"
                   open={openPicker === "category"}
@@ -282,10 +337,11 @@ export function PracticeSession() {
                     ...taxonomyCategories.map((item) => ({ value: item.name, label: item.name, count: item.count })),
                   ]}
                 />
+
                 <TopicPicker
-                  label="Subcategory"
+                  label="Subtopic"
                   values={selectedSubcategories}
-                  placeholder="Choose a category first"
+                  placeholder="Choose a topic first"
                   disabled={selectedCategories.length === 0}
                   open={openPicker === "subcategory"}
                   onOpen={() => setOpenPicker((current) => current === "subcategory" ? null : "subcategory")}
@@ -299,13 +355,14 @@ export function PracticeSession() {
                     );
                   }}
                   options={[
-                    { value: "all", label: "All subcategories", count: selectedCategorySummaries.reduce((total, item) => total + item.count, 0) },
+                    { value: "all", label: "All subtopics", count: selectedCategorySummaries.reduce((total, item) => total + item.count, 0) },
                     ...availableSubcategoryOptions,
                   ]}
                 />
               </div>
+
               <div className="practice-length-row">
-                <span>Session length</span>
+                <span>How many questions?</span>
                 <div className="practice-length-options" role="group" aria-label="Session length">
                   {QUICK_SESSION_LENGTHS.map((length) => {
                     const available = selectedPool.length >= length;
@@ -317,8 +374,8 @@ export function PracticeSession() {
                         disabled={!available}
                         onClick={() => setSessionLength(length)}
                       >
-                        <span>Quick {length}</span>
-                        <small>{available ? length + " questions" : "Not enough questions"}</small>
+                        <span>{length} questions</span>
+                        <small>Quick set</small>
                       </button>
                     );
                   })}
@@ -328,47 +385,156 @@ export function PracticeSession() {
                     onClick={() => setSessionLength("full")}
                     disabled={fullSessionLength === 0}
                   >
-                    <span>Full {fullSessionLength}</span>
-                    <small>All available</small>
+                    <span>All {fullSessionLength}</span>
+                    <small>Full selection</small>
                   </button>
                 </div>
               </div>
-              <div className="practice-start-row"><p>{fullSessionLength === 0 ? "No questions available for this selection." : sessionLengthLabel + " questions in this session"}</p><button className="button button-primary" type="button" disabled={selectedPool.length === 0 || loadingSpecialMode} onClick={() => beginSession(selectedPool)}>{starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span></button></div>
 
+              <div className="practice-start-row">
+                <p>
+                  {fullSessionLength === 0
+                    ? "No questions available for this selection."
+                    : sessionLengthLabel + " questions in this session"}
+                </p>
+                <button
+                  className="button button-primary"
+                  type="button"
+                  disabled={selectedPool.length === 0 || loadingSpecialMode}
+                  onClick={() => beginSession(selectedPool)}
+                >
+                  {starredMode ? "Start starred practice" : "Start practice"} <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </section>
+
+            <section className="flashcard-launch-card practice-secondary-card">
+              <div className="flashcard-launch-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M7.5 11.2v10.1c0 2.2 1.8 4 4 4h13" />
+                  <rect x="6" y="6" width="20" height="15" rx="3.2" />
+                  <path d="M11 11.2h7.2M11 15.3h5.2" />
+                </svg>
+              </div>
+              <div className="flashcard-launch-copy">
+                <p className="eyebrow">Another way to revise</p>
+                <h2>Study with flashcards.</h2>
+                <p>Flip through questions, reveal the answer and reinforce the ones worth remembering.</p>
+              </div>
+              <Link className="button button-secondary" href="/practice/flashcards">
+                Open flashcards <span aria-hidden="true">→</span>
+              </Link>
             </section>
 
 
-            
-            <div className="practice-feature-stack practice-feature-stack-flashcards">
-              <section className="flashcard-launch-card">
-                <div className="flashcard-launch-icon" aria-hidden="true">
-  <svg viewBox="0 0 32 32" focusable="false">
-    <path d="M7.5 11.2v10.1c0 2.2 1.8 4 4 4h13" />
-    <rect x="6" y="6" width="20" height="15" rx="3.2" />
-    <path d="M11 11.2h7.2M11 15.3h5.2" />
-  </svg>
-</div>
-                <div className="flashcard-launch-copy">
-                  <p className="eyebrow">Active recall</p>
-                  <h2>Study with flashcards.</h2>
-                  <p>Flip through questions, reveal the answer, and mark each card as learned or still worth reviewing.</p>
-                </div>
-                <Link className="button button-secondary" href="/practice/flashcards">Start flashcards <span aria-hidden="true">→</span></Link>
-              </section>
-            </div>
-          </>
+            <section className="learn-launch-card practice-secondary-card">
+              <div className="learn-launch-copy">
+                <p className="eyebrow">Prefer a guided route?</p>
+                <h2>Learn step by step.</h2>
+                <p>Work through short lessons, see explanations as you go and build your knowledge before switching back to mixed practice.</p>
+              </div>
+              <Link className="button button-secondary" href="/practice/learn">
+                Start learning <span aria-hidden="true">→</span>
+              </Link>
+            </section>          </>
         ) : finished || !current ? (
-          <section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">{isReviewSession ? "Review complete" : "Session complete"}</p><h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2><p>You answered {session.length} questions and got {correctCount} correct.</p><div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{session.length - correctCount}</strong><span>Incorrect</span></div><div><strong>{Math.round((correctCount / Math.max(1, session.length)) * 100)}%</strong><span>Accuracy</span></div><div><strong>{sessionMissedIds.length}</strong><span>To review</span></div></div><div className="practice-completion-actions">{sessionMissedIds.length > 0 && !isReviewSession && <button className="button button-primary" type="button" onClick={() => { const retryPool = sessionMissedIds.map((id) => questions.find((question) => question.id === id)).filter((question): question is Question => Boolean(question)); beginSession(retryPool, retryPool.length, true); }}>Retry {sessionMissedIds.length} mistake{sessionMissedIds.length === 1 ? "" : "s"} <span aria-hidden="true">→</span></button>}{sessionMissedIds.length > 0 && <Link className="button button-secondary" href="/mistakes">Review my mistakes</Link>}<button className="button button-secondary" type="button" onClick={() => beginSession(activePool)}>Practise another set <span aria-hidden="true">↻</span></button><button className="button button-quiet" type="button" onClick={returnToSetup}>Choose another topic</button></div></section>
+          <section className="completion-panel">
+            <span className="completion-mark" aria-hidden="true">✓</span>
+            <p className="eyebrow">{isReviewSession ? "Review complete" : "Session complete"}</p>
+            <h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2>
+            <p>You answered {session.length} questions and got {correctCount} correct.</p>
+            <div className="results-summary results-summary-four">
+              <div><strong>{correctCount}</strong><span>Correct</span></div>
+              <div><strong>{session.length - correctCount}</strong><span>Incorrect</span></div>
+              <div><strong>{Math.round((correctCount / Math.max(1, session.length)) * 100)}%</strong><span>Accuracy</span></div>
+              <div><strong>{sessionMissedIds.length}</strong><span>To review</span></div>
+            </div>
+            <div className="practice-completion-actions">
+              {sessionMissedIds.length > 0 && !isReviewSession && (
+                <button
+                  className="button button-primary"
+                  type="button"
+                  onClick={() => {
+                    const retryPool = sessionMissedIds
+                      .map((id) => questions.find((question) => question.id === id))
+                      .filter((question): question is Question => Boolean(question));
+                    beginSession(retryPool, retryPool.length, true);
+                  }}
+                >
+                  Retry {sessionMissedIds.length} mistake{sessionMissedIds.length === 1 ? "" : "s"} <span aria-hidden="true">→</span>
+                </button>
+              )}
+              {sessionMissedIds.length > 0 && <Link className="button button-secondary" href="/mistakes">Review my mistakes</Link>}
+              <button className="button button-secondary" type="button" onClick={() => beginSession(activePool)}>
+                Practise another set <span aria-hidden="true">↻</span>
+              </button>
+              <button className="button button-quiet" type="button" onClick={returnToSetup}>
+                Change my options
+              </button>
+            </div>
+          </section>
         ) : (
           <>
-            <div className="page-heading"><div><h1>Practice session</h1></div><div className="practice-heading-actions"><button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button><button className="button button-secondary" type="button" onClick={returnToSetup}>Change topic</button></div></div>
-            <div className="practice-meta"><ProgressBar current={position + 1} total={session.length} label="Session progress" /><ScoreDisplay correct={correctCount} attempted={position + (answered ? 1 : 0)} /></div>
-            <div ref={questionAnchorRef} className="mobile-question-anchor"><QuestionCard question={current} eyebrow={`Question ${position + 1}`}>
-              {current.answers.map((answer, index) => (
-                <AnswerOption key={`${current.id}-${index}`} answer={answer} index={index} selected={selected === answer} disabled={answered} correct={answered && answer === current.correctAnswer} incorrect={answered && selected === answer && answer !== current.correctAnswer} onSelect={() => { setSelected(answer); if (answer === current.correctAnswer) setCorrectCount((score) => score + 1); else setSessionMissedIds((ids) => ids.includes(current.id) ? ids : [...ids, current.id]); void recordQuestionAttempt(current, answer, answer === current.correctAnswer, "practice"); }} />
-              ))}
-            </QuestionCard></div>
-            {answered && <div className="feedback-block"><p className={`feedback-line ${selected === current.correctAnswer ? "feedback-good" : "feedback-bad"}`} role="status"><strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong> {selected === current.correctAnswer ? "That’s the right answer." : "The correct answer is highlighted above."}</p><ExplanationCard explanation={current.explanation} /><button className="button button-primary continue-button" type="button" onClick={() => { setPosition((step) => step + 1); setSelected(null); }}>{position + 1 === session.length ? "Finish session" : "Next question"}<span aria-hidden="true">→</span></button></div>}
+            <div className="page-heading">
+              <div><p className="eyebrow">Keep going</p><h1>Practice session</h1></div>
+              <div className="practice-heading-actions">
+                <button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button>
+                <button className="button button-secondary" type="button" onClick={returnToSetup}>Change options</button>
+              </div>
+            </div>
+
+            <div className="practice-meta">
+              <ProgressBar current={position + 1} total={session.length} label="Session progress" />
+              <ScoreDisplay correct={correctCount} attempted={position + (answered ? 1 : 0)} />
+            </div>
+
+            <div ref={questionAnchorRef} className="mobile-question-anchor">
+              <QuestionCard question={current} eyebrow={"Question " + (position + 1)}>
+                {current.answers.map((answer, index) => (
+                  <AnswerOption
+                    key={current.id + "-" + index}
+                    answer={answer}
+                    index={index}
+                    selected={selected === answer}
+                    disabled={answered}
+                    correct={answered && answer === current.correctAnswer}
+                    incorrect={answered && selected === answer && answer !== current.correctAnswer}
+                    onSelect={() => {
+                      setSelected(answer);
+                      if (answer === current.correctAnswer) setCorrectCount((score) => score + 1);
+                      else setSessionMissedIds((ids) => ids.includes(current.id) ? ids : [...ids, current.id]);
+                      void recordQuestionAttempt(
+                        current,
+                        answer,
+                        answer === current.correctAnswer,
+                        "practice",
+                      );
+                    }}
+                  />
+                ))}
+              </QuestionCard>
+            </div>
+
+            {answered && (
+              <div className="feedback-block">
+                <p className={selected === current.correctAnswer ? "feedback-line feedback-good" : "feedback-line feedback-bad"} role="status">
+                  <strong>{selected === current.correctAnswer ? "Correct." : "Not quite."}</strong>{" "}
+                  {selected === current.correctAnswer ? "That’s the right answer." : "The correct answer is highlighted above."}
+                </p>
+                <ExplanationCard explanation={current.explanation} />
+                <button
+                  className="button button-primary continue-button"
+                  type="button"
+                  onClick={() => {
+                    setPosition((step) => step + 1);
+                    setSelected(null);
+                  }}
+                >
+                  {position + 1 === session.length ? "Finish session" : "Next question"}
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>

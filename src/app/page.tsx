@@ -5,7 +5,6 @@ import { questions } from "@/lib/questions";
 import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
-import { HomeProofWidget } from "@/components/home-proof-widget";
 
 export const metadata: Metadata = {
   title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
@@ -49,11 +48,35 @@ const websiteSchema = {
     "Irish driving theory test practice, topic study and mock tests.",
 };
 
-const modes = [
-  { number: "01", title: "Learn & Practice", description: "Learn from the ground up, target weak spots and practise questions at your own pace.", href: "/practice", action: "Open Learn & Practice" },
-  { number: "02", title: "Mock test", description: "Take a timed 40-question car theory test, then review every answer when you finish.", href: "/mock-test", action: "Take the mock test" },
-  { number: "03", title: "Question library", description: "Browse all 805 questions, search by phrase, filter by topic and save questions for later.", href: "/questions", action: "Browse 805 questions" },
-  { number: "04", title: "Flashcards", description: "Flip through questions, reveal the answer and reinforce the ones worth remembering.", href: "/practice/flashcards", action: "Study with flashcards" },
+const primaryModes = [
+  {
+    number: "01",
+    title: "Practise",
+    description: "Answer questions at your own pace, see the explanation straight away and build accuracy over time.",
+    href: "/practice",
+    action: "Start practising",
+  },
+  {
+    number: "02",
+    title: "Learn",
+    description: "Work through the question bank step by step with short lessons and focused review.",
+    href: "/practice/learn",
+    action: "Start learning",
+  },
+  {
+    number: "03",
+    title: "Mock test",
+    description: "Take a timed test when you want to see how ready you are under realistic conditions.",
+    href: "/mock-test",
+    action: "Take a mock test",
+  },
+];
+
+const secondaryLinks = [
+  { href: "/questions", label: "Question library", description: "Browse all 805 questions" },
+  { href: "/theory-test-topics", label: "Topics", description: "Study one area at a time" },
+  { href: "/practice/flashcards", label: "Flashcards", description: "Revise with active recall" },
+  { href: "/mistakes", label: "My mistakes", description: "Review questions you missed" },
 ];
 
 export default function Home() {
@@ -67,35 +90,57 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
+
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow"><span className="live-dot" /> Free Irish car theory test practice</p>
-            <h1>Get ready for your<br /><span className="hero-irish-text" data-text="Irish car theory test.">Irish car theory test.</span></h1>
-            <p className="hero-description">Practise 805 Irish car theory questions, learn from clear explanations and take timed mock tests — all in your browser. Category B (BW) is the car theory test.</p>
+            <p className="eyebrow hero-eyebrow">
+              <span className="live-dot" aria-hidden="true" />
+              Free Irish car theory test practice
+            </p>
+
+            <h1>
+              Get ready for your
+              <br />
+              <span className="hero-irish-text" data-text="Irish car theory test.">
+                Irish car theory test.
+              </span>
+            </h1>
+
+            <p className="hero-description">
+              Practise {questions.length} Irish car theory questions, learn from clear explanations and take a
+              timed mock test when you are ready.
+            </p>
+
             <div className="hero-actions">
-              <Link className="button button-primary" href="/practice">Start free practice <span aria-hidden="true">→</span></Link>
-              <Link className="button button-secondary" href="/mock-test">Take a mock test</Link>
+              <Link className="button button-primary" href="/practice">
+                Start practising <span aria-hidden="true">→</span>
+              </Link>
+              <Link className="button button-secondary" href="/mock-test">
+                Take a mock test
+              </Link>
             </div>
+
             <div className="hero-proof" aria-label="TheoryPrep practice highlights">
               <div className="hero-stat">
-                <span className="hero-stat-icon" aria-hidden="true">?</span>
                 <strong>{questions.length}</strong>
                 <span>practice questions</span>
               </div>
               <div className="hero-stat">
-                <span className="hero-stat-icon hero-stat-icon-check" aria-hidden="true">✓</span>
                 <strong>40</strong>
                 <span>questions in a mock</span>
               </div>
               <div className="hero-stat">
-                <span className="hero-stat-icon hero-stat-icon-play" aria-hidden="true">▶</span>
                 <strong>Free</strong>
-                <span>to start</span>
+                <span>to get started</span>
               </div>
             </div>
-            <p className="hero-trust">Independent study resource based on official RSA material.</p>
+
+            <p className="hero-trust">
+              Independent study resource based on official RSA material. Not affiliated with or endorsed by the RSA.
+            </p>
           </div>
+
           <div className="hero-art">
             <Image
               src="/images/theorytester-good-luck.png"
@@ -107,19 +152,32 @@ export default function Home() {
             />
           </div>
         </div>
-        <HomeProofWidget />
       </section>
 
-      <section className="seo-content-section seo-home-guide-section" aria-labelledby="seo-home-guide-title">
-        <div className="section-heading seo-section-heading">
+      <section className="home-start-section" aria-labelledby="home-start-title">
+        <div className="section-heading home-start-heading">
           <div>
-            <p className="eyebrow">Irish driving theory test 2026</p>
-            <h2 id="seo-home-guide-title">Prepare with questions, explanations and realistic mock tests.</h2>
+            <p className="eyebrow">Start here</p>
+            <h2 id="home-start-title">Choose one way to prepare.</h2>
           </div>
           <p>
-            Use TheoryPrep to study the Irish car theory test at your own pace. Practise individual topics,
-            review answers and explanations, then use a full mock test to check your knowledge under timed conditions.
+            You do not need to learn everything at once. Pick the route that fits where you are right now.
           </p>
+        </div>
+
+        <div className="home-primary-modes">
+          {primaryModes.map((mode, index) => (
+            <Link className={index === 0 ? "home-primary-mode home-primary-mode-featured" : "home-primary-mode"} href={mode.href} key={mode.number}>
+              <span className="home-primary-mode-number">{mode.number}</span>
+              <div>
+                <h3>{mode.title}</h3>
+                <p>{mode.description}</p>
+              </div>
+              <span className="home-primary-mode-action">
+                {mode.action} <span aria-hidden="true">↗</span>
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -129,35 +187,26 @@ export default function Home() {
         <DailyMission />
       </div>
 
-      <section className="pathway-section" aria-labelledby="pathway-title">
-        <div className="pathway-copy">
-          <p className="eyebrow">A simple route to test day</p>
-          <h2 id="pathway-title">Learn. Practise. Get test-ready.</h2>
-          <p>Start with the rules, strengthen weak areas with focused practice, then put yourself under time pressure with a timed mock test.</p>
-          <Link className="button button-secondary" href="/practice">Start practising <span aria-hidden="true">→</span></Link>
+      <section className="seo-content-section seo-home-guide-section" aria-labelledby="seo-home-guide-title">
+        <div className="section-heading seo-section-heading">
+          <div>
+            <p className="eyebrow">Irish driving theory test 2026</p>
+            <h2 id="seo-home-guide-title">Everything you need for your theory-test revision.</h2>
+          </div>
+          <p>
+            Practise the questions, study specific topics, review mistakes and use a mock test to check your
+            progress.
+          </p>
         </div>
-        <div className="pathway-art">
-          <Image
-            src="/images/theorytester-learn-practise-pass.png"
-            alt="Illustration showing learn, practise and pass for Irish driving theory preparation"
-            width={745}
-            height={480}
-            sizes="(max-width: 760px) 100vw, 520px"
-          />
-        </div>
-      </section>
 
-      <section className="modes-section" aria-labelledby="modes-title">
-        <div className="section-heading">
-          <div><p className="eyebrow">Your next step</p><h2 id="modes-title">Practice your way.</h2></div>
-          <p>Whether you have five minutes or a full study session, there’s a good place to begin.</p>
-        </div>
-        <div className="mode-list">
-          {modes.map((mode) => (
-            <Link className="mode-row" href={mode.href} key={mode.number}>
-              <span className="mode-number">{mode.number}</span>
-              <div className="mode-copy"><h3>{mode.title}</h3><p>{mode.description}</p></div>
-              <span className="mode-action">{mode.action}<span aria-hidden="true"> ↗</span></span>
+        <div className="home-resource-grid">
+          {secondaryLinks.map((item) => (
+            <Link className="home-resource-card" href={item.href} key={item.href}>
+              <span>
+                <strong>{item.label}</strong>
+                <small>{item.description}</small>
+              </span>
+              <span aria-hidden="true">↗</span>
             </Link>
           ))}
         </div>
@@ -165,9 +214,13 @@ export default function Home() {
 
       <section className="seo-links-section" aria-labelledby="seo-links-title">
         <div className="section-heading">
-          <div><p className="eyebrow">Popular searches</p><h2 id="seo-links-title">Find the right place to start.</h2></div>
-          <p>Jump straight to the TheoryPrep guide or practice page that matches what you are looking for.</p>
+          <div>
+            <p className="eyebrow">Useful guides</p>
+            <h2 id="seo-links-title">Looking for something specific?</h2>
+          </div>
+          <p>Jump straight to the guide that matches what you searched for.</p>
         </div>
+
         <div className="seo-home-links">
           <Link href="/theory-test-practice">Irish theory test practice <span aria-hidden="true">↗</span></Link>
           <Link href="/theory-test-questions">Irish theory test questions <span aria-hidden="true">↗</span></Link>

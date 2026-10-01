@@ -9,7 +9,7 @@ export default async function ProgressPage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login");
+    redirect("/login?next=/progress");
   }
 
   return <ProgressDashboard />;
