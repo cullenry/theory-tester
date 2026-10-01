@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const alt = "TheoryPrep — Irish Driving Theory Test 2026";
 export const size = {
   width: 1200,
