@@ -176,7 +176,6 @@ export function LearnCourse() {
 
         <div className="course-footer-actions">
           <Link className="button button-secondary" href="/questions">Browse all 805 questions</Link>
-          <Link className="button button-quiet" href="/practice">Back to Learn &amp; Practice</Link>
         </div>
       </div>
     </main>
