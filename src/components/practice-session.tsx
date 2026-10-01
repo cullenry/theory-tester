@@ -10,6 +10,14 @@ import { taxonomyCategories } from "@/lib/question-taxonomy";
 import { getStarredQuestionIds, recordQuestionAttempt } from "@/lib/progress";
 
 const QUICK_SESSION_LENGTHS = [10, 20] as const;
+const UNASSIGNED_CATEGORY = "Extra road knowledge";
+const unassignedQuestions = questions.filter((question) => !question.taxonomy.category);
+const practiceCategories = [
+  ...taxonomyCategories,
+  ...(unassignedQuestions.length
+    ? [{ name: UNASSIGNED_CATEGORY, count: unassignedQuestions.length, subcategories: [] }]
+    : []),
+];
 type SessionLength = 10 | 20 | "full";
 
 type PickerOption = {
@@ -127,6 +135,7 @@ function TopicPicker({
 
 export function PracticeSession() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [categoryPreset, setCategoryPreset] = useState(false);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [session, setSession] = useState<Question[] | null>(null);
   const [sessionLength, setSessionLength] = useState<SessionLength>(20);
@@ -142,7 +151,7 @@ export function PracticeSession() {
   const [openPicker, setOpenPicker] = useState<"category" | "subcategory" | null>(null);
   const questionAnchorRef = useRef<HTMLDivElement>(null);
 
-  const selectedCategorySummaries = taxonomyCategories.filter((item) => selectedCategories.includes(item.name));
+  const selectedCategorySummaries = practiceCategories.filter((item) => selectedCategories.includes(item.name));
   const availableSubcategoryOptions = selectedCategorySummaries.flatMap((category) =>
     category.subcategories.map((item) => ({
       value: category.name + "\u0000" + item.name,
@@ -156,8 +165,9 @@ export function PracticeSession() {
     const params = new URLSearchParams(window.location.search);
     const category = params.get("category");
 
-    if (category && taxonomyCategories.some((item) => item.name === category)) {
+    if (category && practiceCategories.some((item) => item.name === category)) {
       setSelectedCategories([category]);
+      setCategoryPreset(true);
     }
 
     if (params.get("starred") === "1") {
@@ -177,11 +187,10 @@ export function PracticeSession() {
     : selectedCategories.length === 0
       ? questions
       : questions.filter((question) => {
-          if (!question.taxonomy.category || !selectedCategories.includes(question.taxonomy.category)) {
-            return false;
-          }
-          if (selectedSubcategories.length === 0) return true;
-          const subcategoryKey = question.taxonomy.category + "\u0000" + question.taxonomy.subcategory;
+          const category = question.taxonomy.category ?? UNASSIGNED_CATEGORY;
+          if (!selectedCategories.includes(category)) return false;
+          if (category === UNASSIGNED_CATEGORY || selectedSubcategories.length === 0) return true;
+          const subcategoryKey = category + "\u0000" + question.taxonomy.subcategory;
           return selectedSubcategories.includes(subcategoryKey);
         });
 
@@ -289,7 +298,7 @@ export function PracticeSession() {
               </section>
             ) : null}
 
-            {!starredMode && !loadingSpecialMode && (
+            {!starredMode && !loadingSpecialMode && !categoryPreset && (
               <section className="quick-start-card" aria-labelledby="quick-start-title">
                 <div className="quick-start-copy">
                   <p className="eyebrow">Recommended for a first session</p>
@@ -336,7 +345,7 @@ export function PracticeSession() {
                   }}
                   options={[
                     { value: "all", label: "All questions", count: questions.length },
-                    ...taxonomyCategories.map((item) => ({ value: item.name, label: item.name, count: item.count })),
+                    ...practiceCategories.map((item) => ({ value: item.name, label: item.name, count: item.count })),
                   ]}
                 />
 

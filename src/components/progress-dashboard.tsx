@@ -20,7 +20,60 @@ type TopicRow = {
   percent: number;
   accuracy: number | null;
   attempts: number;
+  mastery: number | null;
+  masteryRate: number | null;
+  weightedCorrect: number;
+  weight: number;
 };
+
+const READINESS_TARGET = 0.8;
+const RECENCY_HALF_LIFE_DAYS = 60;
+
+function attemptWeight(createdAt: string, now: number) {
+  const timestamp = new Date(createdAt).getTime();
+  if (!now || !Number.isFinite(timestamp)) return 1;
+
+  const ageDays = Math.max(0, (now - timestamp) / 86_400_000);
+  return Math.pow(0.5, ageDays / RECENCY_HALF_LIFE_DAYS);
+}
+
+function getWeightedAttemptStats(attempts: QuestionAttempt[], now: number) {
+  let weight = 0;
+  let weightedCorrect = 0;
+
+  for (const attempt of attempts) {
+    if (attempt.selected_answer === null) continue;
+    const currentWeight = attemptWeight(attempt.created_at, now);
+    weight += currentWeight;
+    if (attempt.is_correct) weightedCorrect += currentWeight;
+  }
+
+  return {
+    weight,
+    weightedCorrect,
+    rate: weight ? weightedCorrect / weight : null,
+  };
+}
+
+function getWeightedMockAverage(mocks: Awaited<ReturnType<typeof getProgressData>>["mockTests"], now: number) {
+  let totalWeight = 0;
+  let weightedPercentage = 0;
+
+  for (const mock of mocks) {
+    const weight = attemptWeight(mock.created_at, now);
+    totalWeight += weight;
+    weightedPercentage += mock.percentage * weight;
+  }
+
+  return totalWeight ? Math.round(weightedPercentage / totalWeight) : 0;
+}
+
+function getAdditionalCorrectAnswers(topic: TopicRow, target: number) {
+  if (!topic.weight) return 1;
+  const smoothedWeight = topic.weight + 2;
+  const smoothedCorrect = topic.weightedCorrect + 1;
+  return Math.max(0, Math.ceil((target * smoothedWeight - smoothedCorrect) / (1 - target)));
+}
 
 function getDisplayName(user: { user_metadata?: Record<string, unknown>; email?: string | null }) {
   const name =
@@ -130,42 +183,75 @@ function Stat({ label, value, detail }: { label: string; value: string; detail: 
   );
 }
 
-function TestReadiness({ accuracy, mockAverage, topicCoverage }: { accuracy: number; mockAverage: number; topicCoverage: number }) {
+function TestReadiness({ attempts, mocks, topics, topicCoverage, now }: {
+  attempts: QuestionAttempt[];
+  mocks: Awaited<ReturnType<typeof getProgressData>>["mockTests"];
+  topics: TopicRow[];
+  topicCoverage: number;
+  now: number;
+}) {
+  const overallStats = getWeightedAttemptStats(attempts, now);
+  const accuracy = Math.round((overallStats.rate ?? 0) * 100);
+  const mockAverage = getWeightedMockAverage(mocks, now);
   const score = Math.round(accuracy * 0.45 + mockAverage * 0.35 + topicCoverage * 0.2);
-
-  const meaning =
-    score >= 90
-      ? "Your practice data shows strong preparation. Keep testing yourself to stay sharp."
-      : score >= 80
-        ? "You're building a solid base. Target weaker topics and keep taking mocks."
-        : score >= 70
-          ? "You're making good progress. More focused revision should strengthen your weaker areas."
-          : score >= 50
-            ? "You're on your way. Use Learn and targeted practice to build consistency."
-            : "You're still building your base. Regular practice will give this score more meaning.";
+  const practicedTopics = topics.filter((topic) => topic.masteryRate !== null);
+  const weakestTopic = [...practicedTopics]
+    .sort((a, b) => (a.masteryRate ?? 0) - (b.masteryRate ?? 0) || a.percent - b.percent)[0];
+  const recommendedTopic = weakestTopic ?? [...topics].sort((a, b) => a.percent - b.percent)[0];
+  const strongestTopic = [...practicedTopics]
+    .sort((a, b) => (b.masteryRate ?? 0) - (a.masteryRate ?? 0) || b.percent - a.percent)[0];
+  const target = (recommendedTopic?.masteryRate ?? 0) < READINESS_TARGET ? READINESS_TARGET : 0.9;
+  const targetPercent = Math.round(target * 100);
+  const additionalCorrect = recommendedTopic ? getAdditionalCorrectAnswers(recommendedTopic, target) : 0;
+  const masteryPercent = Math.round((recommendedTopic?.masteryRate ?? 0) * 100);
 
   return (
     <section className="progress-feature-card readiness-card" aria-labelledby="test-readiness-title">
-      <div>
-        <p className="eyebrow">Practice benchmark</p>
-        <h2 id="test-readiness-title">Test readiness</h2>
-        <p>
-          A simple score based on your question accuracy, mock-test performance and topic coverage.
-          It reflects your current practice data, not a prediction of your exam result.
+      <div className="readiness-overview">
+        <p className="eyebrow">Practice readiness</p>
+        <h2 id="test-readiness-title">You&apos;re {score}% ready.</h2>
+        <p>This indicator reflects your TheoryPrep practice history, recent mock results and course coverage. It is not a prediction of your real exam result.</p>
+      </div>
+      <div className="readiness-gauge" role="img" aria-label={score + "% practice readiness"}>
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle className="readiness-gauge-track" cx="50" cy="50" r="43" />
+          <circle className="readiness-gauge-progress" cx="50" cy="50" r="43" style={{ strokeDashoffset: 270.18 * (1 - score / 100) }} />
+        </svg>
+        <span>{score}<small>%</small></span>
+      </div>
+
+      <section className="readiness-focus" aria-label="Recommended topic practice">
+        <div className="readiness-focus-heading">
+          <div>
+            <p className="eyebrow">Next focus</p>
+            <h3>{recommendedTopic?.name ?? "Build your topic history"}</h3>
+          </div>
+          <strong>{masteryPercent}%<span> mastery</span></strong>
+        </div>
+        <div className="readiness-topic-bar" role="progressbar" aria-label={(recommendedTopic?.name ?? "Topic") + " mastery"} aria-valuemin={0} aria-valuemax={100} aria-valuenow={masteryPercent}>
+          <span style={{ width: masteryPercent + "%" }} />
+        </div>
+        <p className="readiness-milestone">
+          {recommendedTopic
+            ? recommendedTopic.masteryRate === null
+              ? `Answer ${additionalCorrect} question correctly to start building toward ${targetPercent}% mastery.`
+              : additionalCorrect
+                ? `${additionalCorrect} more correct ${additionalCorrect === 1 ? "answer" : "answers"} to reach ${targetPercent}% mastery.`
+                : `You've reached the ${targetPercent}% mastery milestone. Keep practising to reinforce it.`
+            : "Start practising a topic to build your personal readiness indicator."}
         </p>
-        <p className="readiness-comment">{meaning}</p>
-      </div>
-      <div className="readiness-score" aria-label={score + " out of 100"}>
-        <strong>{score}</strong>
-        <span>/100</span>
-      </div>
-      <div className="readiness-bar" aria-hidden="true">
-        <span style={{ width: score + "%" }} />
-      </div>
+        {recommendedTopic && (
+          <Link className="button button-primary readiness-practice-link" href={"/practice?category=" + encodeURIComponent(recommendedTopic.name)}>
+            Practice <span aria-hidden="true">→</span>
+          </Link>
+        )}
+      </section>
+
       <div className="readiness-facts">
-        <span>{accuracy}% question accuracy</span>
-        <span>{mockAverage}% mock average</span>
+        <span>{accuracy}% recent weighted accuracy</span>
+        <span>{mockAverage}% recent mock average</span>
         <span>{topicCoverage}% topic coverage</span>
+        {strongestTopic && <span>Strongest: {strongestTopic.name} ({strongestTopic.mastery}%)</span>}
       </div>
     </section>
   );
@@ -287,10 +373,12 @@ function RecentMistakes({ questionIds }: { questionIds: number[] }) {
 export function ProgressDashboard() {
   const [data, setData] = useState<Awaited<ReturnType<typeof getProgressData>> | null>(null);
   const [protection, setProtection] = useState<Awaited<ReturnType<typeof getStreakProtection>> | null>(null);
+  const [readinessAsOf, setReadinessAsOf] = useState<number | null>(null);
 
   useEffect(() => {
     getProgressData(2000).then(async (nextData) => {
       setData(nextData);
+      setReadinessAsOf(Date.now());
       if (nextData.user) setProtection(await getStreakProtection());
     });
   }, []);
@@ -308,6 +396,7 @@ export function ProgressDashboard() {
   );
 
   const topics = useMemo<TopicRow[]>(() => {
+    const now = readinessAsOf ?? 0;
     const attempts = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
     const attemptedByQuestion = new Map<number, number>();
 
@@ -321,6 +410,7 @@ export function ProgressDashboard() {
         const chapterAttempts = attempts.filter((attempt) => questionIds.has(attempt.question_id));
         const correct = chapterAttempts.filter((attempt) => attempt.is_correct).length;
         const chapterProgress = getChapterProgress(chapter, courseProgress.seen);
+        const masteryStats = getWeightedAttemptStats(chapterAttempts, now);
 
         return {
           name: chapter.name,
@@ -329,6 +419,10 @@ export function ProgressDashboard() {
           percent: chapterProgress.percent,
           accuracy: chapterAttempts.length ? Math.round((correct / chapterAttempts.length) * 100) : null,
           attempts: [...questionIds].reduce((total, id) => total + (attemptedByQuestion.get(id) ?? 0), 0),
+          mastery: masteryStats.rate === null ? null : Math.round(((masteryStats.weightedCorrect + 1) / (masteryStats.weight + 2)) * 100),
+          masteryRate: masteryStats.rate === null ? null : (masteryStats.weightedCorrect + 1) / (masteryStats.weight + 2),
+          weightedCorrect: masteryStats.weightedCorrect,
+          weight: masteryStats.weight,
         };
       })
       .filter((topic) => topic.total > 0)
@@ -338,14 +432,11 @@ export function ProgressDashboard() {
         }
         return a.percent - b.percent;
       });
-  }, [chapters, data?.attempts, courseProgress.seen]);
+  }, [chapters, data?.attempts, courseProgress.seen, readinessAsOf]);
 
   const answered = (data?.attempts ?? []).filter((attempt) => attempt.selected_answer !== null);
   const correct = answered.filter((attempt) => attempt.is_correct).length;
   const accuracy = answered.length ? Math.round((correct / answered.length) * 100) : 0;
-  const mockAverage = data?.mockTests.length
-    ? Math.round(data.mockTests.reduce((total, test) => total + test.percentage, 0) / data.mockTests.length)
-    : 0;
   const topicCoverage = topics.length
     ? Math.round((topics.filter((topic) => topic.seen > 0).length / topics.length) * 100)
     : 0;
@@ -436,7 +527,7 @@ export function ProgressDashboard() {
           <Stat label="Mock tests" value={String(data.mockTests.length)} detail={data.mockTests.length ? "Completed on this account" : "Take your first mock"} />
         </div>
 
-        <TestReadiness accuracy={accuracy} mockAverage={mockAverage} topicCoverage={topicCoverage} />
+        <TestReadiness attempts={data.attempts} mocks={data.mockTests} topics={topics} topicCoverage={topicCoverage} now={readinessAsOf ?? 0} />
 
         <div className="dashboard-grid">
           <TopicProgress topics={topics} />
