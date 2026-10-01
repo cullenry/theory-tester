@@ -30,5 +30,12 @@ export async function GET(request: Request) {
     }
   }
 
+  // Supabase's browser recovery flow can return the session in the URL hash.
+  // The server cannot read that hash, so let the dedicated reset page handle
+  // the browser-side recovery session instead of incorrectly sending the user to login.
+  if (safeNext === "/reset-password") {
+    return NextResponse.redirect(new URL("/reset-password", url.origin));
+  }
+
   return NextResponse.redirect(new URL("/login?error=auth", url.origin));
 }
