@@ -8028,6 +8028,8 @@ html.dark .practice-intro-count span {
   border: 0;
   background: rgba(18,31,24,.24);
   backdrop-filter: blur(4px);
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .mobile-more-panel {
@@ -8040,6 +8042,8 @@ html.dark .practice-intro-count span {
   overflow: auto;
   padding: 13px;
   border: 1px solid #d4e1d7;
+  pointer-events: auto;
+  touch-action: pan-y;
   border-radius: 17px;
   background: rgba(255,255,255,.98);
   box-shadow: 0 22px 48px rgba(18,42,28,.18);
