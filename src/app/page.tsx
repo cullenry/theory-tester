@@ -132,7 +132,7 @@ export default function Home() {
               </div>
               <div className="hero-stat">
                 <strong>Free</strong>
-                <span>free</span>
+                <span>core practice</span>
               </div>
             </div>
 
