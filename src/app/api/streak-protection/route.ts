@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
 const MAX_SHIELDS = 3;
 
@@ -39,7 +40,7 @@ async function ensurePreferences(supabase: Awaited<ReturnType<typeof createClien
 }
 
 async function reconcile(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
-  const { error } = await supabase.rpc("reconcile_streak_protection", { target_user: userId });
+  const { error } = await supabaseAdmin.rpc("reconcile_streak_protection", { target_user: userId });
   if (error) throw error;
 }
 
