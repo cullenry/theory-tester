@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { MAX_DISPLAY_NAME_LENGTH, sanitizeDisplayName } from "@/lib/auth/display-name";
 
 type AuthMode = "login" | "signup";
 
@@ -39,8 +40,15 @@ export function AuthForm({ mode }: AuthFormProps) {
       return;
     }
 
-    if (isSignup && !fullName.trim()) {
+    const displayName = isSignup ? sanitizeDisplayName(fullName) : "";
+
+    if (isSignup && !displayName) {
       setErrorMessage("Please enter your name.");
+      return;
+    }
+
+    if (isSignup && Array.from(displayName).length > MAX_DISPLAY_NAME_LENGTH) {
+      setErrorMessage(`Your name must be ${MAX_DISPLAY_NAME_LENGTH} characters or fewer.`);
       return;
     }
 
@@ -51,7 +59,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         email,
         password,
         options: {
-          data: { full_name: fullName.trim() },
+          data: { full_name: displayName },
           emailRedirectTo: window.location.origin + "/auth/callback",
         },
       });
@@ -116,20 +124,21 @@ export function AuthForm({ mode }: AuthFormProps) {
           <label className="auth-field">
             <span>Your name</span>
             <input className="auth-input" type="text" autoComplete="name" value={fullName}
-              onChange={(event) => setFullName(event.target.value)} placeholder="Ryan Cullen" required />
+              onChange={(event) => setFullName(sanitizeDisplayName(event.target.value))} placeholder="Ryan Cullen"
+              maxLength={MAX_DISPLAY_NAME_LENGTH} required />
           </label>
         )}
 
         <label className="auth-field">
           <span>Email address</span>
-          <input className="auth-input" type="email" autoComplete="email" value={email}
+          <input className="auth-input" type="email" autoComplete="email" maxLength={254} value={email}
             onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" required />
         </label>
 
         <label className="auth-field">
           <span>Password</span>
           <input className="auth-input" type="password"
-            autoComplete={isSignup ? "new-password" : "current-password"} value={password}
+            autoComplete={isSignup ? "new-password" : "current-password"} maxLength={128} value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder={isSignup ? "At least 6 characters" : "Your password"}
             minLength={isSignup ? 6 : undefined} required />
@@ -143,7 +152,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         {isSignup && (
           <label className="auth-field">
             <span>Confirm password</span>
-            <input className="auth-input" type="password" autoComplete="new-password"
+            <input className="auth-input" type="password" autoComplete="new-password" maxLength={128}
               value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="Enter your password again" minLength={6} required />
           </label>
