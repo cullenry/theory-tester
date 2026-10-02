@@ -258,7 +258,7 @@ export function PracticeSession() {
           <>
             <header className="practice-page-intro">
               <div>
-                <h1>Practice the Irish theory test.</h1>
+                <h1>Practice the Irish theory test</h1>
                 <p className="practice-page-lead">
                   Not sure where to begin? Start with a quick set of questions. You can focus on a topic or use the full library whenever you are ready.
                 </p>
@@ -273,7 +273,7 @@ export function PracticeSession() {
               <section className="learn-launch-card starred-practice-banner">
                 <div className="learn-launch-copy">
                   <p className="eyebrow eyebrow-status">Saved for later</p>
-                  <h2>Practice your starred questions.</h2>
+                  <h2>Practice your starred questions</h2>
                   <p>
                     {loadingSpecialMode
                       ? "Loading your saved questions…"
@@ -302,7 +302,7 @@ export function PracticeSession() {
               <section className="quick-start-card" aria-labelledby="quick-start-title">
                 <div className="quick-start-copy">
                   <p className="eyebrow eyebrow-status">Recommended for a first session</p>
-                  <h2 id="quick-start-title">Start with 10 questions.</h2>
+                  <h2 id="quick-start-title">Start with 10 questions</h2>
                   <p>It takes a few minutes and gives you an immediate feel for the question style.</p>
                 </div>
                 <button
@@ -427,7 +427,7 @@ export function PracticeSession() {
                 </svg>
               </div>
               <div className="flashcard-launch-copy">
-                <h2>Study with flashcards.</h2>
+                <h2>Study with flashcards</h2>
                 <p>Flip through questions, reveal the answer and reinforce the ones worth remembering.</p>
               </div>
               <Link className="button button-secondary" href="/practice/flashcards">
@@ -435,21 +435,21 @@ export function PracticeSession() {
               </Link>
             </section>
 
-
             <section className="learn-launch-card practice-secondary-card">
               <div className="learn-launch-copy">
-                <h2>Learn step by step.</h2>
+                <h2>Learn step by step</h2>
                 <p>Work through short lessons, see explanations as you go and build your knowledge before switching back to mixed practice.</p>
               </div>
               <Link className="button button-secondary" href="/practice/learn">
                 Start learning <span aria-hidden="true">→</span>
               </Link>
-            </section>          </>
+            </section>
+          </>
         ) : finished || !current ? (
           <section className="completion-panel">
             <CompletionScoreGauge percentage={Math.round((correctCount / Math.max(1, session.length)) * 100)} label="Practice accuracy" />
             <p className="eyebrow eyebrow-status">{isReviewSession ? "Review complete" : "Session complete"}</p>
-            <h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2>
+            <h2>{isReviewSession ? "Mistakes get easier with another look" : "Good work. Keep it rolling"}</h2>
             <p>You answered {session.length} questions and got {correctCount} correct.</p>
             <div className="results-summary results-summary-three">
               <div><strong>{correctCount}</strong><span>Correct</span></div>
