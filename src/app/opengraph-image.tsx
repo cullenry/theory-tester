@@ -8,7 +8,9 @@ export const size = {
 };
 export const contentType = "image/png";
 
-const imageUrl = "https://theoryprep.irish/images/theoryprep-og.jpg";
+// Pull the original high-quality artwork directly from the GitHub repo.
+const imageUrl =
+  "https://raw.githubusercontent.com/cullenry/theory-tester/main/public/images/theoryprep-og.jpg";
 
 export default function Image() {
   return new ImageResponse(
