@@ -449,7 +449,7 @@ export function PracticeSession() {
           <section className="completion-panel">
             <CompletionScoreGauge percentage={Math.round((correctCount / Math.max(1, session.length)) * 100)} label="Practice accuracy" />
             <p className="eyebrow eyebrow-status">{isReviewSession ? "Review complete" : "Session complete"}</p>
-            <h2>{isReviewSession ? "Mistakes get easier with another look" : "Good work. Keep it rolling"}</h2>
+            <h2>{isReviewSession ? "Mistakes get easier with another look" : "Good work — keep it rolling"}</h2>
             <p>You answered {session.length} questions and got {correctCount} correct.</p>
             <div className="results-summary results-summary-three">
               <div><strong>{correctCount}</strong><span>Correct</span></div>
