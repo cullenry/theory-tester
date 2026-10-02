@@ -30,7 +30,7 @@ const popularLinks: SeoLink[] = [
   { href: "/theory-test-practice", label: "Theory test practice", description: "Build confidence with focused Irish theory practice." },
   { href: "/theory-test-questions", label: "Theory test questions", description: "Browse the full question library and explanations." },
   { href: "/irish-theory-test-mock-test", label: "Mock test", description: "Put your knowledge under timed test conditions." },
-  { href: "/irish-road-signs", label: "Irish road signs", description: "Practise signs, signals and road markings." },
+  { href: "/irish-road-signs", label: "Irish road signs", description: "Practice signs, signals and road markings." },
   { href: "/irish-driving-theory-test", label: "Irish driving theory test", description: "See how TheoryPrep can fit into your preparation." },
   { href: "/theory-test-topics", label: "Theory test topics", description: "Jump into focused practice by topic." },
 ];
@@ -141,7 +141,7 @@ export function SeoLandingPage({
 
         <section className="seo-content-section seo-popular-section" aria-labelledby="popular-pages-title">
           <div className="section-heading seo-section-heading">
-            <div><p className="eyebrow">Keep exploring</p><h2 id="popular-pages-title">More ways to practise.</h2></div>
+            <div><p className="eyebrow">Keep exploring</p><h2 id="popular-pages-title">More ways to practice.</h2></div>
             <p>Jump straight into the part of TheoryPrep you need next.</p>
           </div>
           <div className="seo-link-grid">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AnswerOption, ExplanationCard, QuestionCard } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { questions, type Question } from "@/lib/questions";
 import { recordQuestionAttempt } from "@/lib/progress";
 
@@ -47,6 +48,7 @@ export function OfflinePractice() {
         <div className="page-shell practice-shell">
           <section className="course-complete-card">
             <p className="eyebrow">Offline session complete</p>
+            <CompletionScoreGauge percentage={Math.round((correct / Math.max(1, set.length)) * 100)} label="Offline practice accuracy" />
             <h1>{correct}/{set.length} correct.</h1>
             <p>Your answers were kept on this device. When you reconnect, TheoryPrep will try to save them to your account.</p>
             <div className="course-complete-actions">

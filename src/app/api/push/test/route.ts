@@ -19,7 +19,8 @@ export async function POST(request: Request) {
   const { data: subscriptions, error } = await supabaseAdmin
     .from("push_subscriptions")
     .select("endpoint, p256dh, auth")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .limit(20);
 
   if (error) return NextResponse.json({ error: "Could not load subscriptions." }, { status: 500 });
 

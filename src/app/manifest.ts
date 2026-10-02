@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "TheoryPrep — Irish Car Theory Test Practice",
     short_name: "TheoryPrep",
     description:
-      "Practise Irish driving theory test questions for 2026, build your confidence and take timed mock tests.",
+      "Practice Irish driving theory test questions for 2026, build your confidence and take timed mock tests.",
     start_url: "/",
     scope: "/",
     display: "standalone",

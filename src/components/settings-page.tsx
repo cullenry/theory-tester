@@ -231,7 +231,7 @@ export function SettingsPageClient() {
           <div className="settings-row">
             <div>
               <strong>Daily reminders</strong>
-              <span>Allow TheoryPrep to send a gentle reminder when you have not practised that day.</span>
+              <span>Allow TheoryPrep to send a gentle reminder when you have not practiced that day.</span>
             </div>
             <button
               className={[

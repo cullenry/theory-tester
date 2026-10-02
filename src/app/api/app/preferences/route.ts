@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
+import { readJsonBody } from "@/lib/security/read-json-body";
 
 const DEFAULTS = {
   daily_goal: 20,
@@ -51,20 +52,14 @@ export async function PUT(request: Request) {
   const rate = rateLimit(request, { scope: "app-preferences-write", limit: 30, windowMs: 60_000 });
   if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
 
-  const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 8 * 1024) {
-    return NextResponse.json({ error: "Request body is too large." }, { status: 413 });
-  }
-
   const user = await getUser();
   if (!user) return NextResponse.json({ error: "Sign in required." }, { status: 401 });
 
-  let rawBody: unknown;
-  try {
-    rawBody = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  const parsedBody = await readJsonBody(request, 8 * 1024);
+  if (!parsedBody.ok) {
+    return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   }
+  const rawBody = parsedBody.value;
 
   if (!rawBody || typeof rawBody !== "object" || Array.isArray(rawBody)) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });

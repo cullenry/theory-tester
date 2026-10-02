@@ -48,7 +48,7 @@ export default async function TheoryTestTopicPage({ params }: TopicPageProps) {
       intro={topic.intro}
       primaryAction={{
         href: `/practice?category=${encodeURIComponent(topic.category)}`,
-        label: "Practise this topic",
+        label: "Practice this topic",
         description: "",
       }}
       secondaryAction={{ href: "/questions", label: "Browse all questions", description: "" }}
@@ -57,7 +57,7 @@ export default async function TheoryTestTopicPage({ params }: TopicPageProps) {
       breadcrumbParent={{ name: "Irish Theory Test Topics", path: "/theory-test-topics" }}
       questionCategory={topic.category}
       sampleHeading={`Questions about ${topic.category.toLowerCase()}.`}
-      sampleDescription={`Practise examples from TheoryPrep's ${topic.category.toLowerCase()} category.`}
+      sampleDescription={`Practice examples from TheoryPrep's ${topic.category.toLowerCase()} category.`}
     />
   );
 }

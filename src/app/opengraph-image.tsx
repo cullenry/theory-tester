@@ -56,7 +56,7 @@ export default function Image() {
             Irish Driving Theory Test 2026
           </div>
           <div style={{ marginTop: 26, fontSize: 29, lineHeight: 1.3, color: "#536158" }}>
-            Practise 805 questions, learn with clear explanations and take timed mock tests.
+            Practice 805 questions, learn with clear explanations and take timed mock tests.
           </div>
         </div>
 

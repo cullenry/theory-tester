@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { MistakePractice } from "@/components/mistake-practice";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Practise your mistakes" };
+export const metadata = { title: "Practice your mistakes" };
 
 export default async function MistakesPage() {
   const supabase = await createClient();

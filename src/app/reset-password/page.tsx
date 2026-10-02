@@ -13,7 +13,7 @@ export default function ResetPasswordPage() {
           <p className="eyebrow">Almost there</p>
           <h2>One fresh start.</h2>
           <p>Choose a new password for your TheoryPrep account, then head straight back into your practice.</p>
-          <div className="auth-side-line"><span>NEW PASSWORD</span><i /><span>SAVE</span><i /><span>PRACTISE</span></div>
+          <div className="auth-side-line"><span>NEW PASSWORD</span><i /><span>SAVE</span><i /><span>PRACTICE</span></div>
         </div>
         <ResetPasswordForm />
       </div>

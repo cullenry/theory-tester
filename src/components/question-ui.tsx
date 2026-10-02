@@ -56,13 +56,23 @@ export function QuestionCard({ question, eyebrow, children }: { question: Questi
 
 export function ExplanationCard({ explanation }: { explanation: string | null }) {
   if (!explanation) return null;
+  const reminderMatch = explanation.match(/\b(?:REMEMBER\s*-\s*|Remember:\s*)(.+)$/);
+  const explanationText = reminderMatch
+    ? explanation.replace(reminderMatch[0], "").trim()
+    : explanation;
+
   return (
     <aside className="explanation-card" aria-label="Explanation">
       <div className="explanation-heading">
         <span className="explanation-icon" aria-hidden="true">i</span>
-        <div><p className="eyebrow">Explanation</p><h2>Why this is the answer</h2></div>
+        <div><p className="eyebrow">Explanation</p><h2>Why it&apos;s correct</h2></div>
       </div>
-      <div className="explanation-copy">{explanation}</div>
+      {explanationText && <div className="explanation-copy">{explanationText}</div>}
+      {reminderMatch && (
+        <p className="explanation-takeaway">
+          <strong>Remember:</strong> {reminderMatch[1]}
+        </p>
+      )}
     </aside>
   );
 }

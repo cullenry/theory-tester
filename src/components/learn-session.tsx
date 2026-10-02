@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { questions, type Question } from "@/lib/questions";
 import { getProgressData, recordQuestionAttempt, type QuestionAttempt } from "@/lib/progress";
 import { buildLearningPlan, type LearningItem } from "@/lib/learning";
@@ -183,6 +184,7 @@ export function LearnSession() {
         <div className="page-shell results-shell">
           <div className="learn-complete-card">
             <p className="eyebrow">Learn session complete</p>
+            <CompletionScoreGauge percentage={Math.round((coreCorrectCount / Math.max(1, plan.length)) * 100)} label="Core question accuracy" />
             <h1>Good work. Your weak spots got another look.</h1>
             <p>
               You answered {plan.length} core questions, got {coreCorrectCount} right and revisited {retryIds.length} question{retryIds.length === 1 ? "" : "s"} you missed.

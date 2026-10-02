@@ -13,7 +13,7 @@ export default function SignupPage() {
           <p className="eyebrow">Your TheoryPrep account</p>
           <h2>Make practice stick.</h2>
           <p>Create your account now, then build on it as we add saved progress, mock-test history and more.</p>
-          <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>PASS</span></div>
+          <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTICE</span><i /><span>PASS</span></div>
         </div>
         <Suspense fallback={null}>
           <AuthForm mode="signup" />

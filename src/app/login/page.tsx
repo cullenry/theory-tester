@@ -12,8 +12,8 @@ export default function LoginPage() {
         <div className="auth-side">
           <p className="eyebrow">Keep your progress close</p>
           <h2>Ready when you are.</h2>
-          <p>Sign in and get straight back to practising the Irish driving theory questions you need.</p>
-          <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTISE</span><i /><span>DRIVE WITH CONFIDENCE</span></div>
+          <p>Sign in and get straight back to practicing the Irish driving theory questions you need.</p>
+          <div className="auth-side-line"><span>LEARN</span><i /><span>PRACTICE</span><i /><span>DRIVE WITH CONFIDENCE</span></div>
         </div>
         <Suspense fallback={null}>
           <AuthForm mode="login" />

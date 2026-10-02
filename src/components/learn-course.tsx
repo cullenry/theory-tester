@@ -134,7 +134,7 @@ export function LearnCourse() {
         <section className="course-adaptive-card" aria-labelledby="adaptive-learning-title">
           <div className="course-adaptive-heading">
             <div>
-              <h2 id="adaptive-learning-title">Your lessons adjust as you practise.</h2>
+              <h2 id="adaptive-learning-title">Your lessons adjust as you practice.</h2>
               <p>
                 TheoryPrep uses your previous answers to shape the order of questions, so difficult material gets more attention while stronger answers are spaced out for later recall.
               </p>

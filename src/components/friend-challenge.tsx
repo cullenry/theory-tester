@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { recordQuestionAttempt } from "@/lib/progress";
 import { ShareResultButton } from "@/components/share-result-button";
 import type { FriendChallengePayload } from "@/lib/challenge-share";
@@ -44,20 +45,19 @@ export function FriendChallenge({ payload, questions, challengeUrl }: FriendChal
       <main className="app-main">
         <div className="page-shell results-shell">
           <section className="completion-panel">
-            <span className="completion-mark" aria-hidden="true">{correctCount > payload.score ? "✓" : "↗"}</span>
+            <CompletionScoreGauge percentage={Math.round((correctCount / Math.max(1, payload.total)) * 100)} label="Challenge accuracy" />
             <p className="eyebrow">Challenge complete</p>
             <h1>{correctCount} / {payload.total}</h1>
             <p><strong>{payload.name}</strong> scored {payload.score}/{payload.total}. You {correctCount > payload.score ? "beat their score" : correctCount === payload.score ? "matched their score" : "didn’t beat their score"}.</p>
-            <div className="results-summary results-summary-four">
+            <div className="results-summary results-summary-three">
               <div><strong>{correctCount}</strong><span>Your score</span></div>
               <div><strong>{payload.score}</strong><span>{payload.name}&apos;s score</span></div>
               <div><strong>{correctCount - payload.score > 0 ? "+" : ""}{correctCount - payload.score}</strong><span>Difference</span></div>
-              <div><strong>{Math.round((correctCount / payload.total) * 100)}%</strong><span>Accuracy</span></div>
             </div>
             <div className="results-actions">
               <ShareResultButton title="TheoryPrep challenge result" text={resultText} url={challengeUrl} />
               <button className="button button-secondary" type="button" onClick={() => { setResponses(Array.from({ length: questions.length }, () => null)); setPosition(0); setSubmitted(false); }}>Try again <span aria-hidden="true">↻</span></button>
-              <Link className="button button-secondary" href="/practice">Keep practising <span aria-hidden="true">→</span></Link>
+              <Link className="button button-secondary" href="/practice">Keep practicing <span aria-hidden="true">→</span></Link>
             </div>
           </section>
         </div>

@@ -31,7 +31,7 @@ export default function SupportPage() {
         </section>
 
         <div className="support-actions">
-          <Link className="button button-primary" href="/practice">Keep practising <span aria-hidden="true">→</span></Link>
+          <Link className="button button-primary" href="/practice">Keep practicing <span aria-hidden="true">→</span></Link>
           <Link className="button button-secondary" href="/">Back home</Link>
         </div>
       </div>

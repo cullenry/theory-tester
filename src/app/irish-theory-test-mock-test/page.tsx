@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function IrishTheoryTestMockTestPage() {
-  return <SeoLandingPage eyebrow="Test yourself" title="Irish Theory Test Mock Test" intro="Put your preparation under pressure with a full 40-question TheoryPrep mock test. Review your answers afterwards and use the result to guide your next study session." primaryAction={{ href: "/mock-test", label: "Take a mock test", description: "" }} secondaryAction={{ href: "/theory-test-practice", label: "Practise first", description: "" }} canonicalPath="/irish-theory-test-mock-test" sections={[
+  return <SeoLandingPage eyebrow="Test yourself" title="Irish Theory Test Mock Test" intro="Put your preparation under pressure with a full 40-question TheoryPrep mock test. Review your answers afterwards and use the result to guide your next study session." primaryAction={{ href: "/mock-test", label: "Take a mock test", description: "" }} secondaryAction={{ href: "/theory-test-practice", label: "Practice first", description: "" }} canonicalPath="/irish-theory-test-mock-test" sections={[
     { title: "A full 40-question session", body: "Use the full mock format when you want a longer test-style session rather than a short practice burst." },
-    { title: "Keep an eye on the clock", body: "The full mock is timed so you can practise answering questions while keeping track of your remaining time." },
+    { title: "Keep an eye on the clock", body: "The full mock is timed so you can practice answering questions while keeping track of your remaining time." },
     { title: "Review the result", body: "Once you finish, review the questions you got right and wrong and jump straight back into practice where needed." },
-    { title: "Turn mistakes into practice", body: "Mistakes are useful study signals. Use your results and review tools to decide what to practise next." },
+    { title: "Turn mistakes into practice", body: "Mistakes are useful study signals. Use your results and review tools to decide what to practice next." },
   ]} sampleHeading="See the questions behind the mock." sampleDescription="The same public question library is available whenever you want to inspect individual questions more closely." />;
 }

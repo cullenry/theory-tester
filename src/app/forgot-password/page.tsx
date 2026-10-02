@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
           <p className="eyebrow">Reset your access</p>
           <h2>Back to practice.</h2>
           <p>Enter the email on your TheoryPrep account and we’ll send you a secure link to choose a new password.</p>
-          <div className="auth-side-line"><span>RESET</span><i /><span>SIGN IN</span><i /><span>PRACTISE</span></div>
+          <div className="auth-side-line"><span>RESET</span><i /><span>SIGN IN</span><i /><span>PRACTICE</span></div>
         </div>
         <ForgotPasswordForm />
       </div>

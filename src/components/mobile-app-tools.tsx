@@ -257,7 +257,7 @@ export function MobileAppTools() {
         <div className="mobile-app-nudge">
           <span aria-hidden="true">○</span>
           <div>
-            <strong>You haven&apos;t practised today.</strong>
+            <strong>You haven&apos;t practiced today.</strong>
             <small>{goal} questions is your current daily target.</small>
           </div>
           <Link href="/practice/learn">Start <span aria-hidden="true">→</span></Link>
@@ -285,7 +285,7 @@ export function MobileAppTools() {
           <div>
             <strong>Daily reminders</strong>
             <small>{notificationOn
-  ? "One gentle evening reminder when you haven't practised."
+  ? "One gentle evening reminder when you haven't practiced."
   : isIosDevice() && !standalone
     ? "Install TheoryPrep to your Home Screen first for iPhone notifications."
     : "Get a small nudge when your day is still empty."}</small>

@@ -76,7 +76,7 @@ export function TestReady() {
     <main className="app-main">
       <div className="page-shell progress-shell">
         <div className="progress-hero test-ready-hero">
-          <div><p className="eyebrow">Preparation snapshot</p><h1>Test Ready</h1><p>Use your recorded practice to see what is strong, what still needs work and what to practise next.</p></div>
+          <div><p className="eyebrow">Preparation snapshot</p><h1>Test Ready</h1><p>Use your recorded practice to see what is strong, what still needs work and what to practice next.</p></div>
           <div className="test-ready-score"><strong>{score}</strong><span>/100</span><small>practice metric</small></div>
         </div>
 
@@ -94,13 +94,13 @@ export function TestReady() {
         <section className="progress-feature-card">
           <div className="feature-card-heading"><div><p className="eyebrow">Where to focus</p><h2>Your lowest recorded topics</h2></div></div>
           {focusTopics.length === 0 ? (
-            <div className="chart-empty">Keep practising to build topic-level insights.</div>
+            <div className="chart-empty">Keep practicing to build topic-level insights.</div>
           ) : (
             <div className="ready-focus-list">
               {focusTopics.map((topic) => (
                 <div className="ready-focus-row" key={topic.name}>
                   <div><strong>{topic.name}</strong><small>{topic.attempted} questions attempted · {topic.accuracy}% accuracy</small></div>
-                  <Link className="button button-secondary" href={"/practice?category=" + encodeURIComponent(topic.name)}>Practise <span aria-hidden="true">→</span></Link>
+                  <Link className="button button-secondary" href={"/practice?category=" + encodeURIComponent(topic.name)}>Practice <span aria-hidden="true">→</span></Link>
                 </div>
               ))}
             </div>

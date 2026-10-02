@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard, ScoreDisplay } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { getRandomQuestionsFromPool, questions, type Question } from "@/lib/questions";
 import { taxonomyCategories } from "@/lib/question-taxonomy";
 import { getStarredQuestionIds, recordQuestionAttempt } from "@/lib/progress";
@@ -272,11 +273,11 @@ export function PracticeSession() {
               <section className="learn-launch-card starred-practice-banner">
                 <div className="learn-launch-copy">
                   <p className="eyebrow eyebrow-status">Saved for later</p>
-                  <h2>Practise your starred questions.</h2>
+                  <h2>Practice your starred questions.</h2>
                   <p>
                     {loadingSpecialMode
                       ? "Loading your saved questions…"
-                      : "You have " + starredPool.length + " starred question" + (starredPool.length === 1 ? "" : "s") + " ready to practise."}
+                      : "You have " + starredPool.length + " starred question" + (starredPool.length === 1 ? "" : "s") + " ready to practice."}
                   </p>
                   <div className="learn-launch-points">
                     <span>Saved questions only</span>
@@ -318,7 +319,7 @@ export function PracticeSession() {
             <section className="practice-setup question-card" aria-labelledby="practice-options-title">
               <div className="practice-setup-heading">
                 <div>
-                  <h2 id="practice-options-title">Want to practise something specific?</h2>
+                  <h2 id="practice-options-title">Want to practice something specific?</h2>
                 </div>
                 <span className="practice-setup-note">{fullSessionLength} available</span>
               </div>
@@ -446,14 +447,13 @@ export function PracticeSession() {
             </section>          </>
         ) : finished || !current ? (
           <section className="completion-panel">
-            <span className="completion-mark" aria-hidden="true">✓</span>
+            <CompletionScoreGauge percentage={Math.round((correctCount / Math.max(1, session.length)) * 100)} label="Practice accuracy" />
             <p className="eyebrow eyebrow-status">{isReviewSession ? "Review complete" : "Session complete"}</p>
             <h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2>
             <p>You answered {session.length} questions and got {correctCount} correct.</p>
-            <div className="results-summary results-summary-four">
+            <div className="results-summary results-summary-three">
               <div><strong>{correctCount}</strong><span>Correct</span></div>
               <div><strong>{session.length - correctCount}</strong><span>Incorrect</span></div>
-              <div><strong>{Math.round((correctCount / Math.max(1, session.length)) * 100)}%</strong><span>Accuracy</span></div>
               <div><strong>{sessionMissedIds.length}</strong><span>To review</span></div>
             </div>
             <div className="practice-completion-actions">
@@ -473,7 +473,7 @@ export function PracticeSession() {
               )}
               {sessionMissedIds.length > 0 && <Link className="button button-secondary" href="/mistakes">Review my mistakes</Link>}
               <button className="button button-secondary" type="button" onClick={() => beginSession(activePool)}>
-                Practise another set <span aria-hidden="true">↻</span>
+                Practice another set <span aria-hidden="true">↻</span>
               </button>
               <button className="button button-quiet" type="button" onClick={returnToSetup}>
                 Change my options

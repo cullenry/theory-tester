@@ -8,15 +8,17 @@
     "start": "next start",
     "lint": "eslint",
     "scrape": "node scripts/scrape-theory-tester.mjs",
+    "test": "node --experimental-strip-types --test tests/mock-test-completion.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
+    "@vercel/analytics": "2.0.1",
+    "lucide-react": "^1.50.0",
     "next": "16.3.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "@vercel/analytics": "2.0.1",
     "web-push": "^3.6.7"
   },
   "devDependencies": {

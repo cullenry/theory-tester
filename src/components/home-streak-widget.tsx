@@ -142,7 +142,7 @@ function LockedStreakWidget() {
           <div className="home-streak-icon"><StreakIcon /></div>
           <div>
             <p className="eyebrow">Your practice streak</p>
-            <h2>Keep your progress in one place.</h2>
+            <h2>Keep your progress in one place</h2>
             <p>Sign in to save your streak, review activity and track your practice.</p>
           </div>
         </div>
@@ -274,7 +274,7 @@ export function HomeStreakWidget() {
           <div>
             <p className="eyebrow">Your practice streak</p>
             <div className="home-streak-title-row">
-              <h2>{streak.current > 0 ? streak.current + " day" + (streak.current === 1 ? "" : "s") + " strong." : "Start your streak today."}</h2>
+              <h2>{streak.current > 0 ? streak.current + " day" + (streak.current === 1 ? "" : "s") + " strong" : "Start your streak today"}</h2>
               {protection ? (
                 <StreakProtectionAction
                   protection={protection}
@@ -285,7 +285,7 @@ export function HomeStreakWidget() {
             </div>
             <p>
               {activeProtection && !todayActive
-                ? "Your protection is ready for a missed day. Practise today to keep the run moving."
+                ? "Your protection is ready for a missed day. Practice today to keep the run moving."
                 : streak.current > 0
                   ? todayActive
                     ? "Nice work. Keep the run going."
@@ -309,7 +309,7 @@ export function HomeStreakWidget() {
                         ? "home-streak-dot home-streak-dot-today"
                         : "home-streak-dot home-streak-dot-missed"
                 }
-                aria-label={day.protected ? "Protected day" : day.active ? "Practised" : day.future ? "Upcoming" : "Missed"}
+                aria-label={day.protected ? "Protected day" : day.active ? "Practiced" : day.future ? "Upcoming" : "Missed"}
               />
             </div>
           ))}

@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   applicationName: "TheoryPrep",
   title: { default: "Irish Driving Theory Test 2026 | TheoryPrep", template: "%s | TheoryPrep" },
   description:
-    "Practise 805 Irish driving theory questions for 2026, take realistic mock tests, study clear explanations and track your progress online — free with TheoryPrep.",
+    "Practice 805 Irish driving theory questions for 2026, take realistic mock tests, study clear explanations and track your progress online — free with TheoryPrep.",
   openGraph: {
     title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
-      "Practise 805 Irish driving theory questions for 2026. Take realistic mock tests, study clear explanations and track your progress.",
+      "Practice 805 Irish driving theory questions for 2026. Take realistic mock tests, study clear explanations and track your progress.",
     url: siteUrl,
     siteName: "TheoryPrep",
     locale: "en_IE",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
     title: "Irish Driving Theory Test 2026 | TheoryPrep",
     description:
-      "Practise 805 Irish driving theory questions for 2026, plus mock tests and clear explanations.",
+      "Practice 805 Irish driving theory questions for 2026, plus mock tests and clear explanations.",
   },
   robots: { index: true, follow: true },
   appleWebApp: { capable: true, title: "TheoryPrep", statusBarStyle: "default" },

@@ -3,94 +3,26 @@ import { getQuestionById } from "@/lib/questions";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { rateLimit, rateLimitResponse } from "@/lib/security/rate-limit";
+import { validateMockTestCompletion } from "@/lib/security/mock-test-completion";
+import { readJsonBody } from "@/lib/security/read-json-body";
 
-const TEST_FORMATS = {
-  full: { questionCount: 40 },
-  "blitz-20": { questionCount: 20 },
-  "blitz-10": { questionCount: 10 },
-} as const;
-
-type FormatId = keyof typeof TEST_FORMATS;
-
-type CompletionPayload = {
-  formatId?: unknown;
-  questionIds?: unknown;
-  responses?: unknown;
-  timeExpired?: unknown;
-};
+const MAX_COMPLETION_BODY_BYTES = 16 * 1024;
 
 export async function POST(request: Request) {
-  const rate = rateLimit(request, { scope: "mock-test-complete", limit: 12, windowMs: 60_000 });
+  const rate = rateLimit(request, { scope: "mock-test-complete", limit: 6, windowMs: 60_000 });
   if (!rate.allowed) return rateLimitResponse(rate.retryAfterSeconds);
 
-  const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 128 * 1024) {
-    return NextResponse.json({ error: "Request body is too large." }, { status: 413 });
+  const parsedBody = await readJsonBody(request, MAX_COMPLETION_BODY_BYTES);
+  if (!parsedBody.ok) {
+    return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   }
 
-  let body: CompletionPayload;
-
-  try {
-    body = (await request.json()) as CompletionPayload;
-  } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
-  }
-
-  const formatId = body.formatId;
-  const questionIds = body.questionIds;
-  const responses = body.responses;
-  const timeExpired = body.timeExpired;
-
-  if (
-    typeof formatId !== "string" ||
-    !Object.prototype.hasOwnProperty.call(TEST_FORMATS, formatId) ||
-    !Array.isArray(questionIds) ||
-    !Array.isArray(responses) ||
-    questionIds.length !== responses.length
-  ) {
+  const completion = validateMockTestCompletion(parsedBody.value, getQuestionById);
+  if (!completion) {
     return NextResponse.json({ error: "Invalid mock test payload." }, { status: 400 });
   }
 
-  const expectedCount = TEST_FORMATS[formatId as FormatId].questionCount;
-
-  if (
-    questionIds.length !== expectedCount ||
-    !questionIds.every((id) => Number.isInteger(id) && id > 0) ||
-    new Set(questionIds).size !== questionIds.length
-  ) {
-    return NextResponse.json({ error: "Invalid question set." }, { status: 400 });
-  }
-
-  let correctCount = 0;
-  let answeredCount = 0;
-
-  for (let index = 0; index < questionIds.length; index += 1) {
-    const question = getQuestionById(questionIds[index] as number);
-    const response = responses[index];
-
-    if (!question) {
-      return NextResponse.json({ error: "Unknown question." }, { status: 400 });
-    }
-
-    if (response !== null && typeof response !== "string") {
-      return NextResponse.json({ error: "Invalid answer." }, { status: 400 });
-    }
-
-    if (response !== null) {
-      if (!question.answers.includes(response)) {
-        return NextResponse.json({ error: "Invalid answer for question." }, { status: 400 });
-      }
-
-      answeredCount += 1;
-
-      if (question.correctAnswer !== null && response === question.correctAnswer) {
-        correctCount += 1;
-      }
-    }
-  }
-
-  const percentage = Math.round((correctCount / expectedCount) * 100);
-  const verifiedTimeExpired = timeExpired === true;
+  const { formatId, expectedCount, correctCount, answeredCount, percentage, timeExpired } = completion;
 
   // Only the server is allowed to increment the public counter.
   const { data: nextCount, error: incrementError } = await supabaseAdmin.rpc("increment_mock_test_count");
@@ -113,7 +45,7 @@ export async function POST(request: Request) {
         correct_count: correctCount,
         answered_count: answeredCount,
         percentage,
-        time_expired: verifiedTimeExpired,
+        time_expired: timeExpired,
       });
 
       if (historyError) {

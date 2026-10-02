@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { questionDatasetScrapedAt, questions } from "@/lib/questions";
+import { questions } from "@/lib/questions";
 import { HomeStreakWidget } from "@/components/home-streak-widget";
 import { DailyMission } from "@/components/daily-mission";
 import { HomeExamCountdown } from "@/components/home-exam-countdown";
@@ -10,12 +10,12 @@ import { HomeProofWidget } from "@/components/home-proof-widget";
 export const metadata: Metadata = {
   title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
   description:
-    "Practise the Irish driving theory test in 2026 with 805 questions, clear explanations, topic practice and full mock tests. Free to start with TheoryPrep.",
+    "Practice the Irish driving theory test in 2026 with 805 questions, clear explanations, topic practice and full mock tests. Free to start with TheoryPrep.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
     description:
-      "Practise 805 Irish driving theory questions, study by topic and take full mock tests with TheoryPrep.",
+      "Practice 805 Irish driving theory questions, study by topic and take full mock tests with TheoryPrep.",
     url: "https://theoryprep.irish/",
     siteName: "TheoryPrep",
     locale: "en_IE",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
     title: "Irish Driving Theory Test 2026 | Free Practice & Mock Tests",
     description:
-      "Practise 805 Irish driving theory questions, study by topic and take full mock tests.",
+      "Practice 805 Irish driving theory questions, study by topic and take full mock tests.",
   },
 };
 
@@ -53,10 +53,10 @@ const websiteSchema = {
 const primaryModes = [
   {
     number: "01",
-    title: "Practise",
+    title: "Practice",
     description: "Answer questions at your own pace, see the explanation straight away and build accuracy over time.",
     href: "/practice",
-    action: "Start practising",
+    action: "Start practicing",
   },
   {
     number: "02",
@@ -99,19 +99,19 @@ export default function Home() {
             <h1>
               Get ready for your
               <br />
-              <span className="hero-irish-text" data-text="Irish car theory test.">
-                Irish car theory test.
+              <span className="hero-irish-text" data-text="Irish car theory test">
+                Irish car theory test
               </span>
             </h1>
 
             <p className="hero-description">
-              Practise {questions.length} Irish car theory questions, learn from clear explanations and take a
+              Practice {questions.length} Irish car theory questions, learn from clear explanations and take a
               timed mock test when you are ready.
             </p>
 
             <div className="hero-actions">
               <Link className="button button-primary" href="/practice">
-                Start practising <span aria-hidden="true">→</span>
+                Start practicing <span aria-hidden="true">→</span>
               </Link>
               <Link className="button button-secondary" href="/mock-test">
                 Take a mock test
@@ -121,37 +121,23 @@ export default function Home() {
             <div className="hero-proof" aria-label="TheoryPrep practice highlights">
               <div className="hero-stat">
                 <strong>{questions.length}</strong>
-                <span>practice questions</span>
+                <span>Practice questions</span>
               </div>
               <div className="hero-stat">
                 <strong>40</strong>
-                <span>questions in a mock</span>
+                <span>Questions in a mock</span>
               </div>
               <div className="hero-stat">
-                <strong>Free</strong>
-                <span>core practice</span>
+                <strong>2026</strong>
+                <span>Updated for the latest RSA theory test</span>
               </div>
             </div>
-
-            <p className="hero-trust">
-              Independent study resource based on official RSA material. Not affiliated with or endorsed by the RSA.
-            </p>
-            <p className="hero-data-freshness">
-              Question bank updated{" "}
-              <time dateTime={questionDatasetScrapedAt}>
-                {new Date(questionDatasetScrapedAt).toLocaleDateString("en-IE", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </time>
-            </p>
           </div>
 
           <div className="hero-art">
             <Image
               src="/images/theorytester-good-luck.png"
-              alt="Illustration of a car on an Irish country road with Learn, Practise and Pass signs"
+              alt="Illustration of a car on an Irish country road with Learn, Practice and Pass signs"
               width={748}
               height={480}
               priority
@@ -160,12 +146,17 @@ export default function Home() {
           </div>
         </div>
         <HomeProofWidget />
+        <div className="hero-trust-line">
+          <p className="hero-trust">
+            Independent study resource based on official RSA material. Not affiliated with or endorsed by the RSA.
+          </p>
+        </div>
       </section>
 
       <section className="home-start-section" aria-labelledby="home-start-title">
         <div className="section-heading home-start-heading">
           <div>
-            <h2 id="home-start-title">Choose one way to prepare.</h2>
+            <h2 id="home-start-title">Choose one way to prepare</h2>
           </div>
           <p>
             You do not need to learn everything at once. Pick the route that fits where you are right now.
@@ -197,7 +188,7 @@ export default function Home() {
       <section className="seo-content-section seo-home-guide-section" aria-labelledby="seo-home-guide-title">
         <div className="section-heading seo-section-heading">
           <div>
-            <h2 id="seo-home-guide-title">Choose what to focus on next.</h2>
+            <h2 id="seo-home-guide-title">Choose what to focus on next</h2>
           </div>
           <p>
             Browse questions, study one topic at a time, revise with flashcards or revisit anything you missed.
@@ -220,7 +211,7 @@ export default function Home() {
       <section className="seo-links-section" aria-labelledby="seo-links-title">
         <div className="section-heading">
           <div>
-            <h2 id="seo-links-title">Explore the test topics.</h2>
+            <h2 id="seo-links-title">Explore the test topics</h2>
           </div>
           <p>Focused guides to practice, questions, road signs and the mock test.</p>
         </div>

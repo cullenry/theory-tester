@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { questions, type Question } from "@/lib/questions";
 import { getMistakeQuestionIds, recordQuestionAttempt } from "@/lib/progress";
 
@@ -98,7 +99,7 @@ export function MistakePractice() {
             </p>
             <div className="progress-cta-row">
               <Link className="button button-primary" href="/practice">
-                Start practising <span aria-hidden="true">→</span>
+                Start practicing <span aria-hidden="true">→</span>
               </Link>
               <Link className="button button-secondary" href="/progress">My progress</Link>
             </div>
@@ -119,7 +120,7 @@ export function MistakePractice() {
               <p className="eyebrow">Personalised revision</p>
               <h1>Turn your mistakes into progress.</h1>
               <p>
-                Revisit the questions you have missed, practise them again and build confidence
+                Revisit the questions you have missed, practice them again and build confidence
                 where you need it most.
               </p>
             </div>
@@ -139,7 +140,7 @@ export function MistakePractice() {
             <div className="mistakes-section-heading">
               <div>
                 <p className="eyebrow">Choose a session</p>
-                <h2>How much do you want to practise?</h2>
+                <h2>How much do you want to practice?</h2>
               </div>
               <span>{mistakes.length} mistake{mistakes.length === 1 ? "" : "s"} saved</span>
             </div>
@@ -176,7 +177,7 @@ export function MistakePractice() {
 
             <div className="mistakes-start-row">
               <div>
-                <strong>{selectedCount} question{selectedCount === 1 ? "" : "s"} ready to practise</strong>
+                <strong>{selectedCount} question{selectedCount === 1 ? "" : "s"} ready to practice</strong>
                 <span>{sessionSize === "all" ? "Every saved mistake will be included." : "Questions are shuffled for a fresh review."}</span>
               </div>
               <button className="button button-primary" type="button" onClick={() => start()}>
@@ -234,13 +235,13 @@ export function MistakePractice() {
       <main className="app-main">
         <div className="page-shell progress-shell">
           <section className="completion-panel">
-            <span className="completion-mark" aria-hidden="true">✓</span>
+            <CompletionScoreGauge percentage={Math.round((correctCount / Math.max(1, session.length)) * 100)} label="Mistake practice accuracy" />
             <p className="eyebrow">Mistake practice complete</p>
             <h2>{correctCount} / {session.length}</h2>
             <p>Nice work. Keep revisiting missed questions until they become easy.</p>
             <div className="progress-cta-row">
               <button className="button button-primary" type="button" onClick={() => start(sessionSize)}>
-                Practise again <span aria-hidden="true">↻</span>
+                Practice again <span aria-hidden="true">↻</span>
               </button>
               <Link className="button button-secondary" href="/progress">See my progress</Link>
             </div>

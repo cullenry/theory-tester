@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { getDailyChallengeDate, getDailyChallengeQuestions } from "@/lib/daily-challenge";
 import { recordQuestionAttempt } from "@/lib/progress";
 import { buildFriendChallengeUrl, shareText } from "@/lib/challenge-share";
@@ -20,7 +21,7 @@ export function DailyChallenge() {
   const answered = selected !== null;
   const correctCount = challenge.reduce((total, question, index) => total + (responses[index] === question.correctAnswer ? 1 : 0), 0);
 
-  if (!current || submitted) return <main className="app-main"><div className="page-shell results-shell"><section className="completion-panel"><span className="completion-mark" aria-hidden="true">✓</span><p className="eyebrow">Daily Challenge complete</p><h2>{correctCount} / 10</h2><p>You finished today’s challenge. Come back tomorrow for a new set of ten.</p><div className="challenge-share-box">
+  if (!current || submitted) return <main className="app-main"><div className="page-shell results-shell"><section className="completion-panel"><CompletionScoreGauge percentage={Math.round((correctCount / Math.max(1, challenge.length)) * 100)} label="Daily challenge score" /><p className="eyebrow">Daily Challenge complete</p><h2>{correctCount} / 10</h2><p>You finished today’s challenge. Come back tomorrow for a new set of ten.</p><div className="challenge-share-box">
             <p className="eyebrow">Challenge a friend</p>
             <h3>Can they beat your score?</h3>
             <p>Send the same ten questions to a mate and see who scores higher.</p>
@@ -36,7 +37,7 @@ export function DailyChallenge() {
               }}>{shareStatus === "copied" ? "Copied — send it!" : shareStatus === "shared" ? "Shared!" : "Challenge a friend"} <span aria-hidden="true">↗</span></button>
             </div>
           </div>
-          <div className="practice-completion-actions">{correctCount < challenge.length && <Link className="button button-primary" href="/mistakes">Review mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/practice">Keep practising <span aria-hidden="true">→</span></Link><Link className="button button-secondary" href="/progress">See my progress</Link></div></section></div></main>;
+          <div className="practice-completion-actions">{correctCount < challenge.length && <Link className="button button-primary" href="/mistakes">Review mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/practice">Keep practicing <span aria-hidden="true">→</span></Link><Link className="button button-secondary" href="/progress">See my progress</Link></div></section></div></main>;
 
   return <main className="app-main"><div className="page-shell practice-shell">
     <div className="page-heading"><div><p className="eyebrow">Daily Challenge · {challengeDate}</p><h1>10 for today.</h1></div><Link className="button button-secondary" href="/progress">My progress</Link></div>

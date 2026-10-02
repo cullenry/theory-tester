@@ -54,7 +54,7 @@ export function DailyMission() {
     return (
       <section className="daily-mission-section" aria-label="Daily mission">
         <div className="daily-mission-card daily-mission-locked">
-          <div><p className="eyebrow">Today’s mission</p><h2>Build a little momentum.</h2><p>Sign in to track your daily questions, accuracy and Learn sessions.</p></div>
+          <div><p className="eyebrow">Today’s mission</p><h2>Build a little momentum</h2><p>Sign in to track your daily questions, accuracy and Learn sessions.</p></div>
           <Link className="button button-secondary" href="/login">Sign in <span aria-hidden="true">→</span></Link>
         </div>
       </section>
@@ -78,7 +78,7 @@ export function DailyMission() {
     <section className="daily-mission-section" aria-label="Daily mission">
       <div className="daily-mission-card">
         <div className="daily-mission-header">
-          <div><p className="eyebrow">Today’s mission</p><h2>Three small wins.</h2></div>
+          <div><p className="eyebrow">Today’s mission</p><h2>Three small wins</h2></div>
           <span className="daily-mission-count">{completed}/{goals.length} complete</span>
         </div>
         <div className="daily-mission-grid">

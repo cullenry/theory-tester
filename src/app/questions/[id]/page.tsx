@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
   const category = question.taxonomy.category;
   const categoryPhrase = category ? ` from ${category.toLowerCase()}` : "";
   const questionTitle = question.question.trim();
-  const description = `Practise Irish driving theory test question #${question.id}${categoryPhrase}. See the answer and explanation: ${questionTitle}`.slice(0, 158);
+  const description = `Practice Irish driving theory test question #${question.id}${categoryPhrase}. See the answer and explanation: ${questionTitle}`.slice(0, 158);
 
   return {
     title: `Irish Theory Test Question ${question.id}: ${questionTitle.slice(0, 62)}`,

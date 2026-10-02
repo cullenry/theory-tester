@@ -236,8 +236,8 @@ function TestReadiness({ attempts, mocks, topics, topicCoverage, now }: {
               ? `Answer ${additionalCorrect} question correctly to start building toward ${targetPercent}% mastery.`
               : additionalCorrect
                 ? `${additionalCorrect} more correct ${additionalCorrect === 1 ? "answer" : "answers"} to reach ${targetPercent}% mastery.`
-                : `You've reached the ${targetPercent}% mastery milestone. Keep practising to reinforce it.`
-            : "Start practising a topic to build your personal readiness indicator."}
+                : `You've reached the ${targetPercent}% mastery milestone. Keep practicing to reinforce it.`
+            : "Start practicing a topic to build your personal readiness indicator."}
         </p>
         {recommendedTopic && (
           <Link className="button button-primary readiness-practice-link" href={"/practice?category=" + encodeURIComponent(recommendedTopic.name)}>
@@ -269,7 +269,7 @@ function TopicProgress({ topics }: { topics: TopicRow[] }) {
 
       {topics.length === 0 ? (
         <div className="dashboard-empty">
-          <strong>Your topics will appear here as you practise.</strong>
+          <strong>Your topics will appear here as you practice.</strong>
           <span>Start with the course and your progress will build automatically.</span>
         </div>
       ) : (
@@ -360,7 +360,7 @@ function RecentMistakes({ questionIds }: { questionIds: number[] }) {
             ))}
           </div>
           <Link className="button button-secondary dashboard-full-width-button" href="/mistakes">
-            Practise my mistakes <span aria-hidden="true">→</span>
+            Practice my mistakes <span aria-hidden="true">→</span>
           </Link>
         </>
       )}
@@ -539,7 +539,7 @@ export function ProgressDashboard() {
           </div>
           <div className="dashboard-action-grid">
             <Link href="/practice/learn"><strong>Learn</strong><span>Follow the 805-question course →</span></Link>
-            <Link href="/practice"><strong>Practise</strong><span>Pick a topic or session length →</span></Link>
+            <Link href="/practice"><strong>Practice</strong><span>Pick a topic or session length →</span></Link>
             <Link href="/mock-test"><strong>Mock test</strong><span>Take the timed 40-question test →</span></Link>
             <Link href="/questions"><strong>Question bank</strong><span>Search and personalise the library →</span></Link>
           </div>

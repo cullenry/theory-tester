@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { AnswerOption, ProgressBar, QuestionCard, QuestionImage } from "@/components/question-ui";
+import { AnswerOption, ExplanationCard, ProgressBar, QuestionCard, QuestionImage } from "@/components/question-ui";
+import { CompletionScoreGauge } from "@/components/completion-score-gauge";
 import { getRandomQuestions, type Question } from "@/lib/questions";
 import { recordMockTest, recordQuestionAttempt } from "@/lib/progress";
 import { ShareResultButton } from "@/components/share-result-button";
@@ -57,6 +58,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
   const [timeRemaining, setTimeRemaining] = useState(initialDurationSeconds);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
   const mockQuestionRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const deadlineRef = useRef<number | null>(null);
   const submissionRef = useRef(false);
   const recordedResultRef = useRef(false);
@@ -97,6 +99,14 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
       mockQuestionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }, [position, hasStarted, submitted]);
+
+  useEffect(() => {
+    if (!submitted) return;
+
+    window.requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [submitted]);
 
   const startTest = (format: MockTestFormat, nextTest = getRandomQuestions(format.questionCount)) => {
     const durationSeconds = debugTimerEnabled ? initialDurationSeconds : format.durationMinutes * 60;
@@ -200,9 +210,9 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
 
   if (submitted) {
     return (
-      <main className="app-main"><div className="page-shell results-shell">
-        <div className="page-heading"><div><p className="eyebrow eyebrow-status">{timeExpired ? "Time limit reached" : "Mock test complete"}</p><h1>{activeFormat.title} Complete</h1></div><span className="result-grade">{percentage}%</span></div>
-        <div className="result-scoreline"><strong>{correctCount} / {test.length}</strong><span>{percentage}% correct</span></div>
+      <main className="app-main"><div className="page-shell results-shell" ref={resultsRef}>
+        <div className="page-heading"><div><p className="eyebrow eyebrow-status">{timeExpired ? "Time limit reached" : "Mock test complete"}</p><h1>{activeFormat.title} Complete</h1></div></div>
+        <div className="result-scoreline"><strong>{correctCount} / {test.length}</strong><span>{percentage}% correct</span><CompletionScoreGauge percentage={percentage} label="Mock test score" className="result-grade" style={{ margin: "0 0 0 auto", alignSelf: "center" }} /></div>
         <div className="results-status" aria-live="polite">
           <strong>{passed ? "Pass" : "Not yet passed"}</strong>
           <span>
@@ -212,7 +222,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
           </span>
         </div>
         <div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{incorrectCount}</strong><span>Incorrect</span></div><div><strong>{unansweredCount}</strong><span>Unanswered</span></div><div><strong>{percentage}%</strong><span>Percentage</span></div></div>
-        <div className="results-actions"><button className="button button-primary" type="button" onClick={retakeTest}>Retake {activeFormat.title} <span aria-hidden="true">↻</span></button><ShareResultButton title="My TheoryPrep result" text={`I got ${correctCount}/${test.length} on TheoryPrep 🚗 Can you beat me?`} url={`${typeof window !== "undefined" ? window.location.origin : "https://theoryprep.irish"}/mock-test`} />{incorrectCount > 0 && <Link className="button button-secondary" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/">Back to Home</Link></div>
+        <div className="results-actions"><button className="button button-primary" type="button" onClick={retakeTest}>Retake {activeFormat.title} <span aria-hidden="true">↻</span></button><ShareResultButton title="My TheoryPrep result" text={`I got ${correctCount}/${test.length} on TheoryPrep 🚗 Can you beat me?`} url={`${typeof window !== "undefined" ? window.location.origin : "https://theoryprep.irish"}/mock-test`} />{incorrectCount > 0 && <Link className="button button-secondary" href="/mistakes">Practice my mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/">Back to Home</Link></div>
         <section className="review-section"><h2>Every question, at a glance</h2><ol className="review-list">{test.map((question, index) => {
           const response = responses[index];
           const unanswered = response === null;
@@ -220,7 +230,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
           const status = unanswered ? "Unanswered" : isCorrect ? "Correct" : "Incorrect";
           const statusClass = unanswered ? "status-unanswered" : isCorrect ? "status-correct" : "status-incorrect";
           const mark = unanswered ? "–" : isCorrect ? "✓" : "×";
-          return <li className="review-item" key={question.id}><div className="review-status"><span className={`status-mark ${statusClass}`} aria-hidden="true">{mark}</span><span>{status} · Question {index + 1}</span></div><h3>{question.question}</h3>{question.image ? <QuestionImage question={question} /> : null}<p>Your answer: <strong>{response ?? "No answer"}</strong></p><p>Correct answer: <strong>{question.correctAnswer ?? "Not provided"}</strong></p></li>;
+          return <li className="review-item" key={question.id}><div className="review-status"><span className={`status-mark ${statusClass}`} aria-hidden="true">{mark}</span><span>{status} · Question {index + 1}</span></div><h3>{question.question}</h3>{question.image ? <QuestionImage question={question} /> : null}<p>Your answer: <strong>{response ?? "No answer"}</strong></p><p>Correct answer: <strong>{question.correctAnswer ?? "Not provided"}</strong></p><ExplanationCard explanation={question.explanation} /></li>;
         })}</ol></section>
       </div></main>
     );

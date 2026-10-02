@@ -128,7 +128,7 @@ export function HomeExamCountdown() {
           <div className="home-exam-setup">
             <div>
               <p className="eyebrow">Your test day</p>
-              <h2>Keep the date in sight.</h2>
+              <h2>Keep the date in sight</h2>
               <p>Set your theory test date and we’ll show you how long you have left.</p>
             </div>
 
@@ -218,7 +218,7 @@ export function HomeExamCountdown() {
           <div className="home-exam-content">
             <div className="home-exam-copy">
               <p className="eyebrow">Your test day</p>
-              <h2>{days === 0 ? "Test day is here." : days !== null && days > 0 ? String(days) + " day" + (days === 1 ? "" : "s") + " to go." : "Test date passed."}</h2>
+              <h2>{days === 0 ? "Test day is here" : days !== null && days > 0 ? String(days) + " day" + (days === 1 ? "" : "s") + " to go" : "Test date passed"}</h2>
               <p>{formatExamDate(examDate)}</p>
             </div>
             <div className="home-exam-actions">
