@@ -64,7 +64,7 @@ export function LearnCourse() {
       <div className="page-shell course-shell">
         <section className="course-hero">
           <div className="course-hero-copy">
-            <h1>{data.user ? `Hi, ${firstName}. Let’s learn the road.` : "Learn the Irish theory test."}</h1>
+            <h1>{data.user ? `Hi, ${firstName}. Let’s learn the road` : "Learn the Irish theory test"}</h1>
             <p>
               Work through the full question bank in short lessons, with explanations and focused review built around the questions you find hardest.
             </p>
@@ -93,7 +93,7 @@ export function LearnCourse() {
           <section className="course-next-card course-signin-lesson-card" aria-labelledby="first-lesson-title">
             <div>
               <p className="eyebrow">Your first lesson</p>
-              <h2 id="first-lesson-title">Start learning with TheoryPrep.</h2>
+              <h2 id="first-lesson-title">Start learning with TheoryPrep</h2>
               <p>Sign in to start your lessons and let your answers shape what you see next.</p>
             </div>
             <Link
@@ -109,7 +109,7 @@ export function LearnCourse() {
               <p className={complete ? "eyebrow eyebrow-status" : "eyebrow"}>{complete ? "Course complete" : "Continue your journey"}</p>
               <h2>
                 {complete
-                  ? "You’ve covered the whole question bank."
+                  ? "You’ve covered the whole question bank"
                   : next
                     ? next.chapter.name
                     : "Ready to start?"}
@@ -134,7 +134,7 @@ export function LearnCourse() {
         <section className="course-adaptive-card" aria-labelledby="adaptive-learning-title">
           <div className="course-adaptive-heading">
             <div>
-              <h2 id="adaptive-learning-title">Your lessons adjust as you practice.</h2>
+              <h2 id="adaptive-learning-title">Your lessons adjust as you practice</h2>
               <p>
                 TheoryPrep uses your previous answers to shape the order of questions, so difficult material gets more attention while stronger answers are spaced out for later recall.
               </p>
