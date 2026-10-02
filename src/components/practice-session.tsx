@@ -252,12 +252,11 @@ export function PracticeSession() {
 
   return (
     <main className="app-main">
-      <div className="page-shell practice-shell">
+      <div className={session === null ? "page-shell" : "page-shell practice-shell"}>
         {session === null ? (
           <>
             <header className="practice-page-intro">
               <div>
-                <p className="eyebrow">Start with questions</p>
                 <h1>Practice the Irish theory test.</h1>
                 <p className="practice-page-lead">
                   Not sure where to begin? Start with a quick set of questions. You can focus on a topic or use the full library whenever you are ready.
@@ -272,7 +271,7 @@ export function PracticeSession() {
             {starredMode ? (
               <section className="learn-launch-card starred-practice-banner">
                 <div className="learn-launch-copy">
-                  <p className="eyebrow">Saved for later</p>
+                  <p className="eyebrow eyebrow-status">Saved for later</p>
                   <h2>Practise your starred questions.</h2>
                   <p>
                     {loadingSpecialMode
@@ -301,7 +300,7 @@ export function PracticeSession() {
             {!starredMode && !loadingSpecialMode && !categoryPreset && (
               <section className="quick-start-card" aria-labelledby="quick-start-title">
                 <div className="quick-start-copy">
-                  <p className="eyebrow">Recommended for a first session</p>
+                  <p className="eyebrow eyebrow-status">Recommended for a first session</p>
                   <h2 id="quick-start-title">Start with 10 questions.</h2>
                   <p>It takes a few minutes and gives you an immediate feel for the question style.</p>
                 </div>
@@ -319,7 +318,6 @@ export function PracticeSession() {
             <section className="practice-setup question-card" aria-labelledby="practice-options-title">
               <div className="practice-setup-heading">
                 <div>
-                  <p className="eyebrow">Choose your focus</p>
                   <h2 id="practice-options-title">Want to practise something specific?</h2>
                 </div>
                 <span className="practice-setup-note">{fullSessionLength} available</span>
@@ -428,7 +426,6 @@ export function PracticeSession() {
                 </svg>
               </div>
               <div className="flashcard-launch-copy">
-                <p className="eyebrow">Another way to revise</p>
                 <h2>Study with flashcards.</h2>
                 <p>Flip through questions, reveal the answer and reinforce the ones worth remembering.</p>
               </div>
@@ -440,7 +437,6 @@ export function PracticeSession() {
 
             <section className="learn-launch-card practice-secondary-card">
               <div className="learn-launch-copy">
-                <p className="eyebrow">Prefer a guided route?</p>
                 <h2>Learn step by step.</h2>
                 <p>Work through short lessons, see explanations as you go and build your knowledge before switching back to mixed practice.</p>
               </div>
@@ -451,7 +447,7 @@ export function PracticeSession() {
         ) : finished || !current ? (
           <section className="completion-panel">
             <span className="completion-mark" aria-hidden="true">✓</span>
-            <p className="eyebrow">{isReviewSession ? "Review complete" : "Session complete"}</p>
+            <p className="eyebrow eyebrow-status">{isReviewSession ? "Review complete" : "Session complete"}</p>
             <h2>{isReviewSession ? "Mistakes get easier with another look." : "Good work. Keep it rolling."}</h2>
             <p>You answered {session.length} questions and got {correctCount} correct.</p>
             <div className="results-summary results-summary-four">
@@ -487,7 +483,7 @@ export function PracticeSession() {
         ) : (
           <>
             <div className="page-heading">
-              <div><p className="eyebrow">Keep going</p><h1>Practice session</h1></div>
+              <div><h1>Practice session</h1></div>
               <div className="practice-heading-actions">
                 <button className="button button-quiet" type="button" onClick={() => beginSession(activePool)}>↻ <span>Restart</span></button>
                 <button className="button button-secondary" type="button" onClick={returnToSetup}>Change options</button>

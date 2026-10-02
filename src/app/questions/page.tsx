@@ -14,12 +14,11 @@ export default function QuestionsPage() {
     <main className="app-main">
       <div className="page-shell browser-shell">
         <div className="page-heading">
-          <div><p className="eyebrow">The full library</p><h1>Question browser</h1></div>
+          <div><h1>Question browser</h1></div>
           <span className="test-chip">{questions.length} questions</span>
         </div>
         <section className="library-intro" aria-labelledby="library-intro-title">
           <div className="library-intro-copy">
-            <p className="eyebrow">Know what you&apos;re learning</p>
             <h2 id="library-intro-title">The whole road, in one place.</h2>
             <p>Search all {questions.length} questions, browse by topic and open any question for the answer and explanation.</p>
           </div>

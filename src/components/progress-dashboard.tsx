@@ -208,7 +208,6 @@ function TestReadiness({ attempts, mocks, topics, topicCoverage, now }: {
   return (
     <section className="progress-feature-card readiness-card" aria-labelledby="test-readiness-title">
       <div className="readiness-overview">
-        <p className="eyebrow">Practice readiness</p>
         <h2 id="test-readiness-title">You&apos;re {score}% ready.</h2>
         <p>This indicator reflects your TheoryPrep practice history, recent mock results and course coverage. It is not a prediction of your real exam result.</p>
       </div>
@@ -223,7 +222,7 @@ function TestReadiness({ attempts, mocks, topics, topicCoverage, now }: {
       <section className="readiness-focus" aria-label="Recommended topic practice">
         <div className="readiness-focus-heading">
           <div>
-            <p className="eyebrow">Next focus</p>
+            <p className="eyebrow eyebrow-status">Next focus</p>
             <h3>{recommendedTopic?.name ?? "Build your topic history"}</h3>
           </div>
           <strong>{masteryPercent}%<span> mastery</span></strong>
@@ -337,7 +336,6 @@ function RecentMistakes({ questionIds }: { questionIds: number[] }) {
     <section className="dashboard-card">
       <div className="dashboard-card-heading">
         <div>
-          <p className="eyebrow">Keep improving</p>
           <h2>Questions to revisit.</h2>
         </div>
         <Link href="/mistakes">All mistakes ↗</Link>
@@ -470,7 +468,6 @@ export function ProgressDashboard() {
       <main className="app-main">
         <div className="page-shell dashboard-shell">
           <section className="empty-state dashboard-login-state">
-            <p className="eyebrow">Your TheoryPrep dashboard</p>
             <h1>Sign in and make the practice yours.</h1>
             <p>Your course position, topic progress, mistakes, streaks and mock-test history will stay with your account.</p>
             <Link className="button button-primary" href="/login?next=/progress">Sign in <span aria-hidden="true">→</span></Link>
@@ -489,7 +486,6 @@ export function ProgressDashboard() {
       <div className="page-shell dashboard-shell">
         <section className="dashboard-hero">
           <div>
-            <p className="eyebrow">Your TheoryPrep</p>
             <h1>Good to see you, {firstName}.</h1>
             <p>
               Keep your momentum going. Your dashboard is centred on what to do next, with the detail underneath when you need it.
@@ -539,7 +535,6 @@ export function ProgressDashboard() {
 
         <section className="dashboard-actions-card">
           <div>
-            <p className="eyebrow">Quick actions</p>
             <h2>What are you in the mood for?</h2>
           </div>
           <div className="dashboard-action-grid">

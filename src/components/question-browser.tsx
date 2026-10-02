@@ -156,7 +156,6 @@ export function QuestionBrowser() {
       {!progress ? null : progress.user ? (
         <section className="browser-personal-panel" aria-label="Personalised question bank">
           <div className="browser-personal-copy">
-            <p className="eyebrow">Your question bank</p>
             <strong>Practice around what you know.</strong>
             <span>{attemptedIds.size} covered · {reviewIds.size} need another look · {starredIds.size} starred</span>
           </div>
@@ -182,7 +181,6 @@ export function QuestionBrowser() {
       ) : (
         <section className="browser-signin-panel">
           <div>
-            <p className="eyebrow">Make it personal</p>
             <strong>Sign in to track what you’ve covered.</strong>
             <span>Then the question bank can show new questions, mistakes and saved questions just for you.</span>
           </div>

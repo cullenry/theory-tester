@@ -83,7 +83,7 @@ const secondaryLinks = [
 
 export default function Home() {
   return (
-    <main>
+    <main className="home-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -96,11 +96,6 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-inner">
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow">
-              <span className="live-dot" aria-hidden="true" />
-              Free Irish car theory test practice
-            </p>
-
             <h1>
               Get ready for your
               <br />
@@ -170,7 +165,6 @@ export default function Home() {
       <section className="home-start-section" aria-labelledby="home-start-title">
         <div className="section-heading home-start-heading">
           <div>
-            <p className="eyebrow">Start here</p>
             <h2 id="home-start-title">Choose one way to prepare.</h2>
           </div>
           <p>
@@ -203,12 +197,10 @@ export default function Home() {
       <section className="seo-content-section seo-home-guide-section" aria-labelledby="seo-home-guide-title">
         <div className="section-heading seo-section-heading">
           <div>
-            <p className="eyebrow">Irish driving theory test 2026</p>
-            <h2 id="seo-home-guide-title">Everything you need for your theory-test revision.</h2>
+            <h2 id="seo-home-guide-title">Choose what to focus on next.</h2>
           </div>
           <p>
-            Practise the questions, study specific topics, review mistakes and use a mock test to check your
-            progress.
+            Browse questions, study one topic at a time, revise with flashcards or revisit anything you missed.
           </p>
         </div>
 
@@ -228,10 +220,9 @@ export default function Home() {
       <section className="seo-links-section" aria-labelledby="seo-links-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Useful guides</p>
-            <h2 id="seo-links-title">Looking for something specific?</h2>
+            <h2 id="seo-links-title">Explore the test topics.</h2>
           </div>
-          <p>Jump straight to the guide that matches what you searched for.</p>
+          <p>Focused guides to practice, questions, road signs and the mock test.</p>
         </div>
 
         <div className="seo-home-links">

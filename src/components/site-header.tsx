@@ -127,7 +127,15 @@ export function SiteHeader() {
               className="nav-link"
               href={item.href}
               key={item.href}
-              aria-current={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/")) ? "page" : undefined}
+              aria-current={
+                pathname === item.href ||
+                (item.href !== "/" &&
+                  pathname.startsWith(item.href + "/") &&
+                  !(item.href === "/practice" &&
+                    (pathname === "/practice/learn" || pathname.startsWith("/practice/learn/"))))
+                  ? "page"
+                  : undefined
+              }
             >
               {item.label}
             </Link>

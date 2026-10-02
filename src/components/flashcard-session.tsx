@@ -256,17 +256,15 @@ export function FlashcardSession() {
   if (!started) {
     return (
       <main className="app-main">
-        <div className="page-shell practice-shell">
+        <div className="page-shell">
           <div className="page-heading">
             <div>
-              <p className="eyebrow">Active recall</p>
               <h1>Flashcards</h1>
             </div>
           </div>
 
           <section className="flashcard-intro-card">
             <div>
-              <p className="eyebrow">Study, then reveal</p>
               <h2>Remember it before you see it.</h2>
               <p>Use the front of each card to recall the answer, then flip it to check yourself and read the explanation.</p>
             </div>
@@ -279,7 +277,6 @@ export function FlashcardSession() {
           <section className="flashcard-setup-card" aria-labelledby="flashcard-setup-title">
             <div className="feature-card-heading">
               <div>
-                <p className="eyebrow">Build a deck</p>
                 <h2 id="flashcard-setup-title">Choose what to study</h2>
               </div>
               <span>{selectedPool.length} cards</span>
@@ -330,7 +327,7 @@ export function FlashcardSession() {
       <main className="app-main">
         <div className="page-shell practice-shell">
           <section className="flashcard-complete-card">
-            <p className="eyebrow">Deck complete</p>
+            <p className="eyebrow eyebrow-status">Deck complete</p>
             <h1>Nice work. That deck is done.</h1>
             <p>You studied {sessionTotal} cards and marked {sessionMastered} as mastered.</p>
             <div className="results-summary results-summary-four">

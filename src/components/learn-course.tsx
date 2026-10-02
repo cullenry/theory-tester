@@ -54,28 +54,35 @@ export function LearnCourse() {
   const firstName = data.user ? getDisplayName(data.user).split(" ")[0] : "there";
   const hasStarted = progress.seenCount > 0;
   const complete = progress.seenCount >= progress.total;
-  const progressLabel = data.user ? `${progress.seenCount} / ${progress.total}` : "Sign in to track";
-  const progressDescription = data.user ? "questions covered" : "progress saved to your account";
-  const courseProgressPercent = data.user && progress.total > 0
-    ? (progress.seenCount / progress.total) * 100
-    : 0;
-  const courseRingStyle = { "--course-progress": courseProgressPercent + "%" } as CSSProperties;
+  const progressLabel = data.user ? `${progress.seenCount} / ${progress.total}` : "Sign in to track progress";
+  const progressDescription = data.user ? "questions covered" : "saved to your account";
+  const courseProgressPercent = data.user && progress.total > 0 ? progress.percent : 0;
+  const courseRingStyle = { strokeDashoffset: 270.18 * (1 - courseProgressPercent / 100) } as CSSProperties;
 
   return (
     <main className="app-main">
       <div className="page-shell course-shell">
         <section className="course-hero">
           <div className="course-hero-copy">
-            <p className="eyebrow">Learn from the ground up</p>
             <h1>{data.user ? `Hi, ${firstName}. Let’s learn the road.` : "Learn the Irish theory test."}</h1>
             <p>
               Work through the full question bank in short lessons, with explanations and focused review built around the questions you find hardest.
             </p>
           </div>
 
-          <div className="course-hero-progress" aria-label={data.user ? `${progress.seenCount} of ${progress.total} questions covered` : "Sign in to track course progress"}>
-            <span className="course-progress-ring" style={courseRingStyle}>{data.user ? progress.percent : "—"}<small>{data.user ? "%" : ""}</small></span>
-            <div>
+          <div className="course-hero-progress">
+            <div
+              className="readiness-gauge course-progress-gauge"
+              role="img"
+              aria-label={data.user ? `${progress.percent}% of course questions covered` : "Sign in to track course progress"}
+            >
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle className="readiness-gauge-track" cx="50" cy="50" r="43" />
+                <circle className="readiness-gauge-progress" cx="50" cy="50" r="43" style={courseRingStyle} />
+              </svg>
+              <span>{data.user ? progress.percent : "—"}{data.user && <small>%</small>}</span>
+            </div>
+            <div className="course-hero-progress-copy">
               <strong>{progressLabel}</strong>
               <span>{progressDescription}</span>
             </div>
@@ -99,7 +106,7 @@ export function LearnCourse() {
         ) : (
           <section className="course-next-card">
             <div>
-              <p className="eyebrow">{complete ? "Course complete" : "Continue your journey"}</p>
+              <p className={complete ? "eyebrow eyebrow-status" : "eyebrow"}>{complete ? "Course complete" : "Continue your journey"}</p>
               <h2>
                 {complete
                   ? "You’ve covered the whole question bank."
@@ -127,13 +134,11 @@ export function LearnCourse() {
         <section className="course-adaptive-card" aria-labelledby="adaptive-learning-title">
           <div className="course-adaptive-heading">
             <div>
-              <p className="eyebrow">Adaptive Learn</p>
               <h2 id="adaptive-learning-title">Your lessons adjust as you practise.</h2>
               <p>
                 TheoryPrep uses your previous answers to shape the order of questions, so difficult material gets more attention while stronger answers are spaced out for later recall.
               </p>
             </div>
-            <span className="course-adaptive-badge" aria-hidden="true">SMART</span>
           </div>
           <div className="course-adaptive-pills">
             <span><i aria-hidden="true">01</i><strong>Weak spots first</strong><small>Prioritise topics and questions you struggle with.</small></span>

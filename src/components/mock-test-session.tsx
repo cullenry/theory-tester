@@ -172,11 +172,11 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
 
   if (!hasStarted) {
     return (
-      <main className="app-main"><div className="page-shell practice-shell">
-        <div className="page-heading"><div><p className="eyebrow">Timed exam</p><h1>Mock test</h1></div></div>
+      <main className="app-main"><div className="page-shell">
+        <div className="page-heading"><div><h1>Mock test</h1></div></div>
         <section className="mock-format-section" aria-labelledby="mock-config-title">
           <div className="mock-format-heading-row">
-            <div className="mock-format-heading"><p className="eyebrow">Test format</p><h2 id="mock-config-title">Choose a test format</h2></div>
+            <div className="mock-format-heading"><h2 id="mock-config-title">Choose a test format</h2></div>
             <div className="mock-format-heading-art">
               <Image
                 src="/images/theorytester-test-ready.png"
@@ -201,7 +201,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
   if (submitted) {
     return (
       <main className="app-main"><div className="page-shell results-shell">
-        <div className="page-heading"><div><p className="eyebrow">{timeExpired ? "Time limit reached" : "Mock test complete"}</p><h1>{activeFormat.title} Complete</h1></div><span className="result-grade">{percentage}%</span></div>
+        <div className="page-heading"><div><p className="eyebrow eyebrow-status">{timeExpired ? "Time limit reached" : "Mock test complete"}</p><h1>{activeFormat.title} Complete</h1></div><span className="result-grade">{percentage}%</span></div>
         <div className="result-scoreline"><strong>{correctCount} / {test.length}</strong><span>{percentage}% correct</span></div>
         <div className="results-status" aria-live="polite">
           <strong>{passed ? "Pass" : "Not yet passed"}</strong>
@@ -213,7 +213,7 @@ export function MockTestSession({ initialQuestions, initialDurationSeconds = 45 
         </div>
         <div className="results-summary results-summary-four"><div><strong>{correctCount}</strong><span>Correct</span></div><div><strong>{incorrectCount}</strong><span>Incorrect</span></div><div><strong>{unansweredCount}</strong><span>Unanswered</span></div><div><strong>{percentage}%</strong><span>Percentage</span></div></div>
         <div className="results-actions"><button className="button button-primary" type="button" onClick={retakeTest}>Retake {activeFormat.title} <span aria-hidden="true">↻</span></button><ShareResultButton title="My TheoryPrep result" text={`I got ${correctCount}/${test.length} on TheoryPrep 🚗 Can you beat me?`} url={`${typeof window !== "undefined" ? window.location.origin : "https://theoryprep.irish"}/mock-test`} />{incorrectCount > 0 && <Link className="button button-secondary" href="/mistakes">Practise my mistakes <span aria-hidden="true">→</span></Link>}<Link className="button button-secondary" href="/">Back to Home</Link></div>
-        <section className="review-section"><p className="eyebrow">Answer review</p><h2>Every question, at a glance</h2><ol className="review-list">{test.map((question, index) => {
+        <section className="review-section"><h2>Every question, at a glance</h2><ol className="review-list">{test.map((question, index) => {
           const response = responses[index];
           const unanswered = response === null;
           const isCorrect = !unanswered && response === question.correctAnswer;

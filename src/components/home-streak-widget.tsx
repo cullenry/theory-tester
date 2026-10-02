@@ -135,54 +135,20 @@ function StreakIcon() {
 }
 
 function LockedStreakWidget() {
-  const previewDays = ["M", "T", "W", "T", "F", "S", "S"];
-
   return (
     <section className="home-streak-section" aria-label="Your TheoryPrep streak">
-      <div className="home-streak-inner home-streak-locked">
-        <div className="home-streak-locked-blur" aria-hidden="true">
-          <div className="home-streak-copy">
-            <div className="home-streak-icon"><StreakIcon /></div>
-            <div>
-              <p className="eyebrow">Your practice streak</p>
-              <h2>7 days strong.</h2>
-              <p>Nice work. Keep the run going.</p>
-            </div>
-          </div>
-
-          <div className="home-streak-week">
-            {previewDays.map((day, index) => (
-              <div className="home-streak-day" key={day + index}>
-                <span>{day}</span>
-                <i className="home-streak-dot home-streak-dot-active" />
-              </div>
-            ))}
-          </div>
-
-          <div className="home-streak-stats">
-            <span><strong>7</strong> day best</span>
-            <span><strong>128</strong> questions answered</span>
-          </div>
-
-          <span className="home-streak-link">View my progress ↗</span>
-        </div>
-
-        <div className="home-streak-locked-overlay">
-          <span className="home-streak-lock" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <rect x="5.5" y="10" width="13" height="10" rx="2.2" />
-              <path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10" />
-            </svg>
-          </span>
+      <div className="home-streak-inner home-streak-locked home-streak-locked-simple">
+        <div className="home-streak-copy">
+          <div className="home-streak-icon"><StreakIcon /></div>
           <div>
-            <p className="eyebrow">Make your practice count</p>
-            <h2>Sign in to view your progress.</h2>
-            <p>Your streaks, questions answered and practice history will appear here.</p>
+            <p className="eyebrow">Your practice streak</p>
+            <h2>Keep your progress in one place.</h2>
+            <p>Sign in to save your streak, review activity and track your practice.</p>
           </div>
-          <Link className="button button-primary home-streak-signin" href="/login">
-            Sign in <span aria-hidden="true">→</span>
-          </Link>
         </div>
+        <Link className="button button-primary home-streak-signin" href="/login">
+          Sign in <span aria-hidden="true">→</span>
+        </Link>
       </div>
     </section>
   );
