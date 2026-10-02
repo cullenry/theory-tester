@@ -64,7 +64,7 @@ export function LearnCourse() {
       <div className="page-shell course-shell">
         <section className="course-hero">
           <div className="course-hero-copy">
-            <h1>{data.user ? `Hi, ${firstName}. Let’s learn the road` : "Learn the Irish theory test"}</h1>
+            <h1>{data.user ? `Hi, ${firstName} — let’s learn the road` : "Learn the Irish theory test"}</h1>
             <p>
               Work through the full question bank in short lessons, with explanations and focused review built around the questions you find hardest.
             </p>
